@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create();
 
         $this->call([
+            ServiceSeeder::class,
             ClientSeeder::class,
             ProjectSeeder::class,
             PaymentSeeder::class,
