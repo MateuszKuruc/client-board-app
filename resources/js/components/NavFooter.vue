@@ -19,17 +19,37 @@ const page = usePage();
             <SidebarMenu>
                 <SidebarMenuItem v-for="item in items" :key="item.title">
                     <SidebarMenuButton
-                        :is-active="item.href === page.url || page.url.startsWith(item.href + '?')"
-                        :tooltip="item.title"
+                        v-if="!item.children"
                         as-child
+                        :is-active="item.href === '/' ? page.url === '/' : page.url === item.href || page.url.startsWith(item.href + '?')"
+                        :tooltip="item.title"
+                        size="lg"
                     >
                         <Link :href="item.href">
-                            <div>
-                                <component :is="item.icon" />
-                            </div>
+                            <component :is="item.icon" />
                             <span>{{ item.title }}</span>
                         </Link>
                     </SidebarMenuButton>
+
+                    <div v-else>
+                        <SidebarMenuButton as-child :is-active="item.href === page.url" :tooltip="item.title" size="lg">
+                            <Link :href="item.href">
+                                <component :is="item.icon" />
+                                <span>{{ item.title }}</span>
+                            </Link>
+                        </SidebarMenuButton>
+
+                        <SidebarMenu>
+                            <SidebarMenuItem v-for="child in item.children" :key="child.title" class="pl-6">
+                                <SidebarMenuButton as-child :is-active="child.href === page.url" :tooltip="child.title" size="lg">
+                                    <Link :href="child.href">
+                                        <component :is="child.icon" />
+                                        <span>{{ child.title }}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </div>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroupContent>
