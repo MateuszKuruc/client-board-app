@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->decimal('amount', 8, 2);
+            $table->enum('type', ['monthly', 'yearly', 'one-time']);
             $table->timestamps();
         });
     }
