@@ -17,7 +17,6 @@ class ServiceSeeder extends Seeder
             'Web Development',
             'Meta Ads',
             'Google Ads',
-            'Meta + Google Ads',
             'TikTok Ads',
             'Mailing',
             'CRM',

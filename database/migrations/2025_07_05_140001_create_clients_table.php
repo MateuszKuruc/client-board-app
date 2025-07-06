@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Client;
+use App\Models\Service;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,15 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignIdFor(Client::class)->constrained()->cascadeOnDelete();
+            $table->string('name')->unique();
+            $table->foreignIdFor(Service::class)->constrained()->nullOnDelete();
+            $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->string('NIP')->nullable();
             $table->timestamps();
-            $table->boolean('active');
-            $table->decimal('price', 8, 2);
-            $table->date('start_date');
-            $table->date('end_date');
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('clients');
     }
 };
