@@ -50,11 +50,12 @@ const exportCSV = () => {
                 ref="dt"
                 v-model:filters="filters"
                 v-model:expandedRows="expandedRows"
-                :globalFilterFields="['name', 'email', 'phone', 'NIP']"
+                :globalFilterFields="['name', 'email']"
                 :value="clients"
                 paginator
                 :rows="10"
                 dataKey="id"
+                removableSort
                 pt:table="min-w-200"
             >
                 <template #header>
@@ -73,7 +74,7 @@ const exportCSV = () => {
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Klient" sortable></Column>
                 <Column field="email" header="Email" sortable></Column>
-                <Column field="phone" header="Telefon" sortable></Column>
+                <Column field="phone" header="Telefon"></Column>
                 <Column field="NIP" header="NIP"></Column>
                 <!--                <Column header="Usługi">-->
                 <!--                    <template #body="{ data }">-->
