@@ -19,7 +19,6 @@ class ClientFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'service_id' => Service::inRandomOrder()->value('id'),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
             'NIP' => $this->faker->randomNumber(9, true),
