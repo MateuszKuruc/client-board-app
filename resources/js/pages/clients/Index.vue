@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { FilterMatchMode } from '@primevue/core/api';
+import ContrastButton from '@volt/ContrastButton.vue';
 import DataTable from '@volt/DataTable.vue';
 import InputText from '@volt/InputText.vue';
 import SecondaryButton from '@volt/SecondaryButton.vue';
@@ -16,13 +17,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-defineProps({
+const props = defineProps({
     clients: Array,
 });
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
+
+const expandedRows = ref({});
+
+const expandAll = () => {
+    expandedRows.value = Object.fromEntries(props.clients.map((c) => [c.id, true]));
+};
+
+const collapseAll = () => {
+    expandedRows.value = null;
+};
 </script>
 
 <template>
@@ -32,42 +43,88 @@ const filters = ref({
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable
                 v-model:filters="filters"
+                v-model:expandedRows="expandedRows"
                 :globalFilterFields="['name', 'email', 'phone', 'NIP']"
                 :value="clients"
                 paginator
-                :rows="5"
-                sortMode="multiple"
+                :rows="10"
+                dataKey="id"
                 pt:table="min-w-200"
             >
                 <template #header>
-                    <div class="flex justify-end">
+                    <div class="flex justify-between">
+                        <div>
+                            <SecondaryButton text icon="pi pi-plus" label="Rozwiń wszystkie" @click="expandAll" />
+                            <SecondaryButton text icon="pi pi-minus" label="Zwiń wszystkie" @click="collapseAll" />
+                        </div>
                         <div class="relative">
                             <i class="pi pi-search absolute end-3 top-1/2 z-1 -mt-2 leading-none text-surface-400" />
                             <InputText v-model="filters['global'].value" placeholder="Search" />
                         </div>
                     </div>
                 </template>
+                <Column expander style="width: 5rem" />
                 <Column field="name" header="Klient" sortable></Column>
                 <Column field="email" header="Email" sortable></Column>
                 <Column field="phone" header="Telefon" sortable></Column>
-                <Column field="NIP" header="NIP" sortable></Column>
-                <Column header="Usługi">
+                <Column field="NIP" header="NIP"></Column>
+                <!--                <Column header="Usługi">-->
+                <!--                    <template #body="{ data }">-->
+                <!--                        <div v-if="data.projects.length > 0">-->
+                <!--                            <ul>-->
+                <!--                                <li v-for="project in data.projects" :key="project.id">-->
+                <!--                                    <Badge :value="project.service.name" severity="contrast"></Badge>-->
+                <!--                                </li>-->
+                <!--                            </ul>-->
+                <!--                        </div>-->
+                <!--                        <span v-else>-</span>-->
+                <!--                    </template>-->
+                <!--                </Column>-->
+
+                <Column header="Aktywny">
                     <template #body="{ data }">
-                        <div v-if="data.projects.length > 0">
-                            <ul>
-                                <li v-for="project in data.projects" :key="project.id">
-                                    {{ project.service.name }}
-                                </li>
-                            </ul>
-                        </div>
-                        <span v-else>-</span>
+                        <span>{{ data.projects.some((p) => p.active) ? 'Tak' : 'Nie' }}</span>
                     </template>
                 </Column>
+
+                <template #expansion="{ data }">
+                    <div class="space-y-4 bg-gray-50 p-4">
+                        <h5 class="font-semibold">Projekty klienta: {{ data.name }}</h5>
+
+                        <DataTable :value="data.projects" dataKey="id" scrollable scrollHeight="200px">
+                            <Column field="name" header="Nazwa projektu" sortable />
+                            <Column field="service.name" header="Usługa" sortable />
+                            <Column field="start_date" header="Data startu" sortable />
+                            <Column field="end_date" header="Data końca" sortable />
+                            <Column field="price" header="Cena" sortable>
+                                <template #body="{ data: project }"> {{ Number(project.price).toFixed(2) }} zł </template>
+                            </Column>
+                            <Column field="active" header="Aktywny" sortable>
+                                <template #body="{ data: project }">
+                                    <span :class="project.active ? 'text-green-600' : 'text-red-600'">
+                                        {{ project.active ? 'Tak' : 'Nie' }}
+                                    </span>
+                                </template>
+                            </Column>
+                            <Column header="Akcja">
+                                <template #body="{ data: project }">
+                                    <Link :href="route('projects.show', project.id)">
+                                        <ContrastButton icon="pi pi-search" severity="info" label="Sprawdź" />
+                                    </Link>
+                                </template>
+                            </Column>
+                        </DataTable>
+                    </div>
+                </template>
+
                 <Column>
                     <template #body="{ data }">
-                        <SecondaryButton label="Edit" />
+                        <Link :href="route('clients.show', data.slug)">
+                            <SecondaryButton label="Profil" />
+                        </Link>
                     </template>
                 </Column>
+
                 <Column></Column>
             </DataTable>
         </div>
