@@ -32,12 +32,17 @@ const page = usePage();
                     </SidebarMenuButton>
 
                     <div v-else>
-                        <SidebarMenuButton as-child :is-active="item.href === page.url" :tooltip="item.title" size="lg">
+                        <SidebarMenuButton v-if="item.href" as-child :is-active="item.href === page.url" :tooltip="item.title" size="lg">
                             <Link :href="item.href">
                                 <component :is="item.icon" />
                                 <span>{{ item.title }}</span>
                             </Link>
                         </SidebarMenuButton>
+
+                        <div v-else class="flex items-center gap-2 py-2">
+                            <component :is="item.icon" />
+                            <span>{{ item.title }}</span>
+                        </div>
 
                         <SidebarMenu>
                             <SidebarMenuItem v-for="child in item.children" :key="child.title" class="pl-6">
