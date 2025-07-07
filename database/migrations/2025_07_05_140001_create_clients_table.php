@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->foreignIdFor(Service::class)->nullable()->constrained()->nullOnDelete();
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('NIP')->nullable();

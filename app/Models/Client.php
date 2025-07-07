@@ -6,17 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Client extends Model
 {
     /** @use HasFactory<\Database\Factories\ClientFactory> */
     use HasFactory;
-
-    public function services(): BelongsToMany
-    {
-        return $this->belongsToMany(Service::class);
-    }
 
     public function payments(): HasMany
     {
@@ -31,6 +27,11 @@ class Client extends Model
     public function tags(): MorphToMany
     {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function services(): HasManyThrough
+    {
+        return $this->hasManyThrough(Service::class, Project::class);
     }
 }
 
