@@ -5,74 +5,78 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Plus } from 'lucide-vue-next';
+import { BadgeDollarSign, Banknote, BookA, BookOpen, Cog, Folder, FolderOpen, LayoutGrid, PiggyBank, Plus, SquareUserRound } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Klienci',
-        href: '/dashboard',
+        title: 'Pulpit',
+        href: '/pulpit',
         icon: LayoutGrid,
+    },
+    {
+        title: 'Klienci',
+        href: '/klienci',
+        icon: SquareUserRound,
     },
     {
         title: 'Projekty',
-        href: '/',
-        icon: LayoutGrid,
+        href: '/projekty',
+        icon: FolderOpen,
     },
     {
         title: 'Płatności',
-        href: '/',
-        icon: LayoutGrid,
+        href: '/platnosci',
+        icon: BadgeDollarSign,
     },
     {
         title: 'Koszty',
-        href: '/',
-        icon: LayoutGrid,
+        href: '/koszty',
+        icon: Banknote,
     },
     {
         title: 'Finanse',
-        href: '/',
-        icon: LayoutGrid,
+        href: '/finanse',
+        icon: PiggyBank,
     },
     {
         title: 'Leady',
-        href: '/',
-        icon: LayoutGrid,
+        href: '/leady',
+        icon: BookA,
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
         title: 'Nowy',
-        href: '/',
         icon: Plus,
         children: [
             {
                 title: 'Klient',
-                href: '/',
-                icon: Folder,
+                href: '/klienci/dodaj',
+                icon: SquareUserRound,
             },
             {
                 title: 'Projekt',
-                href: '/',
+                href: '/projekty/dodaj',
                 icon: Folder,
             },
             {
                 title: 'Koszt',
-                href: '/',
-                icon: Folder,
+                href: '/koszty/dodaj',
+                icon: Banknote,
             },
             {
                 title: 'Lead',
-                href: '/',
-                icon: Folder,
+                href: '/leady/dodaj',
+                icon: BookA,
             },
         ],
     },
     {
-        title: 'Panel administracyjny',
-        href: '/',
-        icon: Folder,
+        title: 'Konfiguracja',
+        href: '/konfiguracja',
+        icon: Cog,
     },
     {
         title: 'Dokumentacja',
