@@ -1,4 +1,7 @@
+@import './volt-theme.css';
 @import 'tailwindcss';
+@import "tailwindcss";
+@import "tailwindcss-primeui";
 
 @import 'tw-animate-css';
 
