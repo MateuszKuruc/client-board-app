@@ -34,6 +34,11 @@ const expandAll = () => {
 const collapseAll = () => {
     expandedRows.value = null;
 };
+
+const dt = ref();
+const exportCSV = () => {
+    dt.value.exportCSV();
+}
 </script>
 
 <template>
@@ -42,6 +47,7 @@ const collapseAll = () => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable
+                ref="dt"
                 v-model:filters="filters"
                 v-model:expandedRows="expandedRows"
                 :globalFilterFields="['name', 'email', 'phone', 'NIP']"
@@ -57,9 +63,10 @@ const collapseAll = () => {
                             <SecondaryButton text icon="pi pi-plus" label="Rozwiń wszystkie" @click="expandAll" />
                             <SecondaryButton text icon="pi pi-minus" label="Zwiń wszystkie" @click="collapseAll" />
                         </div>
-                        <div class="relative">
+                        <div class="relative flex gap-2">
                             <i class="pi pi-search absolute end-3 top-1/2 z-1 -mt-2 leading-none text-surface-400" />
                             <InputText v-model="filters['global'].value" placeholder="Search" />
+                            <SecondaryButton label="Eksportuj do CSV" @click="exportCSV"/>
                         </div>
                     </div>
                 </template>
@@ -109,7 +116,7 @@ const collapseAll = () => {
                             <Column header="Akcja">
                                 <template #body="{ data: project }">
                                     <Link :href="route('projects.show', project.id)">
-                                        <ContrastButton icon="pi pi-search" severity="info" label="Sprawdź" />
+                                        <ContrastButton icon="pi pi-search" severity="info" label="Szczegóły projektu" />
                                     </Link>
                                 </template>
                             </Column>
