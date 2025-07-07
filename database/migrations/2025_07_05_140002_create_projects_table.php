@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Client;
+use App\Models\Service;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignIdFor(Client::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
             $table->boolean('active');
             $table->decimal('price', 8, 2);
             $table->date('start_date');

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,12 +21,13 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         $start = $this->faker->dateTimeBetween('now', '+3 months');
-        $end = $this->faker->dateTimeBetween($start, '+3 months'); // makes end after start
+        $end = $this->faker->dateTimeBetween($start, '+3 months');
 
         return [
-            'name' => $this->faker->words(3, true), // more realistic than person name
-            'client_id' => Client::inRandomOrder()->value('id'), // required
-            'active' => $this->faker->boolean(80), // 80% chance true
+            'name' => $this->faker->words(3, true),
+            'client_id' => Client::inRandomOrder()->value('id'),
+            'service_id' => Service::inRandomOrder()->value('id'),
+            'active' => $this->faker->boolean(80),
             'price' => $this->faker->randomFloat(2, 1000, 10000),
             'start_date' => $start,
             'end_date' => $end,
