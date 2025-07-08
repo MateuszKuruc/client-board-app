@@ -39,11 +39,15 @@ Route::middleware(['auth'])->group(function () {
    Route::get('/projekty/dodaj', [ProjectController::class, 'create'])->name('projects.create');
 
 
+   Route::prefix('/projekty/{project}')->group(function () {
+       Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+       Route::get('/platnosci/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+   });
 
 
    //  Payments
      Route::get('/platnosci', [PaymentController::class, 'index'])->name('payments.index');
-     Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+
 
     // Expenses
      Route::get('/koszty', [ExpenseController::class, 'index'])->name('expenses.index');
