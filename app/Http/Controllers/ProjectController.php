@@ -19,7 +19,8 @@ class ProjectController extends Controller
                         $q->where('name', 'like', '%' . $search . '%');
                     });
             })
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('projects/Index', [
             'projects' => $projects,
