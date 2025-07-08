@@ -3,15 +3,14 @@ import Paginator from '@/components/Paginator.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
 import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
+import DataTableToolbar from '@/pages/clients/DataTableToolbar.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import Button from '@volt/Button.vue';
 import ContrastButton from '@volt/ContrastButton.vue';
 import DataTable from '@volt/DataTable.vue';
-import InputText from '@volt/InputText.vue';
-import SecondaryButton from '@volt/SecondaryButton.vue';
 import Tag from '@volt/Tag.vue';
-import { ChevronsDown, ChevronsUp, Circle, Search, User } from 'lucide-vue-next';
+import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
 import { ref } from 'vue';
 
@@ -44,19 +43,7 @@ const exportCSV = () => {
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable ref="dt" v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" pt:table="min-w-200">
                 <template #header>
-                    <div class="flex flex-col-reverse justify-between gap-4 py-4 xl:flex-row xl:py-8">
-                        <div class="flex gap-2">
-                            <SecondaryButton @click="expandAll"><ChevronsDown /> Rozwiń wszystkie </SecondaryButton>
-                            <SecondaryButton @click="collapseAll"><ChevronsUp /> Zwiń wszystkie</SecondaryButton>
-                            <!--                            <Button @click="expandAll"><ChevronsDown /> Rozwiń wszystkie </Button>-->
-                            <!--                            <Button @click="collapseAll"><ChevronsUp /> Zwiń wszystkie</Button>-->
-                        </div>
-                        <div class="relative flex items-center gap-2">
-                            <Search />
-                            <InputText v-model="globalSearch" placeholder="Search" />
-                            <Button label="Eksportuj do CSV" @click="exportCSV" />
-                        </div>
-                    </div>
+                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :onExportCSV="exportCSV" />
                 </template>
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Klient">
@@ -98,7 +85,7 @@ const exportCSV = () => {
                                 <Column header="Akcja">
                                     <template #body="{ data: project }">
                                         <Link :href="route('projects.show', { client: project.client.slug, project: project.id })">
-                                            <ContrastButton icon="pi pi-search" severity="info" label="Szczegóły projektu" />
+                                            <ContrastButton severity="info" label="Szczegóły projektu" />
                                         </Link>
                                     </template>
                                 </Column>
