@@ -45,8 +45,11 @@ const emit = defineEmits(['update:modelValue']);
             <!--                            <Button @click="collapseAll"><ChevronsUp /> Zwiń wszystkie</Button>-->
         </div>
         <div class="relative flex items-center gap-2">
-            <Search v-if="searchable" />
-            <InputText v-if="searchable" :modelValue="modelValue" @update:modelValue="emit('update:modelValue', $event)" placeholder="Search" />
+            <div class="relative">
+
+            <Search v-if="searchable" class="absolute top-1/2 -mt-3 text-surface-400 leading-none start-3 z-1" />
+            <InputText v-if="searchable" :modelValue="modelValue" @update:modelValue="emit('update:modelValue', $event)" placeholder="Search" pt:root="ps-10" />
+            </div>
             <Button @click="onExportCSV">
                 <FileDown />
                 {{ exportLabel }}
