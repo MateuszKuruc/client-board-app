@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
+import Paginator from '@/components/Paginator.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
-import { useServerSearch } from '@/composables/useServerSearch';
+import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
-import DataTable from '@volt/DataTable.vue';
-import Column from 'primevue/column';
-import { ref, computed } from 'vue';
-import Paginator from '@/components/Paginator.vue';
 import Button from '@volt/Button.vue';
-import { FolderOpenDot } from 'lucide-vue-next';
 import ContrastButton from '@volt/ContrastButton.vue';
+import DataTable from '@volt/DataTable.vue';
 import Tag from '@volt/Tag.vue';
+import { FolderOpenDot } from 'lucide-vue-next';
+import Column from 'primevue/column';
+import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -48,58 +47,59 @@ function getSortedPayments(project) {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-        <DataTable v-model:expandedRows="expandedRows" :value="projects.data" dataKey="id">
-            <Column expander style="width: 5rem" />
-            <Column field="name" header="Projekt"></Column>
-            <Column field="client.name" header="Klient"></Column>
-            <!--            <Column field="active" header="Aktywny"></Column>-->
-            <Column field="price" header="Cena"></Column>
-            <Column field="start_date" header="Data startu"></Column>
-            <Column field="end_date" header="Data zakończenia"></Column>
-            <Column header="Szczegóły">
-                <template #body="{ data }">
-                    <Link :href="route('projects.show', {client: data.client.id, project: data.id })">
+            <DataTable v-model:expandedRows="expandedRows" :value="projects.data" dataKey="id">
+                <Column expander style="width: 5rem" />
+                <Column field="name" header="Projekt"></Column>
+                <Column field="client.name" header="Klient"></Column>
+                <!--            <Column field="active" header="Aktywny"></Column>-->
+                <Column field="price" header="Cena"></Column>
+                <Column field="start_date" header="Data startu"></Column>
+                <Column field="end_date" header="Data zakończenia"></Column>
+                <Column header="Szczegóły">
+                    <template #body="{ data }">
+                        <Link :href="route('projects.show', { client: data.client.slug, project: data.id })">
+                            <Button><FolderOpenDot /></Button>
+                        </Link>
+                    </template>
+                </Column>
 
-                    <Button><FolderOpenDot /></Button>
-                    </Link>
+                <template #expansion="{ data }">
+                    <div class="space-y-4 bg-gray-50 p-4">
+                        <h5 class="font-semibold">Historia płatności</h5>
+
+                        <DataTable :value="getSortedPayments(data)" dataKey="id" scrollable scrollHeight="200px" removableSort>
+                            <div v-if="getSortedPayments.length > 0">
+                                <Column field="amount" header="Kwota" sortable />
+                                <Column field="status" header="Status" sortable>
+                                    <template #body="{ data }">
+                                        <Tag
+                                            :value="data.status === 'paid' ? 'Opłacone' : 'Oczekujące'"
+                                            :severity="data.status === 'paid' ? 'success' : 'warn'"
+                                        ></Tag>
+                                    </template>
+                                </Column>
+                                <Column field="payment_date" header="Data płatności" sortable>
+                                    <template #body="{ data }">
+                                        {{ data.payment_date ? data.payment_date : '-' }}
+                                    </template>
+                                </Column>
+
+                                <Column header="Akcja">
+                                    <template #body="{ data }">
+                                        <Link :href="route('payments.show', { project: data.project_id, payment: data.id })">
+                                            <ContrastButton severity="info" label="Szczegóły płatności" />
+                                        </Link>
+                                    </template>
+                                </Column>
+                            </div>
+                            <div v-else>
+                                <p>Żadne projekty nie zostały zrealizowane.</p>
+                            </div>
+                        </DataTable>
+                    </div>
                 </template>
-            </Column>
-
-            <template #expansion="{ data }">
-                <div class="space-y-4 bg-gray-50 p-4">
-                    <h5 class="font-semibold">Historia płatności</h5>
-
-                    <DataTable :value="getSortedPayments(data)" dataKey="id" scrollable scrollHeight="200px" removableSort>
-                        <div v-if="getSortedPayments.length > 0">
-                            <Column field="amount" header="Kwota" sortable />
-                            <Column field="status" header="Status" sortable>
-                                <template #body="{ data }">
-                                    <Tag :value="data.status === 'paid' ? 'Opłacone' : 'Oczekujące'" :severity="data.status === 'paid' ? 'success' : 'warn'"></Tag>
-                                </template>
-                            </Column>
-                            <Column field="payment_date" header="Data płatności" sortable>
-                                <template #body="{ data }">
-                                    {{ data.payment_date ? data.payment_date : '-' }}
-                                </template>
-                            </Column>
-
-                            <Column header="Akcja">
-                                <template #body="{ data }">
-                                    <Link :href="route('payments.show', { payment: data.id })">
-                                        <ContrastButton severity="info" label="Szczegóły płatności" />
-                                    </Link>
-                                </template>
-                            </Column>
-                        </div>
-                        <div v-else>
-                            <p>Żadne projekty nie zostały zrealizowane.</p>
-                        </div>
-                    </DataTable>
-                </div>
-            </template>
-
-        </DataTable>
-        <Paginator :data="projects"/>
+            </DataTable>
+            <Paginator :data="projects" />
         </div>
     </AppLayout>
 </template>
