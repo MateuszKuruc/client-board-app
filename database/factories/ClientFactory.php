@@ -25,7 +25,7 @@ class ClientFactory extends Factory
             'slug' => Str::slug($name),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
-            'NIP' => $this->faker->randomNumber(9, true),
+            'nip' => $this->faker->randomNumber(9, true),
         ];
     }
 }
