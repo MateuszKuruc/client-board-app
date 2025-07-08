@@ -32,7 +32,7 @@ const emit = defineEmits(['update:modelValue']);
 
 <template>
     <div class="flex flex-col-reverse justify-between gap-4 py-4 xl:flex-row xl:py-8">
-        <div class="flex gap-2">
+        <div class="flex gap-2" :class="{ 'invisible': !onExpandAll && !onCollapseAll }">
             <SecondaryButton @click="onExpandAll?.()">
                 <ChevronsDown />
                 {{ expandLabel }}
