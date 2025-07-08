@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import Paginator from '@/components/Paginator.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
-import { FilterMatchMode } from '@primevue/core/api';
+import { Head, Link, router } from '@inertiajs/vue3';
+import Button from '@volt/Button.vue';
 import ContrastButton from '@volt/ContrastButton.vue';
 import DataTable from '@volt/DataTable.vue';
 import InputText from '@volt/InputText.vue';
 import SecondaryButton from '@volt/SecondaryButton.vue';
-import { Circle, Search } from 'lucide-vue-next';
+import { debounce } from 'lodash';
+import { ChevronsDown, ChevronsUp, Circle, Search, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,17 +21,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps({
-    clients: Array,
-});
-
-const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    clients: Object,
+    filters: Object,
 });
 
 const expandedRows = ref({});
 
 const expandAll = () => {
-    expandedRows.value = Object.fromEntries(props.clients.map((c) => [c.id, true]));
+    expandedRows.value = Object.fromEntries(props.clients.data.map((c) => [c.id, true]));
 };
 
 const collapseAll = () => {
@@ -40,6 +39,26 @@ const dt = ref();
 const exportCSV = () => {
     dt.value.exportCSV();
 };
+
+const globalSearch = ref(props.filters.search || '');
+
+const debouncedSearch = debounce((value: string) => {
+    router.get(
+        route('clients.index'),
+        {
+            search: value,
+            page: 1,
+        },
+        {
+            preserveState: true,
+            replace: true,
+        },
+    );
+}, 300);
+
+watch(globalSearch, (value) => {
+    debouncedSearch(value);
+});
 </script>
 
 <template>
@@ -49,26 +68,24 @@ const exportCSV = () => {
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable
                 ref="dt"
-                v-model:filters="filters"
                 v-model:expandedRows="expandedRows"
                 :globalFilterFields="['name', 'email']"
-                :value="clients"
-                paginator
-                :rows="10"
+                :value="clients.data"
                 dataKey="id"
                 removableSort
                 pt:table="min-w-200"
             >
                 <template #header>
                     <div class="flex justify-between">
-                        <div>
-                            <SecondaryButton text icon="pi pi-plus" label="Rozwiń wszystkie" @click="expandAll" />
-                            <SecondaryButton text icon="pi pi-minus" label="Zwiń wszystkie" @click="collapseAll" />
+                        <div class="flex gap-2">
+                            <SecondaryButton @click="expandAll"><ChevronsDown /> Rozwiń wszystkie </SecondaryButton>
+                            <SecondaryButton @click="collapseAll"><ChevronsUp /> Zwiń wszystkie</SecondaryButton>
+                            <!--                            <Button @click="expandAll"><ChevronsDown /> Rozwiń wszystkie </Button>-->
+                            <!--                            <Button @click="collapseAll"><ChevronsUp /> Zwiń wszystkie</Button>-->
                         </div>
-                        <div class="relative flex gap-2">
-                            <!--                            <i class="pi pi-search absolute end-3 top-1/2 z-1 -mt-2 leading-none text-surface-400" />-->
+                        <div class="relative flex items-center gap-2">
                             <Search />
-                            <InputText v-model="filters['global'].value" placeholder="Search" />
+                            <InputText v-model="globalSearch" placeholder="Search" />
                             <SecondaryButton label="Eksportuj do CSV" @click="exportCSV" />
                         </div>
                     </div>
@@ -116,16 +133,15 @@ const exportCSV = () => {
                     </div>
                 </template>
 
-                <Column>
+                <Column header="Profil">
                     <template #body="{ data }">
                         <Link :href="route('clients.show', data.slug)">
-                            <SecondaryButton label="Profil" />
+                            <Button><User /></Button>
                         </Link>
                     </template>
                 </Column>
-
-                <Column></Column>
             </DataTable>
+            <Paginator :data="clients" />
         </div>
     </AppLayout>
 </template>
