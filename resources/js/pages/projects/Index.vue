@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import Paginator from '@/components/Paginator.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
+import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
+import DataTableToolbar from '@/pages/clients/DataTableToolbar.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import Button from '@volt/Button.vue';
@@ -11,8 +13,6 @@ import Tag from '@volt/Tag.vue';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
 import { ref } from 'vue';
-import DataTableToolbar from '@/pages/clients/DataTableToolbar.vue';
-import { useServerSearch} from '@/composables/useServerSearch';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,7 +26,7 @@ const props = defineProps({
     filters: Object,
 });
 
-const { globalSearch } = useServerSearch(props.projects.data);
+const { globalSearch } = useServerSearch(props.filters.search || '', 'projects.index');
 
 const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.projects.data);
 
@@ -73,9 +73,8 @@ function getSortedPayments(project) {
                 <template #expansion="{ data }">
                     <div class="space-y-4 bg-gray-50 p-4">
                         <h5 class="font-semibold">Historia płatności</h5>
-
-                        <DataTable :value="getSortedPayments(data)" dataKey="id" scrollable scrollHeight="200px" removableSort>
-                            <div v-if="getSortedPayments.length > 0">
+                        <div v-if="data.payments.length > 0">
+                            <DataTable :value="getSortedPayments(data)" dataKey="id" scrollable scrollHeight="200px" removableSort>
                                 <Column field="amount" header="Kwota" sortable />
                                 <Column field="status" header="Status" sortable>
                                     <template #body="{ data }">
@@ -98,11 +97,11 @@ function getSortedPayments(project) {
                                         </Link>
                                     </template>
                                 </Column>
-                            </div>
-                            <div v-else>
-                                <p>Żadne projekty nie zostały zrealizowane.</p>
-                            </div>
-                        </DataTable>
+                            </DataTable>
+                        </div>
+                        <div v-else>
+                            <p>Żadne projekty nie zostały zrealizowane.</p>
+                        </div>
                     </div>
                 </template>
             </DataTable>
