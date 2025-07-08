@@ -14,6 +14,14 @@ class Client extends Model
     /** @use HasFactory<\Database\Factories\ClientFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'slug',
+        'email',
+        'phone',
+        'nip',
+    ];
+
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
