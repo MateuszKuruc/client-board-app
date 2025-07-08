@@ -67,9 +67,9 @@ watch(globalSearch, (value) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <DataTable ref="dt" v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" removableSort pt:table="min-w-200">
+            <DataTable ref="dt" v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" pt:table="min-w-200">
                 <template #header>
-                    <div class="flex justify-between">
+                    <div class="flex xl:flex-row justify-between gap-4 flex-col-reverse xl:py-8 py-4">
                         <div class="flex gap-2">
                             <SecondaryButton @click="expandAll"><ChevronsDown /> Rozwiń wszystkie </SecondaryButton>
                             <SecondaryButton @click="collapseAll"><ChevronsUp /> Zwiń wszystkie</SecondaryButton>
@@ -79,7 +79,7 @@ watch(globalSearch, (value) => {
                         <div class="relative flex items-center gap-2">
                             <Search />
                             <InputText v-model="globalSearch" placeholder="Search" />
-                            <SecondaryButton label="Eksportuj do CSV" @click="exportCSV" />
+                            <Button label="Eksportuj do CSV" @click="exportCSV" />
                         </div>
                     </div>
                 </template>
