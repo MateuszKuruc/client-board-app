@@ -8,12 +8,24 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::with('client', 'service', 'payments')->paginate(10);
+        $search = $request->input('search');
+
+        $projects = Project::with('client', 'service', 'payments')
+            ->when($search, function($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('client', function ($q) use ($search) {
+                        $q->where('name', 'like', '%' . $search . '%');
+                    });
+            })
+            ->paginate(10);
 
         return Inertia::render('projects/Index', [
             'projects' => $projects,
+            'filters' => [
+                'search' => $search,
+            ]
         ]);
     }
 }
