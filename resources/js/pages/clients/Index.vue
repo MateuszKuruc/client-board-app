@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import Paginator from '@/components/Paginator.vue';
+import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import Button from '@volt/Button.vue';
 import ContrastButton from '@volt/ContrastButton.vue';
 import DataTable from '@volt/DataTable.vue';
 import InputText from '@volt/InputText.vue';
 import SecondaryButton from '@volt/SecondaryButton.vue';
 import Tag from '@volt/Tag.vue';
-import { debounce } from 'lodash';
 import { ChevronsDown, ChevronsUp, Circle, Search, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,6 +25,8 @@ const props = defineProps({
     clients: Object,
     filters: Object,
 });
+
+const { globalSearch } = useServerSearch(props.filters.search || '', 'clients.index');
 
 const expandedRows = ref({});
 
@@ -40,26 +42,6 @@ const dt = ref();
 const exportCSV = () => {
     dt.value.exportCSV();
 };
-
-const globalSearch = ref(props.filters.search || '');
-
-const debouncedSearch = debounce((value: string) => {
-    router.get(
-        route('clients.index'),
-        {
-            search: value,
-            page: 1,
-        },
-        {
-            preserveState: true,
-            replace: true,
-        },
-    );
-}, 300);
-
-watch(globalSearch, (value) => {
-    debouncedSearch(value);
-});
 </script>
 
 <template>
@@ -69,7 +51,7 @@ watch(globalSearch, (value) => {
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable ref="dt" v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" pt:table="min-w-200">
                 <template #header>
-                    <div class="flex xl:flex-row justify-between gap-4 flex-col-reverse xl:py-8 py-4">
+                    <div class="flex flex-col-reverse justify-between gap-4 py-4 xl:flex-row xl:py-8">
                         <div class="flex gap-2">
                             <SecondaryButton @click="expandAll"><ChevronsDown /> Rozwiń wszystkie </SecondaryButton>
                             <SecondaryButton @click="collapseAll"><ChevronsUp /> Zwiń wszystkie</SecondaryButton>
