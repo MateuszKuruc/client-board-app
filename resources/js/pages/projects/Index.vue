@@ -11,6 +11,8 @@ import Tag from '@volt/Tag.vue';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
 import { ref } from 'vue';
+import DataTableToolbar from '@/pages/clients/DataTableToolbar.vue';
+import { useServerSearch} from '@/composables/useServerSearch';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -23,6 +25,8 @@ const props = defineProps({
     projects: Object,
     filters: Object,
 });
+
+const { globalSearch } = useServerSearch(props.projects.data);
 
 const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.projects.data);
 
@@ -47,7 +51,10 @@ function getSortedPayments(project) {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <DataTable v-model:expandedRows="expandedRows" :value="projects.data" dataKey="id">
+            <DataTable v-model:expandedRows="expandedRows" :value="projects.data" dataKey="id" ref="dt">
+                <template #header>
+                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :onExportCSV="exportCSV" />
+                </template>
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Projekt"></Column>
                 <Column field="client.name" header="Klient"></Column>
