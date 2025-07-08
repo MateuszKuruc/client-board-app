@@ -33,5 +33,10 @@ class Client extends Model
     {
         return $this->hasManyThrough(Service::class, Project::class);
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }
 
