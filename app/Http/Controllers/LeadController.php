@@ -19,7 +19,7 @@ class LeadController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return Inertia::render('/leads/Index', [
+        return Inertia::render('leads/Index', [
             'leads' => $leads,
             'filters' => [
                 'search' => $search,
