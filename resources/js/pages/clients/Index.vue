@@ -89,7 +89,7 @@ const exportCSV = () => {
                 <!--                    </template>-->
                 <!--                </Column>-->
 
-                <Column header="Aktywny">
+                <Column field="active" header="Aktywny">
                     <template #body="{ data }">
                         <span>{{ data.projects.some((p) => p.active) ? 'Tak' : 'Nie' }}</span>
                     </template>
@@ -97,13 +97,13 @@ const exportCSV = () => {
 
                 <template #expansion="{ data }">
                     <div class="space-y-4 bg-gray-50 p-4">
-                        <h5 class="font-semibold">Projekty klienta: {{ data.name }}</h5>
+                        <h5 class="font-semibold">Historia projektów</h5>
 
-                        <DataTable :value="data.projects" dataKey="id" scrollable scrollHeight="200px">
+                        <DataTable :value="data.projects" dataKey="id" scrollable scrollHeight="200px" removableSort>
                             <Column field="name" header="Nazwa projektu" sortable />
                             <Column field="service.name" header="Usługa" sortable />
                             <Column field="start_date" header="Data startu" sortable />
-                            <Column field="end_date" header="Data końca" sortable />
+                            <Column field="end_date" header="Data końca" sortable/>
                             <Column field="price" header="Cena" sortable>
                                 <template #body="{ data: project }"> {{ Number(project.price).toFixed(2) }} zł </template>
                             </Column>
@@ -116,7 +116,7 @@ const exportCSV = () => {
                             </Column>
                             <Column header="Akcja">
                                 <template #body="{ data: project }">
-                                    <Link :href="route('projects.show', project.id)">
+                                    <Link :href="route('projects.show', { client: project.client.slug, project: project.id})">
                                         <ContrastButton icon="pi pi-search" severity="info" label="Szczegóły projektu" />
                                     </Link>
                                 </template>
