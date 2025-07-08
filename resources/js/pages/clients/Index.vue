@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Paginator from '@/components/Paginator.vue';
+import { useExpandableRows } from '@/composables/useExpandableRows';
 import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
@@ -28,15 +29,7 @@ const props = defineProps({
 
 const { globalSearch } = useServerSearch(props.filters.search || '', 'clients.index');
 
-const expandedRows = ref({});
-
-const expandAll = () => {
-    expandedRows.value = Object.fromEntries(props.clients.data.map((c) => [c.id, true]));
-};
-
-const collapseAll = () => {
-    expandedRows.value = null;
-};
+const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients.data);
 
 const dt = ref();
 const exportCSV = () => {
