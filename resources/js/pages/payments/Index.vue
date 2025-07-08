@@ -33,13 +33,15 @@ const exportCSV = () => {
 </script>
 
 <template>
-    <Head title="Klienci" />
+    <Head title="Płatności" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable :value="payments.data" dataKey="id" ref="dt">
-                <DataTableToolbar v-model="globalSearch" onExportCSV="exportCSV" />
-                <template #header> </template>
+                <template #header>
+                    <DataTableToolbar v-modelś="globalSearch" :onExportCSV="exportCSV" />
+                </template>
+
                 <Column field="status" header="Status">
                     <template #body="{ data }">
                         <Tag :value="data.status === 'paid' ? 'Opłacone' : 'Oczekujące'" :severity="data.status === 'paid' ? 'success' : 'warn'" />
