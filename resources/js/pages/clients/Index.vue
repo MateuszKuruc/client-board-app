@@ -67,15 +67,7 @@ watch(globalSearch, (value) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <DataTable
-                ref="dt"
-                v-model:expandedRows="expandedRows"
-                :globalFilterFields="['name', 'email']"
-                :value="clients.data"
-                dataKey="id"
-                removableSort
-                pt:table="min-w-200"
-            >
+            <DataTable ref="dt" v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" removableSort pt:table="min-w-200">
                 <template #header>
                     <div class="flex justify-between">
                         <div class="flex gap-2">
@@ -92,7 +84,7 @@ watch(globalSearch, (value) => {
                     </div>
                 </template>
                 <Column expander style="width: 5rem" />
-                <Column field="name" header="Klient" sortable>
+                <Column field="name" header="Klient">
                     <template #body="{ data }">
                         <div class="flex items-center gap-3">
                             <Circle :fill="data.projects.some((p) => p.active) ? 'green' : 'red'" class="shrink-0" />
@@ -100,7 +92,7 @@ watch(globalSearch, (value) => {
                         </div>
                     </template>
                 </Column>
-                <Column field="email" header="Email" sortable></Column>
+                <Column field="email" header="Email"></Column>
                 <Column field="phone" header="Telefon"></Column>
                 <Column field="nip" header="NIP"></Column>
 
