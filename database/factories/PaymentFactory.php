@@ -20,7 +20,11 @@ class PaymentFactory extends Factory
         return [
             'amount' => $this->faker->randomFloat(2, 500, 5000),
             'status' => $this->faker->randomElement(['paid', 'pending']),
-            'payment_date' => $this->faker->dateTimeBetween('-3 months', 'now')->format('Y-m-d'),
+            'payment_date' => function (array $attributes) {
+                return $attributes['status'] === 'paid'
+                    ? $this->faker->dateTimeBetween('-3 months', 'now')->format('Y-m-d')
+                    : null;
+            }
         ];
     }
 }
