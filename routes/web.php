@@ -31,10 +31,14 @@ Route::middleware(['auth'])->group(function () {
    Route::post('/klienci', [ClientController::class, 'store'])->name('clients.store');
 
    //  Projects
+    Route::prefix('/klienci/{client}')->group(function () {
+        Route::get('/projekty/{project}', [ProjectController::class, 'show'])->name('projects.show');
+        Route::get('/projekty/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    });
    Route::get('/projekty', [ProjectController::class, 'index'])->name('projects.index');
    Route::get('/projekty/dodaj', [ProjectController::class, 'create'])->name('projects.create');
-    Route::get('/projekty/{project}', [ProjectController::class, 'show'])->name('projects.show');
-    Route::get('/projekty/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+
+
 
 
    //  Payments
