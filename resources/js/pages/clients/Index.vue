@@ -7,6 +7,7 @@ import ContrastButton from '@volt/ContrastButton.vue';
 import DataTable from '@volt/DataTable.vue';
 import InputText from '@volt/InputText.vue';
 import SecondaryButton from '@volt/SecondaryButton.vue';
+import { Circle, Search } from 'lucide-vue-next';
 import Column from 'primevue/column';
 import { ref } from 'vue';
 
@@ -38,7 +39,7 @@ const collapseAll = () => {
 const dt = ref();
 const exportCSV = () => {
     dt.value.exportCSV();
-}
+};
 </script>
 
 <template>
@@ -65,35 +66,25 @@ const exportCSV = () => {
                             <SecondaryButton text icon="pi pi-minus" label="Zwiń wszystkie" @click="collapseAll" />
                         </div>
                         <div class="relative flex gap-2">
-                            <i class="pi pi-search absolute end-3 top-1/2 z-1 -mt-2 leading-none text-surface-400" />
+                            <!--                            <i class="pi pi-search absolute end-3 top-1/2 z-1 -mt-2 leading-none text-surface-400" />-->
+                            <Search />
                             <InputText v-model="filters['global'].value" placeholder="Search" />
-                            <SecondaryButton label="Eksportuj do CSV" @click="exportCSV"/>
+                            <SecondaryButton label="Eksportuj do CSV" @click="exportCSV" />
                         </div>
                     </div>
                 </template>
                 <Column expander style="width: 5rem" />
-                <Column field="name" header="Klient" sortable></Column>
+                <Column field="name" header="Klient" sortable>
+                    <template #body="{ data }">
+                        <div class="flex items-center gap-3">
+                            <Circle :fill="data.projects.some((p) => p.active) ? 'green' : 'red'" class="shrink-0" />
+                            <span>{{ data.name }}</span>
+                        </div>
+                    </template>
+                </Column>
                 <Column field="email" header="Email" sortable></Column>
                 <Column field="phone" header="Telefon"></Column>
                 <Column field="NIP" header="NIP"></Column>
-                <!--                <Column header="Usługi">-->
-                <!--                    <template #body="{ data }">-->
-                <!--                        <div v-if="data.projects.length > 0">-->
-                <!--                            <ul>-->
-                <!--                                <li v-for="project in data.projects" :key="project.id">-->
-                <!--                                    <Badge :value="project.service.name" severity="contrast"></Badge>-->
-                <!--                                </li>-->
-                <!--                            </ul>-->
-                <!--                        </div>-->
-                <!--                        <span v-else>-</span>-->
-                <!--                    </template>-->
-                <!--                </Column>-->
-
-                <Column field="active" header="Aktywny">
-                    <template #body="{ data }">
-                        <span>{{ data.projects.some((p) => p.active) ? 'Tak' : 'Nie' }}</span>
-                    </template>
-                </Column>
 
                 <template #expansion="{ data }">
                     <div class="space-y-4 bg-gray-50 p-4">
@@ -103,7 +94,7 @@ const exportCSV = () => {
                             <Column field="name" header="Nazwa projektu" sortable />
                             <Column field="service.name" header="Usługa" sortable />
                             <Column field="start_date" header="Data startu" sortable />
-                            <Column field="end_date" header="Data końca" sortable/>
+                            <Column field="end_date" header="Data końca" sortable />
                             <Column field="price" header="Cena" sortable>
                                 <template #body="{ data: project }"> {{ Number(project.price).toFixed(2) }} zł </template>
                             </Column>
@@ -116,7 +107,7 @@ const exportCSV = () => {
                             </Column>
                             <Column header="Akcja">
                                 <template #body="{ data: project }">
-                                    <Link :href="route('projects.show', { client: project.client.slug, project: project.id})">
+                                    <Link :href="route('projects.show', { client: project.client.slug, project: project.id })">
                                         <ContrastButton icon="pi pi-search" severity="info" label="Szczegóły projektu" />
                                     </Link>
                                 </template>
