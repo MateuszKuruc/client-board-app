@@ -62,8 +62,8 @@ const exportCSV = () => {
                     <div class="space-y-4 bg-gray-50 p-4">
                         <h5 class="font-semibold">Historia projektów</h5>
 
-                        <DataTable :value="data.projects" dataKey="id" scrollable scrollHeight="200px" removableSort>
-                            <div v-if="data.projects.length > 0">
+                        <div v-if="data.projects.length > 0">
+                            <DataTable :value="data.projects" dataKey="id" scrollable scrollHeight="200px" removableSort>
                                 <Column field="name" header="Nazwa projektu" sortable />
                                 <Column field="service.name" header="Usługa" sortable>
                                     <template #body="{ data }">
@@ -89,11 +89,11 @@ const exportCSV = () => {
                                         </Link>
                                     </template>
                                 </Column>
-                            </div>
-                            <div v-else>
-                                <p>Żadne projekty nie zostały zrealizowane.</p>
-                            </div>
-                        </DataTable>
+                            </DataTable>
+                        </div>
+                        <div v-else>
+                            <p>Żadne projekty nie zostały zrealizowane.</p>
+                        </div>
                     </div>
                 </template>
 
