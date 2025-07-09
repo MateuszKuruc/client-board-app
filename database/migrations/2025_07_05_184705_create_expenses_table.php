@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('amount', 8, 2);
-            $table->enum('type', ['monthly', 'yearly', 'one-time']);
+            $table->enum('type', ['miesięczna', 'roczna', 'jednorazowa']);
             $table->timestamps();
         });
     }
