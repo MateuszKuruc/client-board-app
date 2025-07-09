@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route:: get('/leady/dodaj', [LeadController::class, 'create'])->name('leads.create');
     Route::put('/leady/{lead}', [LeadController::class, 'update'])->name('leads.update');
     Route::post('/leady',  [LeadController::class, 'store'])->name('leads.store');
+    Route::get('/leady/eksport', [LeadController::class, 'export'])->name('leads.export');
 
     // Configuration
     Route::get('/konfiguracja', [ConfigurationController::class, 'index'])->name('configurations.index');
