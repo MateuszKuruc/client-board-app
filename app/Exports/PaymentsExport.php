@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class PaymentsExport implements FromCollection, WithHeadings
 {
-    protected $search
+    protected $search;
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -20,7 +20,7 @@ class PaymentsExport implements FromCollection, WithHeadings
     public function collection()
     {
         return Payment::with('project', 'project.client')
-            ->when($search, function ($query, $search) {
+            ->when($this->search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->whereHas('project', function ($q) use ($search) {
                         $q->where('name', 'like', '%'.$search.'%');
