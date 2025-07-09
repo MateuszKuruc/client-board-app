@@ -26,6 +26,9 @@ class ClientFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
             'nip' => $this->faker->randomNumber(9, true),
+            'source' => $this->faker->randomElement([
+                'Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne'
+            ])
         ];
     }
 }
