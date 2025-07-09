@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LeadsExport;
 use App\Models\Lead;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LeadController extends Controller
 {
@@ -25,5 +27,10 @@ class LeadController extends Controller
                 'search' => $search,
             ]
         ]);
+    }
+
+    public function export(Request $request)
+    {
+       return Excel::download(new LeadsExport(), 'leads.xlsx');
     }
 }
