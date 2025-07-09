@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ClientsExport;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClientController extends Controller
 {
@@ -26,5 +28,12 @@ class ClientController extends Controller
                 'search' => $search,
             ],
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $search = $request->input('search');
+
+        return Excel::download(new ClientsExport($search), 'clients.xlsx');
     }
 }

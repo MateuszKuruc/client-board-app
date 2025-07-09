@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PaymentsExport;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PaymentController extends Controller
 {
@@ -31,5 +33,12 @@ class PaymentController extends Controller
                 'search' => $search,
             ]
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $search = $request->input('search');
+
+        return Excel::download(new PaymentsExport($search), 'payments.xlsx');
     }
 }
