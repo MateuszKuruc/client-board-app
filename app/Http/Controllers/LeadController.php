@@ -15,8 +15,8 @@ class LeadController extends Controller
         $search = $request->input('search');
 
         $leads = Lead::when($search, function ($query) use ($search) {
-             $query->where('email', 'like', '%' . $search . '%')
-                 ->orWhere('phone', 'like', '%' . $search . '%');
+            $query->where('email', 'like', '%'.$search.'%')
+                ->orWhere('phone', 'like', '%'.$search.'%');
         })
             ->paginate(10)
             ->withQueryString();
@@ -31,6 +31,8 @@ class LeadController extends Controller
 
     public function export(Request $request)
     {
-       return Excel::download(new LeadsExport(), 'leads.xlsx');
+        $search = $request->input('search');
+
+        return Excel::download(new LeadsExport($search), 'leads.xlsx');
     }
 }
