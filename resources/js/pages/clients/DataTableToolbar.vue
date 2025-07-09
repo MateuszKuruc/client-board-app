@@ -8,7 +8,7 @@ defineProps({
     modelValue: String,
     onExpandAll: Function,
     onCollapseAll: Function,
-    onExportCSV: Function,
+    exportUrl: String,
     searchable: {
         type: Boolean,
         default: true,
@@ -50,7 +50,7 @@ const emit = defineEmits(['update:modelValue']);
             <Search v-if="searchable" class="absolute top-1/2 -mt-3 text-surface-400 leading-none start-3 z-1" />
             <InputText v-if="searchable" :modelValue="modelValue" @update:modelValue="emit('update:modelValue', $event)" placeholder="Search" pt:root="ps-10" />
             </div>
-            <Button @click="onExportCSV">
+            <Button as="a" :href="route(exportUrl)">
                 <FileDown />
                 {{ exportLabel }}
             </Button>
