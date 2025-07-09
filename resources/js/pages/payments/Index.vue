@@ -10,7 +10,6 @@ import DataTable from '@volt/DataTable.vue';
 import Tag from '@volt/Tag.vue';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,11 +24,6 @@ const props = defineProps({
 });
 
 const { globalSearch } = useServerSearch(props.filters.search || '', 'payments.index');
-
-const dt = ref();
-const exportCSV = () => {
-    dt.value.exportCSV();
-};
 </script>
 
 <template>
@@ -37,9 +31,9 @@ const exportCSV = () => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <DataTable :value="payments.data" dataKey="id" ref="dt">
+            <DataTable :value="payments.data" dataKey="id">
                 <template #header>
-                    <DataTableToolbar v-modelś="globalSearch" :onExportCSV="exportCSV" />
+                    <DataTableToolbar v-model="globalSearch" :exportUrl="'payments.export'" :filters="filters" />
                 </template>
 
                 <Column field="status" header="Status">
