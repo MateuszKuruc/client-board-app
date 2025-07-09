@@ -12,7 +12,6 @@ import DataTable from '@volt/DataTable.vue';
 import Tag from '@volt/Tag.vue';
 import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,11 +28,6 @@ const props = defineProps({
 const { globalSearch } = useServerSearch(props.filters.search || '', 'clients.index');
 
 const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients.data);
-
-const dt = ref();
-const exportCSV = () => {
-    dt.value.exportCSV();
-};
 </script>
 
 <template>
@@ -41,9 +35,9 @@ const exportCSV = () => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <DataTable ref="dt" v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" pt:table="min-w-200">
+            <DataTable v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" pt:table="min-w-200">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :onExportCSV="exportCSV" />
+                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :exportUrl="'clients.export'" :filters="filters" />
                 </template>
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Klient">

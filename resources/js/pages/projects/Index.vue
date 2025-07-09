@@ -12,7 +12,7 @@ import DataTable from '@volt/DataTable.vue';
 import Tag from '@volt/Tag.vue';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import { ref } from 'vue';
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,11 +29,6 @@ const props = defineProps({
 const { globalSearch } = useServerSearch(props.filters.search || '', 'projects.index');
 
 const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.projects.data);
-
-const dt = ref();
-const exportCSV = () => {
-    dt.value.exportCSV();
-};
 
 function getSortedPayments(project) {
     return [...project.payments].sort((a, b) => {
@@ -53,7 +48,7 @@ function getSortedPayments(project) {
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable v-model:expandedRows="expandedRows" :value="projects.data" dataKey="id" ref="dt">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :onExportCSV="exportCSV" />
+                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :exportUrl="'projects.export'" :filters="filters" />
                 </template>
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Projekt"></Column>
