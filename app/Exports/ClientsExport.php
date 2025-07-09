@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ClientsExport implements FromCollection, WithHeadings
 {
-    protected $search
+    protected $search;
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -18,8 +18,8 @@ class ClientsExport implements FromCollection, WithHeadings
     }
     public function collection()
     {
-        return Client::with(['projects.service', 'projects.client'])
-            ->when($search, function ($query, $search) {
+        return Client::query()
+            ->when($this->search, function ($query, $search) {
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
             })
