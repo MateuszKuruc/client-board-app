@@ -19,7 +19,7 @@ class ExpenseFactory extends Factory
         return [
             'name' => $this->faker->word() . ' subscription',
             'amount' => $this->faker->randomFloat(2, 10, 500),
-            'type' => $this->faker->randomElement(['monthly', 'yearly', 'one-time']),
+            'type' => $this->faker->randomElement(['miesięczna', 'roczna', 'jednorazowa']),
         ];
     }
 }
