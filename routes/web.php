@@ -24,12 +24,14 @@ Route::middleware(['auth'])->group(function () {
 
     // Clients
     Route::get('/klienci', [ClientController::class, 'index'])->name('clients.index');
+    Route::post('/klienci', [ClientController::class, 'store'])->name('clients.store');
     Route::get('/klienci/dodaj', [ClientController::class, 'create'])->name('clients.create');
     Route::get('/klienci/eksport', [ClientController::class, 'export'])->name('clients.export');
     Route::get('/klienci/{client}', [ClientController::class, 'show'])->name('clients.show');
-    Route::get('/klienci/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
     Route::put('/klienci/{client}', [ClientController::class, 'update'])->name('clients.update');
-    Route::post('/klienci', [ClientController::class, 'store'])->name('clients.store');
+    Route::get('/klienci/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+
+
 
 
     //  Projects
