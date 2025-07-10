@@ -20,6 +20,7 @@ class Client extends Model
         'email',
         'phone',
         'nip',
+        'source'
     ];
 
     public function payments(): HasMany
