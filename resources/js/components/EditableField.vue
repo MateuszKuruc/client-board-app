@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import InputText from '@volt/InputText.vue';
 import Select from '@volt/Select.vue';
-import { ref, watch} from 'vue';
 
-const props = defineProps({
+
+defineProps({
     label: String,
     isEditing: Boolean,
     modelValue: String,
@@ -17,10 +17,7 @@ const props = defineProps({
     },
 });
 
-const internalValue = ref(props.modelValue);
 
-// Watch for changes and emit updated value
-watch(internalValue, val => emit('update:modelValue', val));
 
 const emit = defineEmits(['update:modelValue']);
 </script>
@@ -32,7 +29,8 @@ const emit = defineEmits(['update:modelValue']);
         <Select
             v-if="isEditing && type === 'select'"
             :options="options"
-            v-model="internalValue"
+            :modelValue="modelValue"
+            @update:modelValue="(val) => emit('update:modelValue', val)"
         />
         <InputText
             v-else-if="isEditing"
