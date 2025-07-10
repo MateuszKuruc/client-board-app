@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import EditableField from '@/components/EditableField.vue';
+import PageHeading from '@/components/PageHeading.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import PageHeading from '@/components/PageHeading.vue';
-import SecondaryButton from '@volt/SecondaryButton.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,6 +30,24 @@ const form = useForm({
 });
 
 const isEditing = ref(false);
+
+function submitEdit() {
+    form.put(route('clients.update', props.client.slug), {
+       preserveScroll: true,
+        onSuccess: () => {
+           isEditing.value = false;
+        }
+    });
+}
+
+function startEdit() {
+    isEditing.value = !isEditing.value;
+}
+
+function cancelEdit() {
+    form.reset();
+    isEditing.value = !isEditing.value;
+}
 </script>
 
 <template>
@@ -39,7 +56,7 @@ const isEditing = ref(false);
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <!--            <PageHeading />-->
-            <PageHeading :title="form.name" :isEditing="isEditing" @toggleEdit="isEditing = !isEditing" />
+            <PageHeading :title="form.name" :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
             <!--PROFILE -->
 
             <div>
