@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import SectionHeading from '@/pages/clients/SectionHeading.vue';
-import DataTable from '@volt/DataTable.vue';
+import DataTable from '@/components/volt/DataTable.vue';
 import Column from 'primevue/column';
+import dayjs from '@/plugins/dayjs'
 
 defineProps({
     projects: Array,
@@ -16,8 +17,16 @@ defineProps({
     <DataTable v-if="projects.length > 1" class="mt-6" :value="projects" dataKey="id">
         <Column field="name" header="Projekt" />
         <Column field="service.name" header="Usługa" />
-        <Column field="start_date" header="Data startu" />
-        <Column field="end_date" header="Data zakończenia" />
+        <Column field="start_date" header="Data startu">
+            <template #body="{ data }">
+                {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
+            </template>
+        </Column>
+        <Column field="end_date" header="Data zakończenia">
+            <template #body="{ data }">
+                {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
+            </template>
+        </Column>
         <Column field="price" header="Cena" />
         <Column field="active" header="Aktywny">
             <template #body="{ data }">
