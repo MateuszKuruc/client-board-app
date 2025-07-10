@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Button from '@volt/Button.vue';
-import SecondaryButton from '@volt/SecondaryButton.vue';
+import Button from '@/components/volt/Button.vue';
+import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 
 defineProps({
     title: String,

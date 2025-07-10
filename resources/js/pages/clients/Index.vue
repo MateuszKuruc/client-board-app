@@ -6,10 +6,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
-import Button from '@volt/Button.vue';
-import ContrastButton from '@volt/ContrastButton.vue';
-import DataTable from '@volt/DataTable.vue';
-import Tag from '@volt/Tag.vue';
+import Button from '@/components/volt/Button.vue';
+import ContrastButton from '@/components/volt/ContrastButton.vue';
+import DataTable from '@/components/volt/DataTable.vue';
+import Tag from '@/components/volt/Tag.vue';
 import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
 

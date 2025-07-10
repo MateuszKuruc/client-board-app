@@ -1,7 +1,7 @@
 <script setup>
-import Button from '@volt/Button.vue';
-import InputText from '@volt/InputText.vue';
-import SecondaryButton from '@volt/SecondaryButton.vue';
+import Button from '@/components/volt/Button.vue';
+import InputText from '@/components/volt/InputText.vue';
+import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import { ChevronsDown, ChevronsUp, Search, FileDown } from 'lucide-vue-next';
 
 defineProps({

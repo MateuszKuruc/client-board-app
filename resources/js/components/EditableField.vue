@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import InputText from '@volt/InputText.vue';
-import Select from '@volt/Select.vue';
+import InputText from '@/components/volt/InputText.vue';
+import Select from '@/components/volt/Select.vue';
 
 
 defineProps({

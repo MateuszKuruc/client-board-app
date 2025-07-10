@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SingleHeading from '@/pages/clients/SingleHeading.vue';
 import SingleSubheading from '@/pages/clients/SingleSubheading.vue';
-import Divider from '@volt/Divider.vue';
+import Divider from '@/components/volt/Divider.vue';
 
 
 defineProps({

@@ -5,9 +5,9 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import Button from '@volt/Button.vue';
-import DataTable from '@volt/DataTable.vue';
-import Tag from '@volt/Tag.vue';
+import Button from '@/components/volt/Button.vue';
+import DataTable from '@/components/volt/DataTable.vue';
+import Tag from '@/components/volt/Tag.vue';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
 
