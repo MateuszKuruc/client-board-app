@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
             ExpenseSeeder::class,
             LeadSeeder::class,
+            TagSeeder::class,
         ]);
     }
 }
