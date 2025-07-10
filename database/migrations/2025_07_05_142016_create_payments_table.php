@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Project::class)->constrained()->cascadeOnDelete();
             $table->decimal('amount', 8, 2);
-            $table->enum('status', ['paid', 'pending']);
+            $table->enum('status', ['paid', 'pending', 'cancelled']);
             $table->date('payment_date')->nullable();
             $table->timestamps();
         });
