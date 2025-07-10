@@ -30,6 +30,13 @@ class ClientController extends Controller
         ]);
     }
 
+    public function show(Request $request, Client $client)
+    {
+        return Inertia::render('clients/Show', [
+            'client' => $client,
+        ]);
+    }
+
     public function export(Request $request)
     {
         $search = $request->input('search');
