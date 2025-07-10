@@ -12,6 +12,7 @@ import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
+import dayjs from '@/plugins/dayjs'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -48,9 +49,9 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients
                         </div>
                     </template>
                 </Column>
-                <Column field="email" header="Email"></Column>
-                <Column field="phone" header="Telefon"></Column>
-                <Column field="nip" header="NIP"></Column>
+                <Column field="email" header="Email" />
+                <Column field="phone" header="Telefon" />
+                <Column field="nip" header="NIP" />
 
                 <template #expansion="{ data }">
                     <div class="space-y-4 bg-gray-50 p-4">
@@ -64,8 +65,16 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients
                                         <Tag :value="data.service.name" severity="info"></Tag>
                                     </template>
                                 </Column>
-                                <Column field="start_date" header="Data startu" sortable />
-                                <Column field="end_date" header="Data zakończenia" sortable />
+                                <Column field="start_date" header="Data startu" sortable>
+                                    <template #body="{data}">
+                                        {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
+                                    </template>
+                                </Column>
+                                <Column field="end_date" header="Data zakończenia" sortable>
+                                    <template #body="{data}">
+                                        {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
+                                    </template>
+                                </Column>
                                 <Column field="price" header="Cena" sortable>
                                     <template #body="{ data: project }"> {{ Number(project.price).toFixed(2) }} zł </template>
                                 </Column>

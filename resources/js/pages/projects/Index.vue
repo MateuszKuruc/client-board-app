@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import Paginator from '@/components/Paginator.vue';
-import { useExpandableRows } from '@/composables/useExpandableRows';
-import { useServerSearch } from '@/composables/useServerSearch';
-import AppLayout from '@/layouts/AppLayout.vue';
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
-import type { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import Paginator from '@/components/Paginator.vue';
 import Button from '@/components/volt/Button.vue';
 import ContrastButton from '@/components/volt/ContrastButton.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
+import { useExpandableRows } from '@/composables/useExpandableRows';
+import { useServerSearch } from '@/composables/useServerSearch';
+import AppLayout from '@/layouts/AppLayout.vue';
+import dayjs from '@/plugins/dayjs';
+import type { BreadcrumbItem } from '@/types';
+import { Head, Link } from '@inertiajs/vue3';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
-
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,11 +32,14 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.project
 
 function getSortedPayments(project) {
     return [...project.payments].sort((a, b) => {
+        if (a.status === 'cancelled' && b.status !== 'cancelled') return 1;
+        if (a.status !== 'cancelled' && b.status === 'cancelled') return -1;
+
         if (!a.payment_date && b.payment_date) return -1;
         if (a.payment_date && !b.payment_date) return 1;
         if (!a.payment_date && !b.payment_date) return 0;
 
-        return new Date(b.payment_date) - new Date(a.payment_date);
+        return new Date(b.payment_date) - new Date(a.payment_date); // descending
     });
 }
 </script>
@@ -48,15 +51,28 @@ function getSortedPayments(project) {
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable v-model:expandedRows="expandedRows" :value="projects.data" dataKey="id" ref="dt">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :exportUrl="'projects.export'" :filters="filters" />
+                    <DataTableToolbar
+                        v-model="globalSearch"
+                        :onExpandAll="expandAll"
+                        :onCollapseAll="collapseAll"
+                        :exportUrl="'projects.export'"
+                        :filters="filters"
+                    />
                 </template>
                 <Column expander style="width: 5rem" />
-                <Column field="name" header="Projekt"></Column>
-                <Column field="client.name" header="Klient"></Column>
-                <!--            <Column field="active" header="Aktywny"></Column>-->
-                <Column field="price" header="Cena"></Column>
-                <Column field="start_date" header="Data startu"></Column>
-                <Column field="end_date" header="Data zakończenia"></Column>
+                <Column field="name" header="Projekt" />
+                <Column field="client.name" header="Klient" />
+                <Column field="price" header="Cena" />
+                <Column field="start_date" header="Data startu">
+                    <template #body="{ data }">
+                        {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
+                    </template>
+                </Column>
+                <Column field="end_date" header="Data zakończenia">
+                    <template #body="{ data }">
+                        {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
+                    </template>
+                </Column>
                 <Column header="Szczegóły">
                     <template #body="{ data }">
                         <Link :href="route('projects.show', { client: data.client.slug, project: data.id })">
@@ -74,14 +90,14 @@ function getSortedPayments(project) {
                                 <Column field="status" header="Status" sortable>
                                     <template #body="{ data }">
                                         <Tag
-                                            :value="data.status === 'paid' ? 'Opłacone' : 'Oczekujące'"
-                                            :severity="data.status === 'paid' ? 'success' : 'warn'"
-                                        ></Tag>
+                                            :value="data.status === 'paid' ? 'Opłacona' : data.status === 'pending' ? 'Oczekująca' : 'Anulowana'"
+                                            :severity="data.status === 'paid' ? 'success' : data.status === 'pending' ? 'info' : 'danger'"
+                                        />
                                     </template>
                                 </Column>
                                 <Column field="payment_date" header="Data płatności" sortable>
                                     <template #body="{ data }">
-                                        {{ data.payment_date ? data.payment_date : '-' }}
+                                        {{ data.payment_date ? dayjs(data.payment_date).format('DD.MM.YYYY') : '-' }}
                                     </template>
                                 </Column>
 

@@ -10,6 +10,7 @@ import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
+import dayjs from '@/plugins/dayjs'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -38,7 +39,7 @@ const { globalSearch } = useServerSearch(props.filters.search || '', 'payments.i
 
                 <Column field="status" header="Status">
                     <template #body="{ data }">
-                        <Tag :value="data.status === 'paid' ? 'Opłacone' : 'Oczekujące'" :severity="data.status === 'paid' ? 'success' : 'warn'" />
+                        <Tag :value="data.status === 'paid' ? 'Opłacona' : data.status === 'pending' ? 'Oczekująca' : 'Anulowana'" :severity="data.status === 'paid' ? 'success' : data.status === 'pending' ? 'info' : 'danger' " />
                     </template>
                 </Column>
                 <Column field="amount" header="Kwota"></Column>
@@ -46,10 +47,10 @@ const { globalSearch } = useServerSearch(props.filters.search || '', 'payments.i
                 <Column field="project.name" header="Projekt"></Column>
                 <Column field="payment_date" header="Data płatności">
                     <template #body="{ data }">
-                        {{ data.payment_date ? data.payment_date : '-' }}
+                        {{ data.payment_date ? dayjs(data.payment_date).format('DD.MM.YYYY') : '-' }}
                     </template>
                 </Column>
-                <Column header="Aktualizacja">
+                <Column>
                     <template #body="{ data }">
                         <!--                        <Link :href="route('projects.show', { client: data.client.slug, project: data.id })">-->
                         <Button><SquarePen />Edytuj</Button>
