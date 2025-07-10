@@ -2,7 +2,7 @@
 import Paginator from '@/components/Paginator.vue';
 import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
-import DataTableToolbar from '@/pages/clients/DataTableToolbar.vue';
+import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import Button from '@volt/Button.vue';

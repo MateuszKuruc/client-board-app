@@ -3,7 +3,7 @@ import Paginator from '@/components/Paginator.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
 import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
-import DataTableToolbar from '@/pages/clients/DataTableToolbar.vue';
+import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import Button from '@volt/Button.vue';
