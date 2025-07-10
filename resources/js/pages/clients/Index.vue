@@ -65,7 +65,7 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients
                                     </template>
                                 </Column>
                                 <Column field="start_date" header="Data startu" sortable />
-                                <Column field="end_date" header="Data końca" sortable />
+                                <Column field="end_date" header="Data zakończenia" sortable />
                                 <Column field="price" header="Cena" sortable>
                                     <template #body="{ data: project }"> {{ Number(project.price).toFixed(2) }} zł </template>
                                 </Column>
