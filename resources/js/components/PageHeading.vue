@@ -7,10 +7,18 @@ defineProps({
     isEditing: Boolean,
 });
 
-const emit = defineEmits(['toggleEdit']);
+const emit = defineEmits(['cancel', 'edit', 'save']);
 
-function toggleEditing() {
-    emit('toggleEdit');
+function onCancel() {
+    emit('cancel');
+}
+
+function onEdit() {
+    emit('edit');
+}
+
+function onSave() {
+    emit('save');
 }
 </script>
 
@@ -71,7 +79,7 @@ function toggleEditing() {
             <span>
                 <SecondaryButton
                     v-if="!isEditing"
-                    @click="toggleEditing"
+                    @click="onEdit"
                     class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
                 >
                     <svg class="mr-1.5 -ml-0.5 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -84,7 +92,7 @@ function toggleEditing() {
 
                 <SecondaryButton
                     v-if="isEditing"
-                    @click="toggleEditing"
+                    @click="onCancel"
                     class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
                 >
                     <svg class="mr-1.5 -ml-0.5 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -99,6 +107,7 @@ function toggleEditing() {
             <span class="sm:ml-3">
                 <Button
                     v-if="isEditing"
+                    @click="onSave"
                     class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                     <svg class="mr-1.5 -ml-0.5 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
