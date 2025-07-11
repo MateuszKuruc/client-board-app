@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
             $table->boolean('active');
             $table->decimal('price', 8, 2);
+            $table->enum('type', ['subscription', 'one_time', 'mixed']);
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();

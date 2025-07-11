@@ -29,6 +29,7 @@ class ProjectFactory extends Factory
             'service_id' => Service::inRandomOrder()->value('id'),
             'active' => $this->faker->boolean(80),
             'price' => $this->faker->randomFloat(2, 1000, 10000),
+            'type' => $this->faker->randomElement(['subscription', 'one_time', 'mixed']),
             'start_date' => $start,
             'end_date' => $end,
         ];
