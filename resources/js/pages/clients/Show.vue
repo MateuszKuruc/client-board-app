@@ -1,24 +1,27 @@
 <script setup lang="ts">
+import ActionButtons from '@/components/ActionButtons.vue';
+import BarChart from '@/components/BarChart.vue';
 import EditableField from '@/components/EditableField.vue';
 import PageHeading from '@/components/PageHeading.vue';
+import Card from '@/components/volt/Card.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import ProjectsTable from '@/pages/clients/ProjectsTable.vue';
 import SectionHeading from '@/pages/clients/SectionHeading.vue';
+import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
-import DataTable from '@volt/DataTable.vue';
-import Column from 'primevue/column';
-import { ref } from 'vue';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Klienci',
-        href: '/klienci',
-    },
-];
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     client: Object,
 });
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Profil klienta',
+        href: `/klienci/${props.client.slug}`,
+    },
+];
 
 const form = useForm({
     id: props.client.id,
@@ -66,19 +69,100 @@ function cancelEdit() {
     form.reset();
     isEditing.value = !isEditing.value;
 }
+
+const expectedPaymentsTotal = props.client.projects
+    .filter((p) => p.active)
+    .reduce((total, project) => total + Number(project.price), 0)
+    .toFixed(2);
+
+const lifetimeValue = props.client.projects
+    .flatMap((p) => p.payments)
+    .filter((p) => p.status === 'paid')
+    .reduce((total, project) => total + Number(project.amount), 0)
+    .toFixed(2);
+
+const monthlyTotals = computed(() => {
+    const totals: Record<string, number> = {};
+
+    if (!props.client?.projects?.length) return totals;
+
+    props.client.projects
+        .flatMap((project: any) => project.payments || [])
+        .filter((payment: any) => payment.status === 'paid')
+        .forEach((payment: any) => {
+            const month = payment.payment_date?.slice(0, 7); // "YYYY-MM"
+            const amount = Number(payment.amount);
+            if (!month || isNaN(amount)) return;
+
+            if (!totals[month]) totals[month] = 0;
+            totals[month] += amount;
+        });
+
+    return totals;
+});
+
+const sortedMonths = computed(() => Object.keys(monthlyTotals.value).sort());
+const chartLabels = computed(() => sortedMonths.value.map((month) => dayjs(month).format('MMM YYYY')));
+const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTotals.value[month]));
+
+// Debug output
+console.log('Monthly Totals:', monthlyTotals.value);
+console.log('Labels:', chartLabels.value);
+console.log('Values:', chartValues.value);
+console.log(lifetimeValue);
+console.log(expectedPaymentsTotal);
 </script>
 
 <template>
-    <Head title="Klienci" />
+    <Head :title="breadcrumbs[0].title" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <!--            <PageHeading />-->
-            <PageHeading :title="form.name" :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
-            <!--PROFILE -->
+            <!--            <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />-->
+            <PageHeading :title="form.name" :client="client" />
+
+            <!--            <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />-->
+
+            <div class="grid grid-cols-3 gap-4 py-8">
+                <Card class="flex h-60 justify-center border text-center">
+                    <template #title>Ostatni miesiąc</template>
+                    <template #subtitle>Card subtitle</template>
+                    <template #content>
+                        <p class="text-3xl font-bold text-blue-600">
+                            {{ lifetimeValue }}
+                        </p>
+                    </template>
+                </Card>
+
+                <Card class="flex h-60 justify-center border text-center">
+                    <template #title>Łączna wartość </template>
+                    <template #subtitle>Card subtitle</template>
+                    <template #content>
+                        <p class="text-3xl font-bold text-blue-600">
+                            {{ lifetimeValue }}
+                        </p>
+                    </template>
+                </Card>
+
+                <Card class="flex h-60 justify-center border text-center">
+                    <template #title>Spodziewane płatności</template>
+                    <template #subtitle>Card subtitle</template>
+                    <template #content>
+                        <p class="text-3xl font-bold text-blue-600">
+                            {{ expectedPaymentsTotal }}
+                        </p>
+                        <p>
+                            <span class="text-red-600">do zapłaty: {{ (expectedPaymentsTotal - lifetimeValue).toFixed(2) }}</span>
+                        </p>
+                    </template>
+                </Card>
+            </div>
 
             <div>
-                <SectionHeading heading="Informacje o kliencie" subheading="Pełny profil klienta" />
+                <div class="flex items-center justify-between">
+                    <SectionHeading heading="Informacje o kliencie" subheading="Pełny profil klienta" />
+                    <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
+                </div>
                 <div class="mt-6 border-t border-gray-100">
                     <ul class="divide-y divide-gray-100">
                         <li v-for="field in editableFields" :key="field.key">
@@ -92,47 +176,27 @@ function cancelEdit() {
                         </li>
                     </ul>
 
+                    <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />
                     <!--                        Aktywne projekty -->
 
                     <div class="flex flex-col gap-12">
+                        <div class="mt-6">
+                            <ProjectsTable
+                                :projects="client.projects.filter((p) => p.active)"
+                                heading="Lista aktywnych projektów"
+                                subheading="Śledź projekty, które są aktualnie w toku"
+                            />
+                        </div>
 
+                        <div class="mt-6">
+                            <ProjectsTable
+                                :projects="client.projects.filter((p) => !p.active)"
+                                heading="Lista nieaktywnych projektów"
+                                subheading="Sprawdź zakończone lub wciąż nieopłacone projekty"
+                            />
+                        </div>
+                    </div>
 
-                    <div class="mt-6">
-                        <SectionHeading heading="Lista aktywnych projektów" subheading="Śledź projekty, które są aktualnie w realizacji" />
-                        <DataTable class="mt-6" :value="client.projects" dataKey="id">
-                            <Column field="name" header="Projekt" />
-                            <Column field="service.name" header="Usługa" />
-                            <Column field="start_date" header="Data startu" />
-                            <Column field="end_date" header="Data zakończenia" />
-                            <Column field="price" header="Cena" />
-                            <Column field="active" header="Aktywny">
-                                <template #body="{ data }">
-                                    <span class='text-green-600'>
-                                        Tak
-                                    </span>
-                                </template>
-                            </Column>
-                        </DataTable>
-                    </div>
-                    <!--                        Nieaktywne projekty -->
-                    <div class="mt-6">
-                        <SectionHeading heading="Lista nieaktywnych projektów" subheading="Sprawdź zakończone oraz anulowane projekty" />
-                        <DataTable class="mt-6" :value="client.projects" dataKey="id">
-                            <Column field="name" header="Projekt" />
-                            <Column field="service.name" header="Usługa" />
-                            <Column field="start_date" header="Data startu" />
-                            <Column field="end_date" header="Data zakończenia" />
-                            <Column field="price" header="Cena" />
-                            <Column field="active" header="Aktywny">
-                                <template #body="{ data }">
-                                    <span v-if="!data.active" class="text-red-600">
-                                        Nie
-                                    </span>
-                                </template>
-                            </Column>
-                        </DataTable>
-                    </div>
-                    </div>
                     <!--                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">-->
                     <!--                            <dt class="text-sm/6 font-medium text-gray-900">Attachments</dt>-->
                     <!--                            <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">-->
