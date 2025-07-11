@@ -4,23 +4,8 @@ import { computed } from 'vue';
 
 const props = defineProps({
     title: String,
-    isEditing: Boolean,
     client: Object,
 });
-
-const emit = defineEmits(['cancel', 'edit', 'save']);
-
-function onCancel() {
-    emit('cancel');
-}
-
-function onEdit() {
-    emit('edit');
-}
-
-function onSave() {
-    emit('save');
-}
 
 const firstPaidProjectDate = computed(() => {
     const paidPayments = props.client.projects
@@ -38,6 +23,28 @@ const lastPaidProjectEndDate = computed(() => {
     const sorted = paidPaymentsWithProject.sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
 
     return sorted.at(-1)?.project?.end_date || null;
+});
+
+const paymentType = computed(() => {
+    const activeProjects = props.client.projects.filter((p) => p.active);
+
+    const types = activeProjects.map((p) => p.type);
+
+    if (types.includes('mixed')) {
+        return 'Mieszane';
+    }
+
+    const hasSubscription = types.includes('subscription');
+    const hasOneTimeProjects = types.includes('one_time');
+
+    if (hasSubscription && hasOneTimeProjects) {
+        return 'Mieszane';
+    }
+
+    if (hasSubscription) return 'Subskrypcja';
+    if (hasOneTimeProjects) return 'Jednorazowe';
+
+    return null;
 });
 </script>
 
@@ -80,7 +87,7 @@ const lastPaidProjectEndDate = computed(() => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                    Subskrypcja + dodatkowe
+                    Płatności: {{ paymentType || 'Brak danych' }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -90,7 +97,7 @@ const lastPaidProjectEndDate = computed(() => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                    Klient od {{ dayjs(firstPaidProjectDate).format('DD.MM.YYYY') || 'Brak danych' }}
+                    Klient od: {{ client.projects.some((p) => p.active) ? dayjs(firstPaidProjectDate).format('DD.MM.YYYY') : 'Brak płatności' }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -100,7 +107,7 @@ const lastPaidProjectEndDate = computed(() => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                    Opłacony do {{ dayjs(lastPaidProjectEndDate).format('DD.MM.YYYY') || 'Brak danych' }}
+                    Opłacony do: {{ client.projects.some((p) => p.active) ? dayjs(lastPaidProjectEndDate).format('DD.MM.YYYY') : 'Brak płatności' }}
                 </div>
             </div>
         </div>
