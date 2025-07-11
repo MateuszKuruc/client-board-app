@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('nip')->nullable();
             $table->enum('source',
                 ['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne']);
+            $table->enum('location', ['local', 'remote', 'international']);
             $table->timestamps();
         });
     }

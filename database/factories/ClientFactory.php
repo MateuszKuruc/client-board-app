@@ -28,7 +28,8 @@ class ClientFactory extends Factory
             'nip' => $this->faker->randomNumber(9, true),
             'source' => $this->faker->randomElement([
                 'Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne'
-            ])
+            ]),
+            'location' => $this->faker->randomElement(['local', 'remote', 'international']),
         ];
     }
 }
