@@ -14,7 +14,7 @@ defineProps({
 <template>
     <SectionHeading :heading="heading" :subheading="subheading" />
     <span v-if="projects.length < 1" class="mt-4 block text-xl font-semibold">Brak</span>
-    <DataTable v-if="projects.length > 1" class="mt-6" :value="projects" dataKey="id">
+    <DataTable v-if="projects.length >= 1" class="mt-6" :value="projects" dataKey="id">
         <Column field="name" header="Projekt" />
         <Column field="service.name" header="Usługa" />
         <Column field="start_date" header="Data startu">
