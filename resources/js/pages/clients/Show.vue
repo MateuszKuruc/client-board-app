@@ -9,37 +9,37 @@ import ProjectsTable from '@/pages/clients/ProjectsTable.vue';
 import SectionHeading from '@/pages/clients/SectionHeading.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
+import { Client, Source, Payment, Project } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, Ref } from 'vue';
 
-const props = defineProps({
-    client: Object,
-});
+const { client } = defineProps<{
+    client: Client;
+}>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Profil klienta',
-        href: `/klienci/${props.client.slug}`,
+        href: `/klienci/${client.slug}`,
     },
 ];
 
-const form = useForm({
-    id: props.client.id,
-    name: props.client.name,
-    slug: props.client.slug,
-    email: props.client.email,
-    phone: props.client.phone,
-    nip: props.client.nip,
-    source: props.client.source,
-    created_at: props.client.created_at,
-    updated_at: props.client.updated_at,
-});
+type editableFields =
+    | {
+          key: string;
+          label: string;
+          type?: 'text';
+      }
+    | {
+          key: string;
+          label: string;
+          type: 'select';
+          options: sourceOptions;
+      };
 
-const isEditing = ref(false);
+const sourceOptions: Source[] = ['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne'];
 
-const sourceOptions = ['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne'];
-
-const editableFields = [
+const editableFields: editableFields = [
     { key: 'name', label: 'Nazwa' },
     { key: 'email', label: 'Email' },
     { key: 'phone', label: 'Telefon' },
@@ -50,10 +50,25 @@ const editableFields = [
         type: 'select',
         options: sourceOptions,
     },
-];
+] as const;
+
+const form = useForm<Client>({
+    id: client.id,
+    name: client.name,
+    slug: client.slug,
+    email: client.email,
+    phone: client.phone,
+    nip: client.nip,
+    source: client.source,
+    location: client.location,
+    created_at: client.created_at,
+    updated_at: client.updated_at,
+});
+
+const isEditing: Ref<boolean> = ref(false);
 
 function submitEdit() {
-    form.put(route('clients.update', props.client.slug), {
+    form.put(route('clients.update', client.slug), {
         preserveScroll: true,
         onSuccess: () => {
             isEditing.value = false;
@@ -70,26 +85,26 @@ function cancelEdit() {
     isEditing.value = !isEditing.value;
 }
 
-const expectedPaymentsTotal = props.client.projects
+const expectedPaymentsTotal = client.projects
     .filter((p) => p.active)
     .reduce((total, project) => total + Number(project.price), 0)
     .toFixed(2);
 
-const lifetimeValue = props.client.projects
+const lifetimeValue = client.projects
     .flatMap((p) => p.payments)
     .filter((p) => p.status === 'paid')
     .reduce((total, project) => total + Number(project.amount), 0)
     .toFixed(2);
 
-const monthlyTotals = computed(() => {
+const monthlyTotals = computed<Record<string, number>>(() => {
     const totals: Record<string, number> = {};
 
-    if (!props.client?.projects?.length) return totals;
+    if (!client?.projects?.length) return totals;
 
-    props.client.projects
-        .flatMap((project: any) => project.payments || [])
-        .filter((payment: any) => payment.status === 'paid')
-        .forEach((payment: any) => {
+    client.projects
+        .flatMap((project) => project.payments || [])
+        .filter((payment) => payment.status === 'paid')
+        .forEach((payment) => {
             const month = payment.payment_date?.slice(0, 7); // "YYYY-MM"
             const amount = Number(payment.amount);
             if (!month || isNaN(amount)) return;
@@ -104,13 +119,6 @@ const monthlyTotals = computed(() => {
 const sortedMonths = computed(() => Object.keys(monthlyTotals.value).sort());
 const chartLabels = computed(() => sortedMonths.value.map((month) => dayjs(month).format('MMM YYYY')));
 const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTotals.value[month]));
-
-// Debug output
-console.log('Monthly Totals:', monthlyTotals.value);
-console.log('Labels:', chartLabels.value);
-console.log('Values:', chartValues.value);
-console.log(lifetimeValue);
-console.log(expectedPaymentsTotal);
 </script>
 
 <template>
