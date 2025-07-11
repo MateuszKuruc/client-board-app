@@ -10,6 +10,7 @@ import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
+import type { Lead, Paginated, Filters } from '@/types/models';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,12 +19,13 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const props = defineProps({
-    leads: Object,
-    filters: Object,
-});
+const { leads, filters} = defineProps<{
+    leads: Paginated<Lead>;
+    filters: Filters
+}>();
 
-const { globalSearch } = useServerSearch(props.filters.search || '', 'leads.index');
+
+const { globalSearch } = useServerSearch(filters.search || '', 'leads.index');
 </script>
 
 <template>
