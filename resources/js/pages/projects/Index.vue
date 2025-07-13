@@ -10,6 +10,7 @@ import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
+import { Filter, Paginated, Payment, Project } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
@@ -21,14 +22,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const props = defineProps({
-    projects: Object,
-    filters: Object,
-});
+const { projects, filters } = defineProps<{
+    projects: Paginated<Project>;
+    filters: Filter;
+}>();
 
-const { globalSearch } = useServerSearch(props.filters.search || '', 'projects.index');
+const { globalSearch } = useServerSearch(filters.search || '', 'projects.index');
 
-const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.projects.data);
+const { expandedRows, expandAll, collapseAll } = useExpandableRows(projects.data);
 
 function getSortedPayments(project) {
     return [...project.payments].sort((a, b) => {
@@ -62,20 +63,22 @@ function getSortedPayments(project) {
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Projekt" />
                 <Column field="client.name" header="Klient" />
-                <Column field="price" header="Cena" />
+                <Column field="price" header="Cena">
+                    <template #body="{ data }: { data: Project }"> {{ data.price }} zł </template>
+                </Column>
                 <Column field="start_date" header="Data startu">
-                    <template #body="{ data }">
+                    <template #body="{ data }: { data: Project }">
                         {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
                     </template>
                 </Column>
                 <Column field="end_date" header="Data zakończenia">
-                    <template #body="{ data }">
+                    <template #body="{ data }: { data: Project }">
                         {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
                     </template>
                 </Column>
                 <Column header="Szczegóły">
-                    <template #body="{ data }">
-                        <Link :href="route('projects.show', { client: data.client.slug, project: data.id })">
+                    <template #body="{ data }: { data: Project }">
+                        <Link :href="route('projects.show', { client: data.client?.slug, project: data.id })">
                             <Button><FolderOpenDot /></Button>
                         </Link>
                     </template>
@@ -88,7 +91,7 @@ function getSortedPayments(project) {
                             <DataTable :value="getSortedPayments(data)" dataKey="id" scrollable scrollHeight="200px" removableSort>
                                 <Column field="amount" header="Kwota" sortable />
                                 <Column field="status" header="Status" sortable>
-                                    <template #body="{ data }">
+                                    <template #body="{ data }: { data: Payment }">
                                         <Tag
                                             :value="data.status === 'paid' ? 'Opłacona' : data.status === 'pending' ? 'Oczekująca' : 'Anulowana'"
                                             :severity="data.status === 'paid' ? 'success' : data.status === 'pending' ? 'info' : 'danger'"
@@ -96,13 +99,13 @@ function getSortedPayments(project) {
                                     </template>
                                 </Column>
                                 <Column field="payment_date" header="Data płatności" sortable>
-                                    <template #body="{ data }">
+                                    <template #body="{ data }: { data: Payment }">
                                         {{ data.payment_date ? dayjs(data.payment_date).format('DD.MM.YYYY') : '-' }}
                                     </template>
                                 </Column>
 
                                 <Column header="Akcja">
-                                    <template #body="{ data }">
+                                    <template #body="{ data }: { data: Payment }">
                                         <Link :href="route('payments.show', { project: data.project_id, payment: data.id })">
                                             <ContrastButton severity="info" label="Szczegóły płatności" />
                                         </Link>
