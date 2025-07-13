@@ -48,8 +48,10 @@ const theme = ref<ButtonPassThroughOptions>({
         p-text:text-surface-500 enabled:hover:p-text:text-surface-500 enabled:active:p-text:text-surface-500
         dark:p-text:bg-transparent dark:enabled:hover:p-text:bg-surface-800 dark:enabled:active:p-text:bg-surface-700
         dark:p-text:border-transparent dark:enabled:hover:p-text:border-transparent dark:enabled:active:p-text:border-transparent
-        dark:p-text:text-surface-400 dark:enabled:hover:p-text:text-surface-400 dark:enabled:active:p-text:text-surface-400
+        dark:p-text:text-surface-400 dark:enabled:hover:p-text:text-surface-400 dark:enabled:active:p-text:text-surface-400 items-center rounded-md bg-white text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50
     `,
+
+
     loadingIcon: ``,
     icon: `p-right:order-1 p-bottom:order-2`,
     label: `font-medium p-icon-only:invisible p-icon-only:w-0
