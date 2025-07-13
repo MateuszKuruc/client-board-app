@@ -3,14 +3,17 @@ import ActionButtons from '@/components/ActionButtons.vue';
 import BarChart from '@/components/BarChart.vue';
 import EditableField from '@/components/EditableField.vue';
 import PageHeading from '@/components/PageHeading.vue';
-import Card from '@/components/volt/Card.vue';
+import ProjectsTable from '@/components/ProjectsTable.vue';
+import SectionHeading from '@/components/SectionHeading.vue';
+import TagSection from '@/components/TagSection.vue';
+import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import ProjectsTable from '@/pages/clients/ProjectsTable.vue';
-import SectionHeading from '@/pages/clients/SectionHeading.vue';
+import ReusableCard from '@/pages/clients/ReusableCard.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Client, Source, Payment, Project } from '@/types/models';
+import { Client, Source } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
+import { Plus } from 'lucide-vue-next';
 import { computed, ref, Ref } from 'vue';
 
 const { client } = defineProps<{
@@ -85,10 +88,20 @@ function cancelEdit() {
     isEditing.value = !isEditing.value;
 }
 
-const expectedPaymentsTotal = client.projects
+const expectedActivePaymentsTotal = client.projects
     .filter((p) => p.active)
     .reduce((total, project) => total + Number(project.price), 0)
     .toFixed(2);
+
+const activeProjects = client.projects.filter((p) => p.active);
+
+const activePaidProjects = activeProjects
+    .flatMap((p) => p.payments)
+    .filter((p) => p.status === 'paid')
+    .reduce((total, payment) => total + Number(payment.amount), 0)
+    .toFixed(2);
+
+const remainingPaymentsSum = (expectedActivePaymentsTotal - activePaidProjects).toFixed(2);
 
 const lifetimeValue = client.projects
     .flatMap((p) => p.payments)
@@ -116,6 +129,19 @@ const monthlyTotals = computed<Record<string, number>>(() => {
     return totals;
 });
 
+const lastMonthPaidTotal = computed<string>(() => {
+    const now = new Date();
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+    const targetMonth = lastMonth.toISOString().slice(0, 7);
+
+    return client.projects
+        .flatMap((p) => p.payments || null)
+        .filter((p) => p.status === 'paid' && p.payment_date.startsWith(targetMonth))
+        .reduce((total, p) => total + Number(p.amount), 0)
+        .toFixed(2);
+});
+
 const sortedMonths = computed(() => Object.keys(monthlyTotals.value).sort());
 const chartLabels = computed(() => sortedMonths.value.map((month) => dayjs(month).format('MMM YYYY')));
 const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTotals.value[month]));
@@ -128,45 +154,23 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <!--            <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />-->
             <PageHeading :title="form.name" :client="client" />
+            <TagSection />
 
             <!--            <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />-->
 
             <div class="grid grid-cols-3 gap-4 py-8">
-                <Card class="flex h-60 justify-center border text-center">
-                    <template #title>Ostatni miesiąc</template>
-                    <template #subtitle>Card subtitle</template>
-                    <template #content>
-                        <p class="text-3xl font-bold text-blue-600">
-                            {{ lifetimeValue }}
-                        </p>
-                    </template>
-                </Card>
-
-                <Card class="flex h-60 justify-center border text-center">
-                    <template #title>Łączna wartość </template>
-                    <template #subtitle>Card subtitle</template>
-                    <template #content>
-                        <p class="text-3xl font-bold text-blue-600">
-                            {{ lifetimeValue }}
-                        </p>
-                    </template>
-                </Card>
-
-                <Card class="flex h-60 justify-center border text-center">
-                    <template #title>Spodziewane płatności</template>
-                    <template #subtitle>Card subtitle</template>
-                    <template #content>
-                        <p class="text-3xl font-bold text-blue-600">
-                            {{ expectedPaymentsTotal }}
-                        </p>
-                        <p>
-                            <span class="text-red-600">do zapłaty: {{ (expectedPaymentsTotal - lifetimeValue).toFixed(2) }}</span>
-                        </p>
-                    </template>
-                </Card>
+                <ReusableCard :value="lifetimeValue" heading="Łączna wartość klienta" subheading="Lifetime value" />
+                <ReusableCard :value="lastMonthPaidTotal" heading="Ostatni miesiąc" subheading="Opłacone usługi" />
+                <ReusableCard
+                    :value="expectedActivePaymentsTotal"
+                    heading="Spodziewane płatności"
+                    subheading="Dotyczy aktywnych projektów"
+                    :secondValue="remainingPaymentsSum"
+                />
             </div>
 
             <div>
+<!--                <TagSection />-->
                 <div class="flex items-center justify-between">
                     <SectionHeading heading="Informacje o kliencie" subheading="Pełny profil klienta" />
                     <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
@@ -185,14 +189,15 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                     </ul>
 
                     <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />
-                    <!--                        Aktywne projekty -->
+                    <!--                        Projects -->
 
-                    <div class="flex flex-col gap-12">
+                    <div class="flex flex-col">
                         <div class="mt-6">
                             <ProjectsTable
                                 :projects="client.projects.filter((p) => p.active)"
                                 heading="Lista aktywnych projektów"
                                 subheading="Śledź projekty, które są aktualnie w toku"
+                                button
                             />
                         </div>
 
@@ -204,62 +209,16 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                             />
                         </div>
                     </div>
+                </div>
 
-                    <!--                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">-->
-                    <!--                            <dt class="text-sm/6 font-medium text-gray-900">Attachments</dt>-->
-                    <!--                            <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">-->
-                    <!--                                <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">-->
-                    <!--                                    <li class="flex items-center justify-between py-4 pr-5 pl-4 text-sm/6">-->
-                    <!--                                        <div class="flex w-0 flex-1 items-center">-->
-                    <!--                                            <svg-->
-                    <!--                                                class="size-5 shrink-0 text-gray-400"-->
-                    <!--                                                viewBox="0 0 20 20"-->
-                    <!--                                                fill="currentColor"-->
-                    <!--                                                aria-hidden="true"-->
-                    <!--                                                data-slot="icon"-->
-                    <!--                                            >-->
-                    <!--                                                <path-->
-                    <!--                                                    fill-rule="evenodd"-->
-                    <!--                                                    d="M15.621 4.379a3 3 0 0 0-4.242 0l-7 7a3 3 0 0 0 4.241 4.243h.001l.497-.5a.75.75 0 0 1 1.064 1.057l-.498.501-.002.002a4.5 4.5 0 0 1-6.364-6.364l7-7a4.5 4.5 0 0 1 6.368 6.36l-3.455 3.553A2.625 2.625 0 1 1 9.52 9.52l3.45-3.451a.75.75 0 1 1 1.061 1.06l-3.45 3.451a1.125 1.125 0 0 0 1.587 1.595l3.454-3.553a3 3 0 0 0 0-4.242Z"-->
-                    <!--                                                    clip-rule="evenodd"-->
-                    <!--                                                />-->
-                    <!--                                            </svg>-->
-                    <!--                                            <div class="ml-4 flex min-w-0 flex-1 gap-2">-->
-                    <!--                                                <span class="truncate font-medium">resume_back_end_developer.pdf</span>-->
-                    <!--                                                <span class="shrink-0 text-gray-400">2.4mb</span>-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="ml-4 shrink-0">-->
-                    <!--                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>-->
-                    <!--                                        </div>-->
-                    <!--                                    </li>-->
-                    <!--                                    <li class="flex items-center justify-between py-4 pr-5 pl-4 text-sm/6">-->
-                    <!--                                        <div class="flex w-0 flex-1 items-center">-->
-                    <!--                                            <svg-->
-                    <!--                                                class="size-5 shrink-0 text-gray-400"-->
-                    <!--                                                viewBox="0 0 20 20"-->
-                    <!--                                                fill="currentColor"-->
-                    <!--                                                aria-hidden="true"-->
-                    <!--                                                data-slot="icon"-->
-                    <!--                                            >-->
-                    <!--                                                <path-->
-                    <!--                                                    fill-rule="evenodd"-->
-                    <!--                                                    d="M15.621 4.379a3 3 0 0 0-4.242 0l-7 7a3 3 0 0 0 4.241 4.243h.001l.497-.5a.75.75 0 0 1 1.064 1.057l-.498.501-.002.002a4.5 4.5 0 0 1-6.364-6.364l7-7a4.5 4.5 0 0 1 6.368 6.36l-3.455 3.553A2.625 2.625 0 1 1 9.52 9.52l3.45-3.451a.75.75 0 1 1 1.061 1.06l-3.45 3.451a1.125 1.125 0 0 0 1.587 1.595l3.454-3.553a3 3 0 0 0 0-4.242Z"-->
-                    <!--                                                    clip-rule="evenodd"-->
-                    <!--                                                />-->
-                    <!--                                            </svg>-->
-                    <!--                                            <div class="ml-4 flex min-w-0 flex-1 gap-2">-->
-                    <!--                                                <span class="truncate font-medium">coverletter_back_end_developer.pdf</span>-->
-                    <!--                                                <span class="shrink-0 text-gray-400">4.5mb</span>-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="ml-4 shrink-0">-->
-                    <!--                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>-->
-                    <!--                                        </div>-->
-                    <!--                                    </li>-->
-                    <!--                                </ul>-->
-                    <!--                            </dd>-->
-                    <!--                        </div>-->
+                <div class="mt-6">
+                    <div class="flex items-center justify-between">
+                        <SectionHeading heading="Notatki" subheading="Sprawdź dodatkowe informacje o kliencie" />
+                        <SecondaryButton>
+                            <Plus class="text-gray-400" />
+                            Dodaj notatkę</SecondaryButton
+                        >
+                    </div>
                 </div>
             </div>
         </div>
