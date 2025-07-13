@@ -11,7 +11,7 @@ const { heading, subheading, divider } = defineProps<{
 </script>
 
 <template>
-    <div class="px-4 sm:px-0">
+    <div class="px-4 sm:px-0 my-8">
         <SingleHeading :heading="heading" />
         <SingleSubheading :subheading="subheading" />
         <Divider v-if="divider" />
