@@ -1,19 +1,33 @@
 <script setup lang="ts">
-import DataTable from '@/components/volt/DataTable.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
+import DataTable from '@/components/volt/DataTable.vue';
+import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import dayjs from '@/plugins/dayjs';
 import { Project } from '@/types/models';
+import { Plus } from 'lucide-vue-next';
 import Column from 'primevue/column';
 
-const { projects, heading, subheading } = defineProps<{
-    projects: Project[];
-    heading: string;
-    subheading?: string;
-}>();
+const { projects, heading, subheading } = withDefaults(
+    defineProps<{
+        projects: Project[];
+        heading: string;
+        subheading?: string;
+        button?: boolean;
+    }>(),
+    {
+        button: false,
+    },
+);
 </script>
 
 <template>
-    <SectionHeading :heading="heading" :subheading="subheading" />
+    <div class="flex items-center justify-between">
+        <SectionHeading :heading="heading" :subheading="subheading" />
+        <SecondaryButton v-if="button">
+            <Plus class="text-gray-400 w-5" />
+            Dodaj projekt</SecondaryButton
+        >
+    </div>
     <span v-if="projects.length < 1" class="mt-4 block text-xl font-semibold">Brak</span>
     <DataTable v-if="projects.length >= 1" class="mt-6" :value="projects" dataKey="id">
         <Column field="name" header="Projekt" />
