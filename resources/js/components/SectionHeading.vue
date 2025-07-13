@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import SingleHeading from '@/pages/clients/SingleHeading.vue';
-import SingleSubheading from '@/pages/clients/SingleSubheading.vue';
 import Divider from '@/components/volt/Divider.vue';
+import SingleHeading from '@/components/SingleHeading.vue';
+import SingleSubheading from '@/components/SingleSubheading.vue';
 
-
-defineProps({
-    heading: String,
-    subheading: String,
-    divider: Boolean
-});
+const { heading, subheading, divider } = defineProps<{
+    heading: string;
+    subheading?: string;
+    divider?: boolean;
+}>();
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-defineProps({
-    subheading: String
-});
+const { subheading } = defineProps<{
+    subheading: string;
+}>();
 </script>
 
 <template>

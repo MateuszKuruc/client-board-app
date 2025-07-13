@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import SectionHeading from '@/pages/clients/SectionHeading.vue';
 import DataTable from '@/components/volt/DataTable.vue';
+import SectionHeading from '@/components/SectionHeading.vue';
+import dayjs from '@/plugins/dayjs';
+import { Project } from '@/types/models';
 import Column from 'primevue/column';
-import dayjs from '@/plugins/dayjs'
 
-defineProps({
-    projects: Array,
-    heading: String,
-    subheading: String,
-});
+const { projects, heading, subheading } = defineProps<{
+    projects: Project[];
+    heading: string;
+    subheading?: string;
+}>();
 </script>
 
 <template>
@@ -18,18 +19,18 @@ defineProps({
         <Column field="name" header="Projekt" />
         <Column field="service.name" header="Usługa" />
         <Column field="start_date" header="Data startu">
-            <template #body="{ data }">
+            <template #body="{ data }: { data: Project }">
                 {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
             </template>
         </Column>
         <Column field="end_date" header="Data zakończenia">
-            <template #body="{ data }">
+            <template #body="{ data }: { data: Project }">
                 {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
             </template>
         </Column>
         <Column field="price" header="Cena" />
         <Column field="active" header="Aktywny">
-            <template #body="{ data }">
+            <template #body="{ data }: { data: Project }">
                 <span :class="data.active ? 'text-green-600' : 'text-red-600'">
                     {{ data.active ? 'Tak' : 'Nie' }}
                 </span>
