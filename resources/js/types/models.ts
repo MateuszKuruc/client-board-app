@@ -10,6 +10,18 @@ export interface Lead {
 
 export type Source = 'Strona internetowa' | 'Social media' | 'Polecenie' | 'Ads' | 'Grupki' | 'Useme' | 'Inne';
 
+export type Services =
+    | 'Web Development'
+    | 'Meta Ads'
+    | 'Google Ads'
+    | 'TikTok Ads'
+    | 'Mailing'
+    | 'CRM'
+    | 'Pełna automatyzacja'
+    | 'Webinar'
+    | 'Lejek VSL'
+    | 'Prowadzenie social media';
+
 export type Location = 'local' | 'remote' | 'international';
 export interface Client {
     id: number;
