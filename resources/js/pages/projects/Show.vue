@@ -21,6 +21,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const serviceOptions: string[] = services.map((service) => service.name);
+const statusOptions: string[] = ['Aktywny', 'Nieaktywny'];
+const typeOptions: string[] = ['Subskrypcja', 'Standard'];
+
 type editableField =
     | {
           key: string;
@@ -52,9 +56,6 @@ const stringToActive = (status: string): boolean => {
     return status === 'Aktywny';
 };
 
-const serviceOptions: string[] = services.map((service) => service.name);
-const statusOptions: string[] = ['Aktywny', 'Nieaktywny'];
-
 const isEditing: Ref<boolean> = ref(false);
 
 function submitEdit() {
@@ -76,8 +77,9 @@ function submitEdit() {
             onBefore({ data }) {
                 console.log('🚀 payload about to go out:', data);
             },
-            onSuccess: () => {
+            onSuccess: (page) => {
                 isEditing.value = false;
+                form.price = page.props.project.price;
             },
         },
     );
@@ -93,23 +95,25 @@ function cancelEdit() {
 }
 
 const form = useForm<Project>({
-    // id: project.id,
     name: project.name,
-    // client_id: project.client_id,
     service_id: project.service_id,
-    service_name: serviceIdToName(project.service_id), // for UI display
+    service_name: serviceIdToName(project.service_id),
     active: project.active,
-    active_status: activeToString(project.active), // for UI display
+    active_status: activeToString(project.active),
     price: project.price,
     type: project.type,
     start_date: project.start_date,
     end_date: project.end_date,
-    // created_at: project.created_at,
-    // updated_at: project.updated_at,
 });
 
 const editableFields: editableField[] = [
     { key: 'name', label: 'Nazwa' },
+    {
+        key: 'service_name',
+        label: 'Usługa',
+        type: 'select',
+        options: serviceOptions,
+    },
     { key: 'price', label: 'Cena' },
     {
         key: 'active_status',
@@ -117,15 +121,10 @@ const editableFields: editableField[] = [
         type: 'select',
         options: statusOptions,
     },
-    { key: 'type', label: 'Rodzaj' },
+    { key: 'type', label: 'Rodzaj płatności', type: 'select', options: typeOptions },
     { key: 'start_date', label: 'Data startu' },
+
     { key: 'end_date', label: 'Data zakończenia' },
-    {
-        key: 'service_name',
-        label: 'Usługa',
-        type: 'select',
-        options: serviceOptions,
-    },
 ] as const;
 </script>
 
