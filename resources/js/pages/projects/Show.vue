@@ -132,7 +132,7 @@ const editableFields: editableField[] = [
     },
     { key: 'type', label: 'Rodzaj płatności', type: 'select', options: typeOptions },
     { key: 'start_date', label: 'Data startu', type: 'picker' },
-    { key: 'end_date', label: 'Data zakończenia', type: 'picker' },
+    { key: 'end_date', label: 'Data zakończenia', type: 'picker', minDate: new Date(form.start_date) },
 ] as const;
 </script>
 
@@ -146,7 +146,6 @@ const editableFields: editableField[] = [
                 <TagSection />
             </div>
 
-            <!--        test -->
             <div class="flex items-center justify-between">
                 <SectionHeading heading="Informacje o projekcie" subheading="Szczegółowe dane projektu" />
                 <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
@@ -161,6 +160,7 @@ const editableFields: editableField[] = [
                             :label="field.label"
                             :type="field.type || 'text'"
                             :options="field.options || []"
+                            :minDate="field.key === 'end_date' ? new Date(form.start_date) : undefined"
                         />
                     </li>
                 </ul>
