@@ -5,6 +5,7 @@ import PageHeadingProject from '@/components/PageHeadingProject.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import dayjs from '@/plugins/dayjs';
 import { Project, Service } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, Ref } from 'vue';
@@ -36,6 +37,11 @@ type editableField =
           label: string;
           type: 'select';
           options: string[];
+      }
+    | {
+          key: string;
+          label: string;
+          type: 'picker';
       };
 
 const serviceIdToName = (serviceId: number): string => {
@@ -63,6 +69,10 @@ function submitEdit() {
         data.service_id = serviceNameToId(data.service_name);
         data.active = stringToActive(data.active_status);
 
+        data.start_date = dayjs(data.start_date).format('YYYY-MM-DD');
+
+        data.end_date = dayjs(data.end_date).format('YYYY-MM-DD');
+
         delete data.service_name;
         delete data.active_status;
 
@@ -74,12 +84,11 @@ function submitEdit() {
         }),
         {
             preserveScroll: true,
-            onBefore({ data }) {
-                console.log('🚀 payload about to go out:', data);
-            },
             onSuccess: (page) => {
                 isEditing.value = false;
                 form.price = page.props.project.price;
+                form.start_date = page.props.project.start_date;
+                form.end_date = page.props.project.end_date;
             },
         },
     );
@@ -122,9 +131,8 @@ const editableFields: editableField[] = [
         options: statusOptions,
     },
     { key: 'type', label: 'Rodzaj płatności', type: 'select', options: typeOptions },
-    { key: 'start_date', label: 'Data startu' },
-
-    { key: 'end_date', label: 'Data zakończenia' },
+    { key: 'start_date', label: 'Data startu', type: 'picker' },
+    { key: 'end_date', label: 'Data zakończenia', type: 'picker' },
 ] as const;
 </script>
 
