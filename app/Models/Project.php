@@ -13,6 +13,11 @@ class Project extends Model
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'price' => 'decimal:2',
+        'active' => 'boolean',
+    ];
+
     protected $fillable = [
         'name',
         'client_id',
