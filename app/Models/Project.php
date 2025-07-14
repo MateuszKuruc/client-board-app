@@ -19,6 +19,7 @@ class Project extends Model
         'service_id',
         'active',
         'price',
+        'type',
         'start_date',
         'end_date',
     ];
