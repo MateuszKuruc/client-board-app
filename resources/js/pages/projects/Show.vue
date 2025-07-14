@@ -5,12 +5,13 @@ import PageHeadingProject from '@/components/PageHeadingProject.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Project, Services } from '@/types/models';
+import { Project, Service } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, Ref } from 'vue';
 
-const { project } = defineProps<{
+const { project, services } = defineProps<{
     project: Project;
+    services: Service[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -22,29 +23,64 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type editableField =
     | {
-    key: string;
-    label: string;
-    type?: 'text';
-}
+          key: string;
+          label: string;
+          type?: 'text';
+      }
     | {
-    key: string;
-    label: string;
-    type: 'select';
-    options: Services[];
+          key: string;
+          label: string;
+          type: 'select';
+          options: string[];
+      };
+
+const serviceIdToName = (serviceId: number): string => {
+    const service = services.find((s) => s.id === serviceId);
+    return service ? service.name : '';
 };
 
-const serviceOptions: Services[] = ['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne'];
+const serviceNameToId = (serviceName: string): number => {
+    const service = services.find((s) => s.name === serviceName);
+    return service ? service.id : 0;
+};
 
+const activeToString = (active: boolean): string => {
+    return active ? 'Aktywny' : 'Nieaktywny';
+};
+
+const stringToActive = (status: string): boolean => {
+    return status === 'Aktywny';
+};
+
+const serviceOptions: string[] = services.map((service) => service.name);
+const statusOptions: string[] = ['Aktywny', 'Nieaktywny'];
 
 const isEditing: Ref<boolean> = ref(false);
 
 function submitEdit() {
-    form.put(route('projects.update', project.id), {
-        preserveScroll: true,
-        onSuccess: () => {
-            isEditing.value = false;
+    form.transform((data) => {
+        data.service_id = serviceNameToId(data.service_name);
+        data.active = stringToActive(data.active_status);
+
+        delete data.service_name;
+        delete data.active_status;
+
+        return data;
+    }).put(
+        route('projects.update', {
+            client: project.client.slug,
+            project: project.id,
+        }),
+        {
+            preserveScroll: true,
+            onBefore({ data }) {
+                console.log('🚀 payload about to go out:', data);
+            },
+            onSuccess: () => {
+                isEditing.value = false;
+            },
         },
-    });
+    );
 }
 
 function startEdit() {
@@ -57,30 +93,35 @@ function cancelEdit() {
 }
 
 const form = useForm<Project>({
-    id: project.id,
+    // id: project.id,
     name: project.name,
-    client: project.client,
-    service: project.service,
+    // client_id: project.client_id,
+    service_id: project.service_id,
+    service_name: serviceIdToName(project.service_id), // for UI display
     active: project.active,
+    active_status: activeToString(project.active), // for UI display
     price: project.price,
     type: project.type,
     start_date: project.start_date,
     end_date: project.end_date,
-    created_at: project.created_at,
-    updated_at: project.updated_at,
+    // created_at: project.created_at,
+    // updated_at: project.updated_at,
 });
-
-
 
 const editableFields: editableField[] = [
     { key: 'name', label: 'Nazwa' },
     { key: 'price', label: 'Cena' },
-    { key: 'active', label: 'Status' },
+    {
+        key: 'active_status',
+        label: 'Status',
+        type: 'select',
+        options: statusOptions,
+    },
     { key: 'type', label: 'Rodzaj' },
     { key: 'start_date', label: 'Data startu' },
     { key: 'end_date', label: 'Data zakończenia' },
     {
-        key: 'service',
+        key: 'service_name',
         label: 'Usługa',
         type: 'select',
         options: serviceOptions,
