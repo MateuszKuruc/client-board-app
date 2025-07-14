@@ -13,6 +13,7 @@ import Tag from '@/components/volt/Tag.vue';
 import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
 import dayjs from '@/plugins/dayjs'
+import { Paginated, Client, Filters } from '@/types/models';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,14 +22,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const props = defineProps({
-    clients: Object,
-    filters: Object,
-});
+const { clients, filters } = defineProps<{
+    clients: Paginated<Client>;
+    filters: Filters
+}>();
 
-const { globalSearch } = useServerSearch(props.filters.search || '', 'clients.index');
+const { globalSearch } = useServerSearch(filters.search || '', 'clients.index');
 
-const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients.data);
+const { expandedRows, expandAll, collapseAll } = useExpandableRows(clients.data);
 </script>
 
 <template>
