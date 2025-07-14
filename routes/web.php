@@ -37,7 +37,9 @@ Route::middleware(['auth'])->group(function () {
     //  Projects
     Route::prefix('/klienci/{client}')->group(function () {
         Route::get('/projekty/{project}', [ProjectController::class, 'show'])->name('projects.show');
+        Route::put('/projekty/{project}', [ProjectController::class, 'update'])->name('projects.update');
         Route::get('/projekty/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+
     });
     Route::get('/projekty', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projekty/dodaj', [ProjectController::class, 'create'])->name('projects.create');
