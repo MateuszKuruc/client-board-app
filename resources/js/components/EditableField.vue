@@ -11,9 +11,10 @@ interface EditableFieldProps {
     modelValue: string | Date;
     type?: 'text' | 'select' | 'picker';
     options?: string[];
+    minDate?: string | Date;
 }
 
-const { label, isEditing, modelValue, type, options } = defineProps({
+const { label, isEditing, modelValue, type, options, minDate } = defineProps({
     label: String as PropType<EditableFieldProps['label']>,
     isEditing: Boolean as PropType<EditableFieldProps['isEditing']>,
     modelValue: [String, Date] as PropType<EditableFieldProps['modelValue']>,
@@ -25,6 +26,7 @@ const { label, isEditing, modelValue, type, options } = defineProps({
         type: Array as PropType<EditableFieldProps['options']>,
         default: () => [] as string[],
     },
+    minDate: [String, Date] as PropType<EditableFieldProps['minDate']>,
 } as const);
 
 const emit = defineEmits<{
@@ -53,8 +55,10 @@ const emit = defineEmits<{
         <DatePicker
             v-else-if="isEditing && type === 'picker'"
             showIcon
+            fluid
             iconDisplay="input"
             dateFormat="dd-mm-yy"
+            :minDate="minDate"
             :modelValue="modelValue"
             @update:modelValue="(val) => emit('update:modelValue', val)"
         />
