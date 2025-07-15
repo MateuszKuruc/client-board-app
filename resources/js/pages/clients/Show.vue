@@ -15,6 +15,9 @@ import { Client, Source } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Plus } from 'lucide-vue-next';
 import { computed, ref, Ref } from 'vue';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const { client } = defineProps<{
     client: Client;
@@ -75,7 +78,11 @@ function submitEdit() {
         preserveScroll: true,
         onSuccess: () => {
             isEditing.value = false;
+            toast.add({ severity: 'success', summary: 'Profil klienta zaktualizowany', detail: 'Zmiany zostały pomyślnie zapisane', life: 3000 });
         },
+        onError: () => {
+            toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Zmiany nie zostały zapisane', life: 3000 });
+        }
     });
 }
 
