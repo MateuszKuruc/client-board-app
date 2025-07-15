@@ -98,7 +98,7 @@ const paymentType = computed(() => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                    Klient od: {{ client.projects.some((p) => p.active) ? dayjs(firstPaidProjectDate).format('DD.MM.YYYY') : 'Brak płatności' }}
+                    Klient od: {{ firstPaidProjectDate ? dayjs(firstPaidProjectDate).format('DD.MM.YYYY') : 'Brak płatności' }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -108,7 +108,7 @@ const paymentType = computed(() => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                    Opłacony do: {{ client.projects.some((p) => p.active) ? dayjs(lastPaidProjectEndDate).format('DD.MM.YYYY') : 'Brak płatności' }}
+                    Opłacony do: {{ lastPaidProjectEndDate ? dayjs(lastPaidProjectEndDate).format('DD.MM.YYYY') : 'Brak płatności' }}
                 </div>
             </div>
         </div>
