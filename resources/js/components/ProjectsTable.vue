@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SectionHeading from '@/components/SectionHeading.vue';
 import DataTable from '@/components/volt/DataTable.vue';
+import Divider from '@/components/volt/Divider.vue';
 import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import dayjs from '@/plugins/dayjs';
 import { Project } from '@/types/models';
@@ -24,11 +25,14 @@ const { projects, heading, subheading } = withDefaults(
     <div class="flex items-center justify-between">
         <SectionHeading :heading="heading" :subheading="subheading" />
         <SecondaryButton v-if="button">
-            <Plus class="text-gray-400 w-5" />
+            <Plus class="w-5 text-gray-400" />
             Dodaj projekt</SecondaryButton
         >
     </div>
-    <span v-if="projects.length < 1" class="mt-4 block text-xl font-semibold">Brak</span>
+    <div v-if="projects.length < 1" class="mt-4 flex flex-col gap-4 text-xl font-semibold text-gray-500">
+        Brak
+        <Divider />
+    </div>
     <DataTable v-if="projects.length >= 1" class="mt-6" :value="projects" dataKey="id">
         <Column field="name" header="Projekt" />
         <Column field="service.name" header="Usługa" />

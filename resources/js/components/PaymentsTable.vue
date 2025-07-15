@@ -2,6 +2,7 @@
 import SectionHeading from '@/components/SectionHeading.vue';
 import Button from '@/components/volt/Button.vue';
 import DataTable from '@/components/volt/DataTable.vue';
+import Divider from '@/components/volt/Divider.vue';
 import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import dayjs from '@/plugins/dayjs';
 import { Payment } from '@/types/models';
@@ -29,7 +30,10 @@ const { heading, subheading, payments } = withDefaults(
             Dodaj projekt</SecondaryButton
         >
     </div>
-    <span v-if="payments.length < 1" class="mt-4 block text-xl font-semibold">Brak</span>
+    <div v-if="payments.length < 1" class="mt-4 flex flex-col gap-4 text-xl font-semibold text-gray-500">
+        Brak
+        <Divider />
+    </div>
     <DataTable v-if="payments.length >= 1" class="mt-6" :value="payments" dataKey="id">
         <Column field="amount" header="Kwota" />
         <Column field="status" header="Status">
