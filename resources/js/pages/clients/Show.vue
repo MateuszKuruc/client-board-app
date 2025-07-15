@@ -4,18 +4,18 @@ import BarChart from '@/components/BarChart.vue';
 import EditableField from '@/components/EditableField.vue';
 import PageHeadingClient from '@/components/PageHeadingClient.vue';
 import ProjectsTable from '@/components/ProjectsTable.vue';
+import ReusableCard from '@/components/ReusableCard.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import ReusableCard from '@/components/ReusableCard.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Client, Source } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Plus } from 'lucide-vue-next';
-import { computed, ref, Ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import { computed, ref, Ref } from 'vue';
 
 const toast = useToast();
 
@@ -82,7 +82,7 @@ function submitEdit() {
         },
         onError: () => {
             toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Zmiany nie zostały zapisane', life: 3000 });
-        }
+        },
     });
 }
 
@@ -95,26 +95,32 @@ function cancelEdit() {
     isEditing.value = !isEditing.value;
 }
 
-const expectedActivePaymentsTotal = Number(client.projects
-    .filter((p) => p.active)
-    .reduce((total, project) => total + Number(project.price), 0)
-    .toFixed(2));
+const expectedActivePaymentsTotal = Number(
+    client.projects
+        .filter((p) => p.active)
+        .reduce((total, project) => total + Number(project.price), 0)
+        .toFixed(2),
+);
 
 const activeProjects = client.projects.filter((p) => p.active);
 
-const activePaidProjects = Number(activeProjects
-    .flatMap((p) => p.payments)
-    .filter((p) => p.status === 'paid')
-    .reduce((total, payment) => total + Number(payment.amount), 0)
-    .toFixed(2));
+const activePaidProjects = Number(
+    activeProjects
+        .flatMap((p) => p.payments)
+        .filter((p) => p.status === 'paid')
+        .reduce((total, payment) => total + Number(payment.amount), 0)
+        .toFixed(2),
+);
 
 const remainingPaymentsSum = Number((expectedActivePaymentsTotal - activePaidProjects).toFixed(2));
 
-const lifetimeValue = Number(client.projects
-    .flatMap((p) => p.payments)
-    .filter((p) => p.status === 'paid')
-    .reduce((total, project) => total + Number(project.amount), 0)
-    .toFixed(2));
+const lifetimeValue = Number(
+    client.projects
+        .flatMap((p) => p.payments)
+        .filter((p) => p.status === 'paid')
+        .reduce((total, project) => total + Number(project.amount), 0)
+        .toFixed(2),
+);
 
 const monthlyTotals = computed<Record<string, number>>(() => {
     const totals: Record<string, number> = {};
@@ -142,11 +148,13 @@ const lastMonthPaidTotal = computed<string>(() => {
 
     const targetMonth = lastMonth.toISOString().slice(0, 7);
 
-    return Number(client.projects
-        .flatMap((p) => p.payments || null)
-        .filter((p) => p.status === 'paid' && p.payment_date.startsWith(targetMonth))
-        .reduce((total, p) => total + Number(p.amount), 0)
-        .toFixed(2));
+    return Number(
+        client.projects
+            .flatMap((p) => p.payments || null)
+            .filter((p) => p.status === 'paid' && p.payment_date.startsWith(targetMonth))
+            .reduce((total, p) => total + Number(p.amount), 0)
+            .toFixed(2),
+    );
 });
 
 const sortedMonths = computed(() => Object.keys(monthlyTotals.value).sort());
@@ -159,11 +167,8 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
-            <!--            <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />-->
             <PageHeadingClient :title="form.name" :client="client" />
             <TagSection />
-
-            <!--            <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />-->
 
             <div class="grid grid-cols-3 gap-4 py-8">
                 <ReusableCard :value="lifetimeValue" heading="Łączna wartość klienta" subheading="Lifetime value" />
@@ -177,7 +182,6 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
             </div>
 
             <div>
-<!--                <TagSection />-->
                 <div class="flex items-center justify-between">
                     <SectionHeading heading="Informacje o kliencie" subheading="Pełny profil klienta" />
                     <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
@@ -195,8 +199,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                         </li>
                     </ul>
 
-                    <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />
-                    <!--                        Projects -->
+                    <BarChart v-if="lifetimeValue" class="h-100" :labels="chartLabels" :values="chartValues" />
 
                     <div class="flex flex-col">
                         <div class="mt-6">
