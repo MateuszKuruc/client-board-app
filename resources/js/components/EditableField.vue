@@ -46,7 +46,7 @@ const emit = defineEmits<{
         </p>
 
         <p v-else-if="!isEditing && type === 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            {{ modelValue ? dayjs(modelValue).format('DD-MM-YYYY') : '-' }}
+            {{ modelValue ? dayjs(modelValue).format('DD.MM.YYYY') : '-' }}
         </p>
 
         <Select
