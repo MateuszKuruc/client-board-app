@@ -158,7 +158,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
     <Head :title="breadcrumbs[0].title" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
             <!--            <BarChart class="h-100" :labels="chartLabels" :values="chartValues" />-->
             <PageHeadingClient :title="form.name" :client="client" />
             <TagSection />
