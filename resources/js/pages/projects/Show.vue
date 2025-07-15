@@ -21,7 +21,19 @@ const { project, services } = defineProps<{
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: `Projekt: ${project.name}`,
+        title: 'Klienci',
+        href: route('clients.index'),
+    },
+    {
+        title: project.client.name,
+        href: route('clients.show', project.client.slug),
+    },
+    {
+        title: 'Projekty',
+        href: route('projects.index'),
+    },
+    {
+        title: project.name,
         href: `/klienci/${project.client.slug}/projekty/${project.id}`,
     },
 ];
