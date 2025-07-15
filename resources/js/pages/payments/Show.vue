@@ -17,6 +17,26 @@ const { payment } = defineProps<{
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
+        title: 'Klienci',
+        href: route('clients.index'),
+    },
+    {
+        title: payment.project.client.name,
+        href: route('clients.show', payment.project.client.slug),
+    },
+    {
+        title: 'Projekty',
+        href: route('projects.index'),
+    },
+    {
+        title: payment.project.name,
+        href: route('projects.show', { client: payment.project.client.slug, project: payment.project.id }),
+    },
+    {
+        title: 'Płatności',
+        href: route('payments.index'),
+    },
+    {
         title: `Płatność ${payment.id}`,
         href: `/klienci/${payment.project.client.slug}/projekty/${payment.project.id}/platnosci/${payment.id}`,
     },
