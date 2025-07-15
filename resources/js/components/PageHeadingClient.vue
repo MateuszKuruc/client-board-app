@@ -28,24 +28,13 @@ const lastPaidProjectEndDate = computed(() => {
 
 const paymentType = computed(() => {
     const activeProjects = client.projects.filter((p) => p.active);
-
     const types = activeProjects.map((p) => p.type);
 
-    if (types.includes('mixed')) {
-        return 'Mieszane';
-    }
+    if (types.includes('Subskrypcja') && types.includes('Standard')) return 'Mieszane';
+    if (types.includes('Subskrypcja')) return 'Subskrypcja';
+    if (types.includes('Standard')) return 'Standard';
 
-    const hasSubscription = types.includes('subscription');
-    const hasOneTimeProjects = types.includes('one_time');
-
-    if (hasSubscription && hasOneTimeProjects) {
-        return 'Mieszane';
-    }
-
-    if (hasSubscription) return 'Subskrypcja';
-    if (hasOneTimeProjects) return 'Jednorazowe';
-
-    return null;
+    return 'Brak danych';
 });
 </script>
 
@@ -88,7 +77,7 @@ const paymentType = computed(() => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                    Płatności: {{ paymentType || 'Brak danych' }}
+                    Płatności: {{ paymentType }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
