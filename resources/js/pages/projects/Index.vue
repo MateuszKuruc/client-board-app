@@ -84,29 +84,33 @@ function getSortedPayments(project) {
                     </template>
                 </Column>
 
-                <template #expansion="{ data }">
+                <template #expansion="{ data: project }">
                     <div class="space-y-4 bg-gray-50 p-4">
                         <h5 class="font-semibold">Historia płatności</h5>
-                        <div v-if="data.payments.length > 0">
-                            <DataTable :value="getSortedPayments(data)" dataKey="id" scrollable scrollHeight="200px" removableSort>
+                        <div v-if="project.payments.length > 0">
+                            <DataTable :value="getSortedPayments(project)" dataKey="id" scrollable scrollHeight="200px" removableSort>
                                 <Column field="amount" header="Kwota" sortable />
                                 <Column field="status" header="Status" sortable>
-                                    <template #body="{ data }: { data: Payment }">
+                                    <template #body="{ data: payment }: { data: Payment }">
                                         <Tag
-                                            :value="data.status === 'paid' ? 'Opłacona' : data.status === 'pending' ? 'Oczekująca' : 'Anulowana'"
-                                            :severity="data.status === 'paid' ? 'success' : data.status === 'pending' ? 'info' : 'danger'"
+                                            :value="
+                                                payment.status === 'paid' ? 'Opłacona' : payment.status === 'pending' ? 'Oczekująca' : 'Anulowana'
+                                            "
+                                            :severity="payment.status === 'paid' ? 'success' : payment.status === 'pending' ? 'info' : 'danger'"
                                         />
                                     </template>
                                 </Column>
                                 <Column field="payment_date" header="Data płatności" sortable>
-                                    <template #body="{ data }: { data: Payment }">
-                                        {{ data.payment_date ? dayjs(data.payment_date).format('DD.MM.YYYY') : '-' }}
+                                    <template #body="{ data: payment }: { data: Payment }">
+                                        {{ payment.payment_date ? dayjs(payment.payment_date).format('DD.MM.YYYY') : '-' }}
                                     </template>
                                 </Column>
 
                                 <Column header="Akcja">
-                                    <template #body="{ data }: { data: Payment }">
-                                        <Link :href="route('payments.show', { project: data.project_id, payment: data.id })">
+                                    <template #body="{ data: payment }: { data: Payment }">
+                                        <Link
+                                            :href="route('payments.show', { client: project.client.slug, project: project.id, payment: payment.id })"
+                                        >
                                             <ContrastButton severity="info" label="Szczegóły płatności" />
                                         </Link>
                                     </template>
