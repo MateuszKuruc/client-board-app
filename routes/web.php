@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/projekty/{project}')->group(function () {
             Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
             Route::get('/platnosci/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+            Route::put('/platnosci/{payment}', [PaymentController::class, 'update'])->name('payments.update');
         });
 
     });
@@ -60,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     //  Payments
     Route::get('/platnosci', [PaymentController::class, 'index'])->name('payments.index');
     Route::get('/platnosci/eksport', [PaymentController::class, 'export'])->name('payments.export');
+
 
 
     // Expenses
