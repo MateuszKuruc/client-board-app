@@ -34,7 +34,7 @@ const { heading, subheading, payments } = withDefaults(
         Brak
         <Divider />
     </div>
-    <DataTable v-if="payments.length >= 1" class="mt-6" :value="payments" dataKey="id">
+    <DataTable v-if="payments.length >= 1" :value="payments" dataKey="id">
         <Column field="amount" header="Kwota" />
         <Column field="status" header="Status">
             <template #body="{ data }: { data: Payment }">

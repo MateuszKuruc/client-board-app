@@ -33,7 +33,7 @@ const { projects, heading, subheading } = withDefaults(
         Brak
         <Divider />
     </div>
-    <DataTable v-if="projects.length >= 1" class="mt-6" :value="projects" dataKey="id">
+    <DataTable v-if="projects.length >= 1" :value="projects" dataKey="id">
         <Column field="name" header="Projekt" />
         <Column field="service.name" header="Usługa" />
         <Column field="start_date" header="Data startu">
