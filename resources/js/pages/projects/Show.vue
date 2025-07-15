@@ -156,7 +156,7 @@ const editableFields: editableField[] = [
 
             <div class="flex items-center justify-between">
                 <SectionHeading heading="Informacje o projekcie" subheading="Szczegółowe dane projektu" />
-                <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
+                <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" buttonLabel="Edytuj projekt" />
             </div>
 
             <div class="border-t border-gray-100">

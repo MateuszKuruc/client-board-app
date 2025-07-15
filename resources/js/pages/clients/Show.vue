@@ -184,7 +184,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
             <div>
                 <div class="flex items-center justify-between">
                     <SectionHeading heading="Informacje o kliencie" subheading="Pełny profil klienta" />
-                    <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" />
+                    <ActionButtons :isEditing="isEditing" @cancel="cancelEdit" @save="submitEdit" @edit="startEdit" buttonLabel="Edytuj profil" />
                 </div>
                 <div class="mt-6 border-t border-gray-100">
                     <ul class="divide-y divide-gray-100">
@@ -201,8 +201,8 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
 
                     <BarChart v-if="lifetimeValue" class="h-100" :labels="chartLabels" :values="chartValues" />
 
-                    <div class="flex flex-col">
-                        <div class="mt-6">
+                    <div class="flex flex-col my-6 gap-4">
+                        <div>
                             <ProjectsTable
                                 :projects="client.projects.filter((p) => p.active)"
                                 heading="Lista aktywnych projektów"
@@ -211,7 +211,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                             />
                         </div>
 
-                        <div class="mt-6">
+                        <div>
                             <ProjectsTable
                                 :projects="client.projects.filter((p) => !p.active)"
                                 heading="Lista nieaktywnych projektów"
@@ -221,7 +221,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                     </div>
                 </div>
 
-                <div class="mt-6">
+                <div>
                     <div class="flex items-center justify-between">
                         <SectionHeading heading="Notatki" subheading="Sprawdź dodatkowe informacje o kliencie" />
                         <SecondaryButton>
