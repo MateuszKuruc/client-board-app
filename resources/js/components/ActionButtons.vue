@@ -4,8 +4,9 @@ import Button from '@/components/volt/Button.vue';
 import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import { Pencil, X } from 'lucide-vue-next';
 
-defineProps<{
+const { buttonLabel, isEditing } = defineProps<{
     isEditing: boolean;
+    buttonLabel?: string;
 }>();
 
 const emit = defineEmits(['cancel', 'edit', 'save']);
@@ -28,7 +29,7 @@ function onSave() {
         <span>
             <SecondaryButton v-if="!isEditing" @click="onEdit">
                 <Pencil class="w-5 text-gray-400" />
-                Edytuj profil
+                {{ buttonLabel }}
             </SecondaryButton>
 
             <SecondaryButton v-if="isEditing" @click="onCancel">
