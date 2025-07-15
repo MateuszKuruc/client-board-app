@@ -9,7 +9,7 @@ import dayjs from '@/plugins/dayjs';
 import { Project, Service } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, Ref } from 'vue';
-import ProjectsTable from '@/components/ProjectsTable.vue';
+import PaymentsTable from '@/components/PaymentsTable.vue';
 import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
@@ -95,7 +95,7 @@ function submitEdit() {
                 form.end_date = page.props.project.end_date;
                 toast.add({ severity: 'success', summary: 'Projekt zaktualizowany', detail: 'Zmiany zostały pomyślnie zapisane', life: 3000 });
             },
-            onError: (error) => {
+            onError: () => {
                 toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Zmiany nie zostały zapisane', life: 3000 });
             }
         },
@@ -176,8 +176,9 @@ const editableFields: editableField[] = [
 
             <div class="flex flex-col">
                 <div class="mt-6">
-                    <ProjectsTable
-                        :projects="project.payments.filter((p) => p.paid)"
+                    <PaymentsTable
+
+                        :payments="project.payments.filter((p) => p.status === 'paid')"
                         heading="Lista zaksięgowanych płatności"
                         subheading="Śledź potwierdzone płatności związane z projektem"
                         button
@@ -185,16 +186,18 @@ const editableFields: editableField[] = [
                 </div>
 
                 <div class="mt-6">
-                    <ProjectsTable
-                        :projects="project.payments.filter((p) => !p.pending)"
+                    <PaymentsTable
+
+                        :payments="project.payments.filter((p) => p.status === 'pending')"
                         heading="Lista oczekujących płatności"
                         subheading="Sprawdź płatności, które wciąż nie zostały zaksięgowane"
                     />
                 </div>
 
                 <div class="mt-6">
-                    <ProjectsTable
-                        :projects="project.payments.filter((p) => !p.cancelled)"
+                    <PaymentsTable
+
+                        :payments="project.payments.filter((p) => p.status === 'cancelled')"
                         heading="Lista anulowanych płatności"
                         subheading="Płatności, które nie będą opłacone"
                     />
