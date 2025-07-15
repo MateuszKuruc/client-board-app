@@ -37,17 +37,23 @@ const emit = defineEmits<{
 <template>
     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
         <label class="text-sm/6 font-medium text-gray-900">{{ label }}</label>
-        <p v-if="!isEditing && type !== 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            {{ label === 'Cena' ? modelValue + ' zł' : modelValue }}
+        <p v-if="!isEditing && type === 'text'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+            {{ label === 'Cena' ? modelValue + ' zł' : label === 'Kwota' ? modelValue + ' zł' : modelValue }}
+        </p>
+
+        <p v-if="!isEditing && type === 'select'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+            {{ modelValue === 'paid' ? 'Opłacona' : modelValue === 'pending' ? 'Oczekująca' : modelValue === 'cancelled' ? 'Anulowana' : modelValue }}
         </p>
 
         <p v-else-if="!isEditing && type === 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            {{ dayjs(modelValue).format('DD-MM-YYYY') }}
+            {{ modelValue ? dayjs(modelValue).format('DD-MM-YYYY') : '-' }}
         </p>
 
         <Select
             v-if="isEditing && type === 'select'"
             :options="options"
+            :optionLabel="Array.isArray(options) && options[0] && typeof options[0] === 'object' ? 'label' : undefined"
+            :optionValue="Array.isArray(options) && options[0] && typeof options[0] === 'object' ? 'value' : undefined"
             :modelValue="modelValue"
             @update:modelValue="(val) => emit('update:modelValue', val)"
         />
@@ -57,7 +63,7 @@ const emit = defineEmits<{
             showIcon
             fluid
             iconDisplay="input"
-            dateFormat="dd-mm-yy"
+            dateFormat="dd.mm.yy"
             :minDate="minDate"
             :modelValue="modelValue"
             @update:modelValue="(val) => emit('update:modelValue', val)"
