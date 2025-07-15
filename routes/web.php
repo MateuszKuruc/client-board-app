@@ -40,16 +40,21 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/projekty/{project}', [ProjectController::class, 'update'])->name('projects.update');
         Route::get('/projekty/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
 
+        Route::prefix('/projekty/{project}')->group(function () {
+            Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+            Route::get('/platnosci/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+        });
+
     });
     Route::get('/projekty', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projekty/dodaj', [ProjectController::class, 'create'])->name('projects.create');
     Route::get('/projekty/eksport', [ProjectController::class, 'export'])->name('projects.export');
 
 
-    Route::prefix('/projekty/{project}')->group(function () {
-        Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
-        Route::get('/platnosci/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
-    });
+//    Route::prefix('/projekty/{project}')->group(function () {
+//        Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+//        Route::get('/platnosci/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+//    });
 
 
     //  Payments
