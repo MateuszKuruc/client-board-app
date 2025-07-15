@@ -174,10 +174,9 @@ const editableFields: editableField[] = [
                 </ul>
             </div>
 
-            <div class="flex flex-col">
-                <div class="mt-6">
+            <div class="flex flex-col mt-6 gap-4">
+                <div>
                     <PaymentsTable
-
                         :payments="project.payments.filter((p) => p.status === 'paid')"
                         heading="Lista zaksięgowanych płatności"
                         subheading="Śledź potwierdzone płatności związane z projektem"
@@ -185,18 +184,16 @@ const editableFields: editableField[] = [
                     />
                 </div>
 
-                <div class="mt-6">
+                <div>
                     <PaymentsTable
-
                         :payments="project.payments.filter((p) => p.status === 'pending')"
                         heading="Lista oczekujących płatności"
                         subheading="Sprawdź płatności, które wciąż nie zostały zaksięgowane"
                     />
                 </div>
 
-                <div class="mt-6">
+                <div>
                     <PaymentsTable
-
                         :payments="project.payments.filter((p) => p.status === 'cancelled')"
                         heading="Lista anulowanych płatności"
                         subheading="Płatności, które nie będą opłacone"
