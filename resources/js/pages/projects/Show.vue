@@ -9,6 +9,10 @@ import dayjs from '@/plugins/dayjs';
 import { Project, Service } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, Ref } from 'vue';
+import ProjectsTable from '@/components/ProjectsTable.vue';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const { project, services } = defineProps<{
     project: Project;
@@ -89,7 +93,11 @@ function submitEdit() {
                 form.price = page.props.project.price;
                 form.start_date = page.props.project.start_date;
                 form.end_date = page.props.project.end_date;
+                toast.add({ severity: 'success', summary: 'Projekt zaktualizowany', detail: 'Zmiany zostały pomyślnie zapisane', life: 3000 });
             },
+            onError: (error) => {
+                toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Zmiany nie zostały zapisane', life: 3000 });
+            }
         },
     );
 }
@@ -164,6 +172,33 @@ const editableFields: editableField[] = [
                         />
                     </li>
                 </ul>
+            </div>
+
+            <div class="flex flex-col">
+                <div class="mt-6">
+                    <ProjectsTable
+                        :projects="project.payments.filter((p) => p.paid)"
+                        heading="Lista zaksięgowanych płatności"
+                        subheading="Śledź potwierdzone płatności związane z projektem"
+                        button
+                    />
+                </div>
+
+                <div class="mt-6">
+                    <ProjectsTable
+                        :projects="project.payments.filter((p) => !p.pending)"
+                        heading="Lista oczekujących płatności"
+                        subheading="Sprawdź płatności, które wciąż nie zostały zaksięgowane"
+                    />
+                </div>
+
+                <div class="mt-6">
+                    <ProjectsTable
+                        :projects="project.payments.filter((p) => !p.cancelled)"
+                        heading="Lista anulowanych płatności"
+                        subheading="Płatności, które nie będą opłacone"
+                    />
+                </div>
             </div>
         </div>
     </AppLayout>
