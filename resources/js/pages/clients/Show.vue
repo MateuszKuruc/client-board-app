@@ -25,7 +25,11 @@ const { client } = defineProps<{
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Profil klienta',
+        title: 'Klienci',
+        href: route('clients.index'),
+    },
+    {
+        title: client.name,
         href: `/klienci/${client.slug}`,
     },
 ];
