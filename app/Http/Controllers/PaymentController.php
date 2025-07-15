@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PaymentsExport;
+use App\Models\Client;
 use App\Models\Payment;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,6 +34,15 @@ class PaymentController extends Controller
             'filters' => [
                 'search' => $search,
             ]
+        ]);
+    }
+
+    public function show(Request $request, Client $client, Project $project, Payment $payment)
+    {
+        $payment->load('project');
+
+        return Inertia::render('payments/Show', [
+            'payment' => $payment,
         ]);
     }
 
