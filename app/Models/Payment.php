@@ -11,6 +11,12 @@ class Payment extends Model
     /** @use HasFactory<\Database\Factories\PaymentFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'project_id',
+        'amount',
+        'status',
+        'payment_date',
+    ];
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
