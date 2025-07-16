@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import FormLayout from '@/components/FormLayout.vue';
-import InputError from '@/components/InputError.vue';
-import { Label } from '@/components/ui/label';
 import Button from '@/components/volt/Button.vue';
 import DatePicker from '@/components/volt/DatePicker.vue';
 import InputText from '@/components/volt/InputText.vue';
 import Select from '@/components/volt/Select.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import FormField from '@/pages/payments/FormField.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Project } from '@/types/models';
@@ -82,8 +81,7 @@ const submit = () => {
             <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <form @submit.prevent="submit" class="flex flex-col gap-6">
                     <div class="grid gap-6">
-                        <div class="grid gap-2">
-                            <Label for="project">Projekt</Label>
+                        <FormField id="project" label="Projekt" :error="form.errors.project_id">
                             <Select
                                 v-model="form.project_id"
                                 :options="projects"
@@ -93,17 +91,13 @@ const submit = () => {
                                 placeholder="Wybierz projekt"
                                 required
                             />
-                            <InputError :message="form.errors.project_id" />
-                        </div>
+                        </FormField>
 
-                        <div class="grid gap-2">
-                            <Label for="amount">Kwota płatności</Label>
+                        <FormField id="amount" label="Kwota płatności" :error="form.errors.amount">
                             <InputText id="amount" v-model="form.amount" placeholder="1000" />
-                            <InputError :message="form.errors.amount" />
-                        </div>
+                        </FormField>
 
-                        <div class="grid gap-2">
-                            <Label for="status">Status</Label>
+                        <FormField id="status" label="Status" :error="form.errors.status">
                             <Select
                                 v-model="form.status"
                                 :options="statusOptions"
@@ -112,14 +106,11 @@ const submit = () => {
                                 editable
                                 placeholder="Wybierz status"
                             />
-                            <InputError :message="form.errors.status" />
-                        </div>
+                        </FormField>
 
-                        <div class="grid gap-2">
-                            <Label for="payment_date">Data płatności</Label>
+                        <FormField id="payment_date" label="Data płatności">
                             <DatePicker v-model="form.payment_date" showIcon iconDisplay="input" placeholder="Data lub puste pole" />
-                            <InputError :message="form.errors.payment_date" />
-                        </div>
+                        </FormField>
 
                         <Button
                             type="submit"
