@@ -28,6 +28,7 @@ class PaymentController extends Controller
                     });
                 });
             })
+            ->orderBy('payment_date', 'desc')
             ->paginate(10)
             ->withQueryString();
 
