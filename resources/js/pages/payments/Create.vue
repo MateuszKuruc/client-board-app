@@ -54,10 +54,6 @@ const form = useForm<Payment>({
 });
 
 const submit = () => {
-    if (!validateForm()) {
-        return;
-    }
-
     form.transform((data) => {
         if (data.payment_date) {
             data.payment_date = dayjs(data.payment_date).format('YYYY-MM-DD');
@@ -76,28 +72,6 @@ const submit = () => {
         },
     });
 };
-
-const validateForm = () => {
-    form.clearErrors();
-    let valid = true;
-
-    if (!form.project_id) {
-        form.setError('project_id', 'Przypisz płatność do projektu');
-        valid = false;
-    }
-
-    if (!form.amount) {
-        form.setError('amount', 'Podaj kwotę płatności');
-        valid = false;
-    }
-
-    if (!form.status) {
-        form.setError('status', 'Wybierz status płatności');
-        valid = false;
-    }
-
-    return valid;
-};
 </script>
 
 <template>
@@ -110,32 +84,51 @@ const validateForm = () => {
                     <div class="grid gap-6">
                         <div class="grid gap-2">
                             <Label for="project">Projekt</Label>
-                            <Select v-model="form.project_id" :options="projects" optionLabel="name" optionValue="id" editable />
+                            <Select
+                                v-model="form.project_id"
+                                :options="projects"
+                                optionLabel="name"
+                                optionValue="id"
+                                editable
+                                placeholder="Wybierz projekt"
+                                required
+                            />
                             <InputError :message="form.errors.project_id" />
                         </div>
 
                         <div class="grid gap-2">
                             <Label for="amount">Kwota płatności</Label>
-                            <InputText id="amount" v-model="form.amount" />
-                            <!--                        <Message size="small" severity="secondary" variant="simple">Wprowadź kwotę płatności</Message>-->
+                            <InputText id="amount" v-model="form.amount" placeholder="1000" />
                             <InputError :message="form.errors.amount" />
                         </div>
 
                         <div class="grid gap-2">
                             <Label for="status">Status</Label>
-                            <Select v-model="form.status" :options="statusOptions" optionLabel="name" optionValue="value" editable />
+                            <Select
+                                v-model="form.status"
+                                :options="statusOptions"
+                                optionLabel="name"
+                                optionValue="value"
+                                editable
+                                placeholder="Wybierz status"
+                            />
                             <InputError :message="form.errors.status" />
                         </div>
 
                         <div class="grid gap-2">
                             <Label for="payment_date">Data płatności</Label>
-                            <DatePicker v-model="form.payment_date" showIcon iconDisplay="input" />
-                            <!--                            <InputError :message="form.errors.password" />-->
+                            <DatePicker v-model="form.payment_date" showIcon iconDisplay="input" placeholder="Data lub puste pole" />
+                            <InputError :message="form.errors.payment_date" />
                         </div>
 
-                        <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
+                        <Button
+                            type="submit"
+                            class="mt-2 w-full"
+                            tabindex="5"
+                            :disabled="form.processing || !form.project_id || !form.amount || !form.status"
+                        >
                             <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                            Utwórz płatność
+                            {{ form.processing ? 'Zapisywanie...' : 'Utwórz płatność' }}
                         </Button>
                     </div>
                 </form>
