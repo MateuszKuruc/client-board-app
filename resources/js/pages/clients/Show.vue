@@ -8,10 +8,12 @@ import ReusableCard from '@/components/ReusableCard.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import SecondaryButton from '@/components/volt/SecondaryButton.vue';
+import { locationOptions } from '@/constants/locationOptions';
+import { sourceOptions } from '@/constants/sourceOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Client, Source } from '@/types/models';
+import { Client } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Plus } from 'lucide-vue-next';
 import { useToast } from 'primevue/usetoast';
@@ -34,22 +36,16 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-type editableFields =
+type EditableField =
+    | { key: string; label: string; type?: 'text' }
     | {
-          key: string;
-          label: string;
-          type?: 'text';
-      }
-    | {
-          key: string;
-          label: string;
-          type: 'select';
-          options: sourceOptions;
-      };
+    key: string
+    label: string
+    type: 'select'
+    options: typeof sourceOptions | typeof locationOptions
+}
 
-const sourceOptions: Source[] = ['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne'];
-
-const editableFields: editableFields = [
+const editableFields: EditableField = [
     { key: 'name', label: 'Nazwa' },
     { key: 'email', label: 'Email' },
     { key: 'phone', label: 'Telefon' },
@@ -59,6 +55,12 @@ const editableFields: editableFields = [
         label: 'Źródło',
         type: 'select',
         options: sourceOptions,
+    },
+    {
+        key: 'location',
+        label: 'Lokalizacja',
+        type: 'select',
+        options: locationOptions,
     },
 ] as const;
 
@@ -205,7 +207,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
 
                     <BarChart v-if="lifetimeValue" class="h-100" :labels="chartLabels" :values="chartValues" />
 
-                    <div class="flex flex-col my-6 gap-4">
+                    <div class="my-6 flex flex-col gap-4">
                         <div>
                             <ProjectsTable
                                 :projects="client.projects.filter((p) => p.active)"
