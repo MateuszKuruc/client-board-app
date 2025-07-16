@@ -77,7 +77,11 @@ const isEditing: Ref<boolean> = ref(false);
 
 function submitEdit() {
     form.transform((data) => {
-        data.payment_date = dayjs(data.payment_date).format('YYYY-MM-DD');
+        if (data.payment_date) {
+            data.payment_date = dayjs(data.payment_date).format('YYYY-MM-DD');
+        } else {
+            data.payment_date = null;
+        }
 
         return data;
     }).put(route('payments.update', { client: payment.project.client.slug, project: payment.project.id, payment: payment.id }), {
