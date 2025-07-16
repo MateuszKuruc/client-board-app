@@ -53,14 +53,21 @@ const submit = () => {
             <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <form @submit.prevent="submit" class="flex flex-col gap-6">
                     <div class="grid gap-6">
-                        <InputField id="email" label="Email" :error="form.errors.email" v-model="form.email" placeholder="example@gmail.com" />
+                        <InputField
+                            id="email"
+                            label="Email"
+                            :error="form.errors.email"
+                            v-model="form.email"
+                            placeholder="example@gmail.com"
+                            required
+                        />
                         <InputField id="phone" label="Telefon" :error="form.errors.phone" v-model="form.phone" placeholder="531380713" />
 
                         <SubmitButton
                             :processing="form.processing"
                             buttonLabel="Utwórz leada"
                             loadingLabel="Zapisywanie..."
-                            :disabled="form.processing || !form.email || !form.phone"
+                            :disabled="form.processing || !form.email"
                         />
                     </div>
                 </form>

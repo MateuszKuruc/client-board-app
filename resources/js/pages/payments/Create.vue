@@ -90,9 +90,17 @@ const submit = () => {
                             optionLabel="name"
                             optionValue="id"
                             placeholder="Wybierz projekt"
+                            required
                         />
 
-                        <InputField id="amount" label="Kwota płatności" :error="form.errors.amount" v-model="form.amount" placeholder="1000" />
+                        <InputField
+                            id="amount"
+                            label="Kwota płatności"
+                            :error="form.errors.amount"
+                            v-model="form.amount"
+                            placeholder="1000"
+                            required
+                        />
 
                         <SelectField
                             id="status"
@@ -103,6 +111,7 @@ const submit = () => {
                             optionLabel="name"
                             optionValue="value"
                             placeholder="Wybierz status"
+                            required
                         />
 
                         <DateField id="payment_date" label="Data płatności" v-model="form.payment_date" placeholder="Data lub puste pole" />
