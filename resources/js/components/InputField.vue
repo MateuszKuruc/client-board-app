@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import InputText from '@/components/volt/InputText.vue';
-import FormField from '@/pages/payments/FormField.vue';
+import FormField from '@/components/FormField.vue';
 
 const { id, label, error, modelValue, placeholder } = defineProps<{
     id: string;

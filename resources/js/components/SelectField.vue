@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FormField from '@/pages/payments/FormField.vue';
+import FormField from '@/components/FormField.vue';
 import { useAttrs } from 'vue';
 import Select from '@/components/volt/Select.vue';
 
