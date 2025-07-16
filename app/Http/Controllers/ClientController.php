@@ -18,8 +18,8 @@ class ClientController extends Controller
 
         $clients = Client::with(['projects.service', 'projects.client'])
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
             })
             ->paginate(10)
             ->withQueryString();
@@ -29,6 +29,18 @@ class ClientController extends Controller
             'filters' => [
                 'search' => $search,
             ],
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('clients/Create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+
         ]);
     }
 
@@ -62,6 +74,7 @@ class ClientController extends Controller
                 'required',
                 Rule::in(['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne']),
             ],
+            'location' => ['required', Rule::in(['local', 'remote', 'international'])],
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
