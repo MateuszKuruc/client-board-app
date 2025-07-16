@@ -14,6 +14,7 @@ import { Filter, Paginated, Payment, Project } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
+import StyledLink from '@/components/StyledLink.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -78,9 +79,9 @@ function getSortedPayments(project) {
                 </Column>
                 <Column header="Szczegóły">
                     <template #body="{ data }: { data: Project }">
-                        <Link :href="route('projects.show', { client: data.client?.slug, project: data.id })">
-                            <Button><FolderOpenDot /></Button>
-                        </Link>
+                        <StyledLink :href="route('projects.show', { client: data.client?.slug, project: data.id })">
+                            <FolderOpenDot />
+                        </StyledLink>
                     </template>
                 </Column>
 
@@ -108,11 +109,11 @@ function getSortedPayments(project) {
 
                                 <Column header="Akcja">
                                     <template #body="{ data: payment }: { data: Payment }">
-                                        <Link
-                                            :href="route('payments.show', { client: project.client.slug, project: project.id, payment: payment.id })"
+                                        <StyledLink
+                                            variant="text" :href="route('payments.show', { client: project.client.slug, project: project.id, payment: payment.id })"
                                         >
-                                            <ContrastButton severity="info" label="Szczegóły płatności" />
-                                        </Link>
+                                            Zarządzaj płatnością
+                                        </StyledLink>
                                     </template>
                                 </Column>
                             </DataTable>
