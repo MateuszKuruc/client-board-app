@@ -2,6 +2,7 @@
 import DatePicker from '@/components/volt/DatePicker.vue';
 import InputText from '@/components/volt/InputText.vue';
 import Select from '@/components/volt/Select.vue';
+import { viewLabels } from '@/constants/viewLabels';
 import dayjs from '@/plugins/dayjs';
 import { PropType } from 'vue';
 
@@ -10,7 +11,7 @@ interface EditableFieldProps {
     isEditing: boolean;
     modelValue: string | Date;
     type?: 'text' | 'select' | 'picker';
-    options?: string[];
+    options?: string[] | { value: string; label: string }[];
     minDate?: string | Date;
 }
 
@@ -42,7 +43,7 @@ const emit = defineEmits<{
         </p>
 
         <p v-if="!isEditing && type === 'select'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            {{ modelValue === 'paid' ? 'Opłacona' : modelValue === 'pending' ? 'Oczekująca' : modelValue === 'cancelled' ? 'Anulowana' : modelValue }}
+            {{ viewLabels[modelValue] || modelValue }}
         </p>
 
         <p v-else-if="!isEditing && type === 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -52,8 +53,8 @@ const emit = defineEmits<{
         <Select
             v-if="isEditing && type === 'select'"
             :options="options"
-            :optionLabel="Array.isArray(options) && options[0] && typeof options[0] === 'object' ? 'label' : undefined"
-            :optionValue="Array.isArray(options) && options[0] && typeof options[0] === 'object' ? 'value' : undefined"
+            :optionLabel="typeof options[0] === 'string' ? undefined : 'label'"
+            :optionValue="typeof options[0] === 'string' ? undefined : 'value'"
             :modelValue="modelValue"
             @update:modelValue="(val) => emit('update:modelValue', val)"
         />
