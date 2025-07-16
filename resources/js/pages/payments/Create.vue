@@ -1,17 +1,15 @@
 <script setup lang="ts">
+import DateField from '@/components/DateField.vue';
 import FormLayout from '@/components/FormLayout.vue';
-import Button from '@/components/volt/Button.vue';
-import DatePicker from '@/components/volt/DatePicker.vue';
+import InputField from '@/components/InputField.vue';
+import SelectField from '@/components/SelectField.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import FormField from '@/pages/payments/FormField.vue';
-import SelectField from '@/pages/payments/SelectField.vue';
+import SubmitButton from '@/pages/payments/SubmitButton.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Project } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
 import { useToast } from 'primevue/usetoast';
-import InputField from '@/pages/payments/InputField.vue';
 
 const toast = useToast();
 
@@ -105,19 +103,14 @@ const submit = () => {
                             placeholder="Wybierz status"
                         />
 
-                        <FormField id="payment_date" label="Data płatności">
-                            <DatePicker v-model="form.payment_date" showIcon iconDisplay="input" placeholder="Data lub puste pole" />
-                        </FormField>
+                        <DateField id="payment_date" label="Data płatności" v-model="form.payment_date" placeholder="Data lub puste pole" />
 
-                        <Button
-                            type="submit"
-                            class="mt-2 w-full"
-                            tabindex="5"
+                        <SubmitButton
+                            :processing="form.processing"
+                            buttonLabel="Utwórz płatność"
+                            loadingLabel="Zapisywanie..."
                             :disabled="form.processing || !form.project_id || !form.amount || !form.status"
-                        >
-                            <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                            {{ form.processing ? 'Zapisywanie...' : 'Utwórz płatność' }}
-                        </Button>
+                        />
                     </div>
                 </form>
             </div>
