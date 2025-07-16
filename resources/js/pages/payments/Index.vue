@@ -37,7 +37,9 @@ const { globalSearch } = useServerSearch(filters.search || '', 'payments.index')
                 <template #header>
                     <DataTableToolbar v-model="globalSearch" :exportUrl="'payments.export'" :filters="filters" />
                 </template>
-
+                <Column field="id" header="Płatność">
+                    <template #body="{ data: payment }: { data: Payment }">Nr {{ payment.id }} </template>
+                </Column>
                 <Column field="status" header="Status">
                     <template #body="{ data }: { data: Payment }">
                         <Tag
