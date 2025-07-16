@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
-import Button from '@/components/volt/Button.vue';
+import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useServerSearch } from '@/composables/useServerSearch';
@@ -9,7 +9,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Filters, Payment } from '@/types/models';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
 
@@ -56,9 +56,12 @@ const { globalSearch } = useServerSearch(filters.search || '', 'payments.index')
                 </Column>
                 <Column>
                     <template #body="{ data }: { data: Payment }">
-                        <Link :href="route('payments.show', { client: data.project.client.slug, project: data.project.id, payment: data.id })">
-                            <Button><SquarePen />Edytuj</Button>
-                        </Link>
+                        <StyledLink
+                            variant="default"
+                            :href="route('payments.show', { client: data.project.client.slug, project: data.project.id, payment: data.id })"
+                        >
+                            <SquarePen />
+                        </StyledLink>
                     </template>
                 </Column>
             </DataTable>
