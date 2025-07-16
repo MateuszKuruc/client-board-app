@@ -6,9 +6,7 @@ import SubmitButton from '@/components/SubmitButton.vue';
 import { locationOptions } from '@/constants/locationOptions';
 import { sourceOptions } from '@/constants/sourceOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
-import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Project } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 
@@ -25,25 +23,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { projects } = defineProps<{
-    projects: Project[];
-}>();
-
-const statusOptions = [
-    {
-        value: 'paid',
-        name: 'Opłacona',
-    },
-    {
-        value: 'pending',
-        name: 'Oczekująca',
-    },
-    {
-        value: 'cancelled',
-        name: 'Anulowana',
-    },
-];
-
 const form = useForm<Payment>({
     name: null,
     email: null,
@@ -56,21 +35,13 @@ const form = useForm<Payment>({
 const submit = () => {
     form.clearErrors();
 
-    form.transform((data) => {
-        if (data.payment_date) {
-            data.payment_date = dayjs(data.payment_date).format('YYYY-MM-DD');
-        } else {
-            data.payment_date = null;
-        }
-
-        return data;
-    }).post(route('payments.store'), {
+    form.post(route('clients.store'), {
         onSuccess: () => {
             form.reset();
-            toast.add({ severity: 'success', summary: 'Płatność dodana poprawnie', detail: 'Dane zostały zapisane w systemie', life: 3000 });
+            toast.add({ severity: 'success', summary: 'Klient dodany poprawnie', detail: 'Dane zostały zapisane w systemie', life: 3000 });
         },
         onError: () => {
-            toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Płatność nie została zapisana', life: 3000 });
+            toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Klient nie został zapisany', life: 3000 });
         },
     });
 };
