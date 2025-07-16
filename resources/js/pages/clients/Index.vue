@@ -1,19 +1,18 @@
 <script setup lang="ts">
+import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
+import StyledLink from '@/components/StyledLink.vue';
+import DataTable from '@/components/volt/DataTable.vue';
+import Tag from '@/components/volt/Tag.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
 import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
-import DataTableToolbar from '@/components/DataTableToolbar.vue';
+import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
-import Button from '@/components/volt/Button.vue';
-import ContrastButton from '@/components/volt/ContrastButton.vue';
-import DataTable from '@/components/volt/DataTable.vue';
-import Tag from '@/components/volt/Tag.vue';
+import { Client, Filters, Paginated } from '@/types/models';
+import { Head } from '@inertiajs/vue3';
 import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import dayjs from '@/plugins/dayjs'
-import { Paginated, Client, Filters } from '@/types/models';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,7 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const { clients, filters } = defineProps<{
     clients: Paginated<Client>;
-    filters: Filters
+    filters: Filters;
 }>();
 
 const { globalSearch } = useServerSearch(filters.search || '', 'clients.index');
@@ -39,7 +38,13 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(clients.data)
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable v-model:expandedRows="expandedRows" :value="clients.data" dataKey="id" pt:table="min-w-200">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :onExpandAll="expandAll" :onCollapseAll="collapseAll" :exportUrl="'clients.export'" :filters="filters" />
+                    <DataTableToolbar
+                        v-model="globalSearch"
+                        :onExpandAll="expandAll"
+                        :onCollapseAll="collapseAll"
+                        :exportUrl="'clients.export'"
+                        :filters="filters"
+                    />
                 </template>
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Klient">
@@ -67,12 +72,12 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(clients.data)
                                     </template>
                                 </Column>
                                 <Column field="start_date" header="Data startu" sortable>
-                                    <template #body="{data}">
+                                    <template #body="{ data }">
                                         {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
                                     </template>
                                 </Column>
                                 <Column field="end_date" header="Data zakończenia" sortable>
-                                    <template #body="{data}">
+                                    <template #body="{ data }">
                                         {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
                                     </template>
                                 </Column>
@@ -86,11 +91,14 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(clients.data)
                                         </span>
                                     </template>
                                 </Column>
-                                <Column header="Akcja">
+                                <Column header="Opcje">
                                     <template #body="{ data: project }">
-                                        <Link :href="route('projects.show', { client: project.client.slug, project: project.id })">
-                                            <ContrastButton severity="info" label="Szczegóły projektu" />
-                                        </Link>
+                                        <StyledLink
+                                            variant="text"
+                                            :href="route('projects.show', { client: project.client.slug, project: project.id })"
+                                        >
+                                            Zarządzaj projektem
+                                        </StyledLink>
                                     </template>
                                 </Column>
                             </DataTable>
@@ -103,9 +111,9 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(clients.data)
 
                 <Column header="Profil">
                     <template #body="{ data }">
-                        <Link :href="route('clients.show', data.slug)">
-                            <Button><User /></Button>
-                        </Link>
+                        <StyledLink variant="default" :href="route('clients.show', data.slug)">
+                            <User />
+                        </StyledLink>
                     </template>
                 </Column>
             </DataTable>
