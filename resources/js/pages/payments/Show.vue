@@ -4,12 +4,13 @@ import EditableField from '@/components/EditableField.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import PaymentsTable from '@/components/PaymentsTable.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
+import { statusOptions } from '@/constants/statusOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import { Payment } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
-import { computed, ref, Ref } from 'vue';
+import { ref, Ref } from 'vue';
 
 const toast = useToast();
 
@@ -43,19 +44,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const rawStatusOptions = ['paid', 'pending', 'cancelled'] as const;
-
-const statusOptions = computed(() => {
-    return rawStatusOptions.map((value) => {
-        let label = value;
-        if (value === 'paid') label = 'Opłacona';
-        else if (value === 'pending') label = 'Oczekująca';
-        else if (value === 'cancelled') label = 'Anulowana';
-        return { value, label };
-    });
-});
-
-type editableField =
+type EditableField =
     | {
           key: string;
           label: string;
@@ -65,7 +54,7 @@ type editableField =
           key: string;
           label: string;
           type: 'select';
-          options: string[];
+          options: string[] | { value: string; label: string }[];
       }
     | {
           key: string;
@@ -111,13 +100,13 @@ const form = useForm<Payment>({
     payment_date: payment.payment_date,
 });
 
-const editableFields: editableField[] = [
+const editableFields: EditableField[] = [
     { key: 'amount', label: 'Kwota' },
     {
         key: 'status',
         label: 'Status',
         type: 'select',
-        options: statusOptions.value,
+        options: statusOptions,
     },
     { key: 'payment_date', label: 'Data płatności', type: 'picker' },
 ] as const;
