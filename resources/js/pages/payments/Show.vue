@@ -2,6 +2,7 @@
 import ActionButtons from '@/components/ActionButtons.vue';
 import EditableField from '@/components/EditableField.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
+import PaymentsTable from '@/components/PaymentsTable.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
@@ -145,6 +146,19 @@ const editableFields: editableField[] = [
                         />
                     </li>
                 </ul>
+            </div>
+
+            <div class="mt-6 flex flex-col gap-4">
+                <div>
+                    <PaymentsTable
+                        :payments="payment.project.payments.filter((p) => p.id !== payment.id)"
+                        :client="payment.project.client"
+                        :project="payment.project"
+                        heading="Powiązane płatności"
+                        subheading="Lista innych płatności przypisanych do tego samego projektu"
+                        button
+                    />
+                </div>
             </div>
         </div>
     </AppLayout>
