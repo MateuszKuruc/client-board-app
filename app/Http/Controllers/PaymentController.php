@@ -54,7 +54,7 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'amount' => ['required', 'numeric', 'max:999999.99'],
             'status' => ['required', 'string'],
-            'payment_date' => ['required', 'date'],
+            'payment_date' => ['nullable', 'date'],
         ]);
 
         $payment->update($validated);
