@@ -40,6 +40,31 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $projects = Project::latest()->get();
+
+        return Inertia::render('payments/Create', [
+            'projects' => $projects,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'project_id' => 'required',
+            'amount' => ['required', 'numeric', 'max:999999.99'],
+            'status' => ['required', 'string'],
+            'payment_date' => ['nullable', 'date'],
+        ]);
+
+        Payment::create([
+            ...$validated,
+        ]);
+
+        return redirect()->route('payments.index');
+    }
+
     public function show(Request $request, Client $client, Project $project, Payment $payment)
     {
         $payment->load('project.client', 'project.payments');
