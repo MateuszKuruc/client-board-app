@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
-import Button from '@/components/volt/Button.vue';
+import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useServerSearch } from '@/composables/useServerSearch';
@@ -51,9 +51,10 @@ const { globalSearch } = useServerSearch(filters.search || '', 'leads.index');
 
                 <Column header="Aktualizacja">
                     <template #body="{ data }: { data: Lead }">
-                        <!--                        <Link :href="route('projects.show', { client: data.client.slug, project: data.id })">-->
-                        <Button><SquarePen />Zamień w klienta</Button>
-                        <!--                        </Link>-->
+                        <StyledLink variant="text" href="#">
+                            <SquarePen />
+                            Zamień w klienta
+                        </StyledLink>
                     </template>
                 </Column>
             </DataTable>
