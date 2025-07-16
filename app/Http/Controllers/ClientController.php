@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ClientsExport;
+use App\Http\Requests\Clients\StoreClientRequest;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ class ClientController extends Controller
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
 
@@ -37,11 +39,14 @@ class ClientController extends Controller
         return Inertia::render('clients/Create');
     }
 
-    public function store(Request $request)
+    public function store(StoreClientRequest $request)
     {
-        $request->validate([
+        $validated = $request->validated();
+        $validated['slug'] = Str::slug($validated['name']);
 
-        ]);
+        Client::create($validated);
+
+        return redirect()->route('clients.index');
     }
 
     public function show(Request $request, Client $client)
