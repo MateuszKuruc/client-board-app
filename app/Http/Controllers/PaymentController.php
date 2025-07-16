@@ -41,7 +41,7 @@ class PaymentController extends Controller
 
     public function show(Request $request, Client $client, Project $project, Payment $payment)
     {
-        $payment->load('project.client');
+        $payment->load('project.client', 'project.payments');
 
         return Inertia::render('payments/Show', [
             'payment' => $payment,
