@@ -37,8 +37,8 @@ const { heading, subheading, payments } = withDefaults(
         <Divider />
     </div>
     <DataTable v-if="payments.length >= 1" :value="payments" dataKey="id">
-        <Column field="id" header="Numer płatności">
-            <template #body="{ data: payment }: { data: Payment }"> Płatność {{ payment.id }} </template>
+        <Column field="id" header="Płatność">
+            <template #body="{ data: payment }: { data: Payment }"> Nr {{ payment.id }} </template>
         </Column>
         <Column field="amount" header="Kwota" />
         <Column field="status" header="Status">
