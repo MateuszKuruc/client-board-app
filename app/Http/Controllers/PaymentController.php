@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PaymentsExport;
+use App\Http\Requests\Payments\StorePaymentRequest;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Project;
@@ -49,18 +50,11 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StorePaymentRequest $request)
     {
-        $validated = $request->validate([
-            'project_id' => 'required',
-            'amount' => ['required', 'numeric', 'max:999999.99'],
-            'status' => ['required', 'string'],
-            'payment_date' => ['nullable', 'date'],
-        ]);
+        $validated = $request->validated();
 
-        Payment::create([
-            ...$validated,
-        ]);
+        Payment::create($validated);
 
         return redirect()->route('payments.index');
     }
