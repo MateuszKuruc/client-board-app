@@ -3,8 +3,8 @@ import DateField from '@/components/DateField.vue';
 import FormLayout from '@/components/FormLayout.vue';
 import InputField from '@/components/InputField.vue';
 import SelectField from '@/components/SelectField.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import SubmitButton from '@/pages/payments/SubmitButton.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Project } from '@/types/models';
@@ -51,6 +51,8 @@ const form = useForm<Payment>({
 });
 
 const submit = () => {
+    form.clearErrors();
+
     form.transform((data) => {
         if (data.payment_date) {
             data.payment_date = dayjs(data.payment_date).format('YYYY-MM-DD');
@@ -62,7 +64,7 @@ const submit = () => {
     }).post(route('payments.store'), {
         onSuccess: () => {
             form.reset();
-            toast.add({ severity: 'success', summary: 'Płatność dodana poprawnie', detail: 'Dane zostały zapisane w systmie', life: 3000 });
+            toast.add({ severity: 'success', summary: 'Płatność dodana poprawnie', detail: 'Dane zostały zapisane w systemie', life: 3000 });
         },
         onError: () => {
             toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Płatność nie została zapisana', life: 3000 });
@@ -72,7 +74,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Płatności" />
+    <Head title="Nowa płatność" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <FormLayout title="Dodaj nową płatność" description="Uzupełnij wymagane pola i zapisz płatność">
