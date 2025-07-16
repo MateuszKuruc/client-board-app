@@ -48,7 +48,7 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Nowy',
+        title: 'Utwórz',
         icon: Plus,
         children: [
             {
@@ -59,7 +59,12 @@ const footerNavItems: NavItem[] = [
             {
                 title: 'Projekt',
                 href: '/projekty/dodaj',
-                icon: Folder,
+                icon: FolderOpen,
+            },
+            {
+                title: 'Płatność',
+                href: '/platnosci/dodaj',
+                icon: BadgeDollarSign,
             },
             {
                 title: 'Koszt',
