@@ -190,6 +190,8 @@ const editableFields: editableField[] = [
                 <div>
                     <PaymentsTable
                         :payments="project.payments.filter((p) => p.status === 'paid')"
+                        :client="project.client"
+                        :project="project"
                         heading="Lista zaksięgowanych płatności"
                         subheading="Śledź potwierdzone płatności związane z projektem"
                         button
@@ -199,6 +201,8 @@ const editableFields: editableField[] = [
                 <div>
                     <PaymentsTable
                         :payments="project.payments.filter((p) => p.status === 'pending')"
+                        :client="project.client"
+                        :project="project"
                         heading="Lista oczekujących płatności"
                         subheading="Sprawdź płatności, które wciąż nie zostały zaksięgowane"
                     />
@@ -207,6 +211,8 @@ const editableFields: editableField[] = [
                 <div>
                     <PaymentsTable
                         :payments="project.payments.filter((p) => p.status === 'cancelled')"
+                        :client="project.client"
+                        :project="project"
                         heading="Lista anulowanych płatności"
                         subheading="Płatności, które nie będą opłacone"
                     />
