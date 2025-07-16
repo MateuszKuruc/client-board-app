@@ -52,11 +52,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/projekty/eksport', [ProjectController::class, 'export'])->name('projects.export');
 
 
-//    Route::prefix('/projekty/{project}')->group(function () {
-//        Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
-//        Route::get('/platnosci/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
-//    });
-
 
     //  Payments
     Route::get('/platnosci', [PaymentController::class, 'index'])->name('payments.index');
@@ -74,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Leads
     Route::get('/leady', [LeadController::class, 'index'])->name('leads.index');
-    Route:: get('/leady/dodaj', [LeadController::class, 'create'])->name('leads.create');
+    Route::get('/leady/dodaj', [LeadController::class, 'create'])->name('leads.create');
     Route::put('/leady/{lead}', [LeadController::class, 'update'])->name('leads.update');
     Route::post('/leady', [LeadController::class, 'store'])->name('leads.store');
     Route::get('/leady/eksport', [LeadController::class, 'export'])->name('leads.export');
