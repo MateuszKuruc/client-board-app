@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ProjectsExport;
 use App\Http\Requests\Expenses\StoreExpenseRequest;
+use App\Http\Requests\Expenses\UpdateExpenseRequest;
 use App\Models\Expense;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -47,12 +48,17 @@ class ExpenseController extends Controller
 
     public function show(Expense $expense)
     {
+        $latestExpenses = Expense::latest()->take(3)->get();
+        $biggestExpenses = Expense::where('is_paid', 1)->orderBy('amount', 'desc')->take(3)->get();
+
         return Inertia::render('expenses/Show', [
-            'expense' => $expense
+            'expense' => $expense,
+            'latestExpenses' => $latestExpenses,
+            'biggestExpenses' => $biggestExpenses,
         ]);
     }
 
-    public function update(StoreExpenseRequest $request, Expense $expense)
+    public function update(UpdateExpenseRequest $request, Expense $expense)
     {
         $validated = $request->validated();
 
