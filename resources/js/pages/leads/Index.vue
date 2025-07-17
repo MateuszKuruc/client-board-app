@@ -39,18 +39,18 @@ const { globalSearch } = useServerSearch(filters.search || '', 'leads.index');
 
                 <Column field="email" header="Email"> </Column>
                 <Column field="phone" header="Telefon">
-                    <template #body="{ data }: { data: Lead }">
-                        {{ data.phone ? data.phone : '-' }}
+                    <template #body="{ data: lead }: { data: Lead }">
+                        {{ lead.phone ? lead.phone : '-' }}
                     </template>
                 </Column>
                 <Column field="converted_at" header="Status">
-                    <template #body="{ data }: { data: Lead }">
-                        <Tag :value="data.converted_at ? 'Przekonwertowany' : 'Potencjalny'" :severity="data.converted_at ? 'success' : 'warn'" />
+                    <template #body="{ data: lead }: { data: Lead }">
+                        <Tag :value="lead.converted_at ? 'Przekonwertowany' : 'Potencjalny'" :severity="lead.converted_at ? 'success' : 'warn'" />
                     </template>
                 </Column>
 
                 <Column header="Aktualizacja">
-                    <template #body="{ data }: { data: Lead }">
+                    <template #body="{ data: lead }: { data: Lead }">
                         <StyledLink variant="text" href="#">
                             <SquarePen />
                             Zamień w klienta
