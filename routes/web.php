@@ -32,8 +32,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/klienci/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
 
 
-
-
     //  Projects
     Route::prefix('/klienci/{client}')->group(function () {
         Route::get('/projekty/{project}', [ProjectController::class, 'show'])->name('projects.show');
@@ -53,7 +51,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/projekty/eksport', [ProjectController::class, 'export'])->name('projects.export');
 
 
-
     //  Payments
     Route::get('/platnosci', [PaymentController::class, 'index'])->name('payments.index');
     Route::post('/platnosci', [PaymentController::class, 'store'])->name('payments.store');
@@ -61,10 +58,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/platnosci/eksport', [PaymentController::class, 'export'])->name('payments.export');
 
 
-
     // Expenses
     Route::get('/koszty', [ExpenseController::class, 'index'])->name('expenses.index');
     Route::get('/koszty/dodaj', [ExpenseController::class, 'create'])->name('expenses.create');
+    Route::get('/koszty/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
     Route::put('/koszty/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::post('/koszty', [ExpenseController::class, 'store'])->name('expenses.store');
 
