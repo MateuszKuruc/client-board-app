@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ProjectsExport;
 use App\Http\Requests\Projects\StoreProjectRequest;
+use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\Service;
@@ -84,7 +85,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function update(Request $request, Client $client, Project $project)
+    public function update(UpdateProjectRequest $request, Client $client, Project $project)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -101,10 +102,8 @@ class ProjectController extends Controller
         return redirect()->route('projects.show', ['client' => $client->slug, 'project' => $project->id]);
     }
 
-    public
-    function export(
-        Request $request
-    ) {
+    public function export(Request $request)
+    {
         $search = $request->input('search');
 
         return Excel::download(new ProjectsExport($search), 'projects.xlsx');
