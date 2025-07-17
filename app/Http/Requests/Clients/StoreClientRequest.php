@@ -45,7 +45,7 @@ class StoreClientRequest extends FormRequest
             'phone.digits_between' => 'Telefon musi mieć od 9 do 11 cyfr',
             'phone.unique' => 'Ten numer telefonu już istnieje',
 
-            'nip.digits' => 'NIP musi składać się z 10 cyfr',
+            'nip' => 'NIP powinien składać się z 10 cyfr',
 
             'source.required' => 'Wybierz źródło klienta',
             'source.in' => 'Wybrane źródło jest nieprawidłowe',
