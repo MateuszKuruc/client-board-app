@@ -35,14 +35,21 @@ class StoreClientRequest extends FormRequest
     {
         return [
             'name.required' => 'Podaj nazwę klienta',
+            'name.min' => 'Nazwa klienta musi mieć minimum 3 znaki',
+            'name.max' => 'Nazwa klienta może mieć maksymalnie 255 znaków',
+
             'email.required' => 'Podaj adres e‑mail',
             'email.email' => 'Podaj poprawny adres e‑mail',
             'email.unique' => 'Ten adres e‑mail jest już zajęty',
+
             'phone.digits_between' => 'Telefon musi mieć od 9 do 11 cyfr',
             'phone.unique' => 'Ten numer telefonu już istnieje',
+
             'nip.digits' => 'NIP musi składać się z 10 cyfr',
+
             'source.required' => 'Wybierz źródło klienta',
             'source.in' => 'Wybrane źródło jest nieprawidłowe',
+
             'location.required' => 'Wybierz lokalizację klienta',
             'location.in' => 'Wybrana lokalizacja jest nieprawidłowa',
         ];

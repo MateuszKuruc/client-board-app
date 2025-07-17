@@ -30,11 +30,14 @@ class StorePaymentRequest extends FormRequest
     {
         return [
             'project_id.required' => 'Przypisz płatność do projektu',
+
             'amount.required' => 'Podaj kwotę płatności',
             'amount.numeric' => 'Kwota musi być liczbą',
             'amount.min' => 'Kwota musi być dodatnia',
             'amount.max' => 'Kwota nie może przekraczać 999 999,99',
+
             'status' => 'Wybierz status płatności',
+
             'payment_date.date' => 'Data płatności jest nieprawidłowa'
         ];
     }

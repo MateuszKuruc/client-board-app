@@ -30,6 +30,7 @@ class StoreLeadRequest extends FormRequest
             'email.required' => 'Podaj adres e-mail',
             'email.email' => 'Podaj poprawny adres e-mail',
             'email.unique' => 'Ten adres email już istnieje',
+
             'phone.unique' => 'Ten numer telefonu już istnieje',
             'phone.digits_between' => 'Telefon musi mieć między 9 a 11 cyfr',
         ];
