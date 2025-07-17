@@ -3,11 +3,10 @@ import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
-import Tag from '@/components/volt/Tag.vue';
 import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import type { Filters, Lead, Paginated, Expense } from '@/types/models';
+import type { Expense, Filters, Paginated } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
@@ -38,16 +37,22 @@ const { globalSearch } = useServerSearch(filters.search || '', 'expenses.index')
                 </template>
                 <Column field="id" header="Numer płatności" />
                 <Column field="name" header="Koszt" />
+                <Column field="amount" header="Cena" />
                 <Column field="type" header="Rodzaj płatności">
                     <template #body="{ data: expense }: { data: Expense }">
                         {{ expense.type }}
+                    </template>
+                </Column>
+                <Column field="is_paid" header="Status płatności">
+                    <template #body="{ data: expense }: { data: Expense }">
+                        {{ expense.is_paid ? 'Opłacona' : 'Nieopłacona' }}
                     </template>
                 </Column>
                 <Column field="payment_date" header="Data płatności" />
 
                 <Column header="Opcje">
                     <template #body="{ data: expense }: { data: Expense }">
-                        <StyledLink variant="text" href="#">
+                        <StyledLink variant="text" :href="route('expenses.show', expense.id)">
                             <SquarePen />
                             Edytuj
                         </StyledLink>
