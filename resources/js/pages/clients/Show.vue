@@ -21,29 +21,29 @@ import { computed, ref, Ref } from 'vue';
 
 const toast = useToast();
 
-const { client } = defineProps<{
+const props = defineProps<{
     client: Client;
 }>();
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs = computed<BreadcrumbItem[]>(() => [
     {
         title: 'Klienci',
         href: route('clients.index'),
     },
     {
-        title: client.name,
-        href: `/klienci/${client.slug}`,
+        title: props.client.name,
+        href: `/klienci/${props.client.slug}`,
     },
-];
+]);
 
 type EditableField =
     | { key: string; label: string; type?: 'text' }
     | {
-    key: string
-    label: string
-    type: 'select'
-    options: typeof sourceOptions | typeof locationOptions
-}
+          key: string;
+          label: string;
+          type: 'select';
+          options: typeof sourceOptions | typeof locationOptions;
+      };
 
 const editableFields: EditableField = [
     { key: 'name', label: 'Nazwa' },
@@ -80,7 +80,7 @@ const form = useForm<Client>({
 const isEditing: Ref<boolean> = ref(false);
 
 function submitEdit() {
-    form.put(route('clients.update', client.slug), {
+    form.put(route('clients.update', props.client.slug), {
         preserveScroll: true,
         onSuccess: () => {
             isEditing.value = false;
@@ -102,13 +102,13 @@ function cancelEdit() {
 }
 
 const expectedActivePaymentsTotal = Number(
-    client.projects
+    props.client.projects
         .filter((p) => p.active)
         .reduce((total, project) => total + Number(project.price), 0)
         .toFixed(2),
 );
 
-const activeProjects = client.projects.filter((p) => p.active);
+const activeProjects = props.client.projects.filter((p) => p.active);
 
 const activePaidProjects = Number(
     activeProjects
@@ -121,7 +121,7 @@ const activePaidProjects = Number(
 const remainingPaymentsSum = Number((expectedActivePaymentsTotal - activePaidProjects).toFixed(2));
 
 const lifetimeValue = Number(
-    client.projects
+    props.client.projects
         .flatMap((p) => p.payments)
         .filter((p) => p.status === 'paid')
         .reduce((total, project) => total + Number(project.amount), 0)
@@ -131,9 +131,9 @@ const lifetimeValue = Number(
 const monthlyTotals = computed<Record<string, number>>(() => {
     const totals: Record<string, number> = {};
 
-    if (!client?.projects?.length) return totals;
+    if (!props.client?.projects?.length) return totals;
 
-    client.projects
+    props.client.projects
         .flatMap((project) => project.payments || [])
         .filter((payment) => payment.status === 'paid')
         .forEach((payment) => {
@@ -155,7 +155,7 @@ const lastMonthPaidTotal = computed<string>(() => {
     const targetMonth = lastMonth.toISOString().slice(0, 7);
 
     return Number(
-        client.projects
+        props.client.projects
             .flatMap((p) => p.payments || null)
             .filter((p) => p.status === 'paid' && p.payment_date.startsWith(targetMonth))
             .reduce((total, p) => total + Number(p.amount), 0)
@@ -201,6 +201,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                                 :label="field.label"
                                 :type="field.type || 'text'"
                                 :options="field.options || []"
+                                :error="form.errors[field.key]"
                             />
                         </li>
                     </ul>

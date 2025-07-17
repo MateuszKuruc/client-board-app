@@ -24,7 +24,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { projects } = defineProps<{
+const props = defineProps<{
     projects: Project[];
 }>();
 

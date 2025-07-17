@@ -19,12 +19,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { leads, filters } = defineProps<{
+const props = defineProps<{
     leads: Paginated<Lead>;
     filters: Filters;
 }>();
 
-const { globalSearch } = useServerSearch(filters.search || '', 'leads.index');
+const { globalSearch } = useServerSearch(props.filters.search || '', 'leads.index');
 </script>
 
 <template>

@@ -21,14 +21,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { clients, filters } = defineProps<{
+const props = defineProps<{
     clients: Paginated<Client>;
     filters: Filters;
 }>();
 
-const { globalSearch } = useServerSearch(filters.search || '', 'clients.index');
+const { globalSearch } = useServerSearch(props.filters.search || '', 'clients.index');
 
-const { expandedRows, expandAll, collapseAll } = useExpandableRows(clients.data);
+const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients.data);
 </script>
 
 <template>

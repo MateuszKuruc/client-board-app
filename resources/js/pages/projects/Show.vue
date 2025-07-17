@@ -14,7 +14,7 @@ import { ref, Ref } from 'vue';
 
 const toast = useToast();
 
-const { project, services } = defineProps<{
+const props = defineProps<{
     project: Project;
     services: Service[];
 }>();
@@ -25,8 +25,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('clients.index'),
     },
     {
-        title: project.client.name,
-        href: route('clients.show', project.client.slug),
+        title: props.project.client.name,
+        href: route('clients.show', props.project.client.slug),
     },
     {
         title: 'Projekty',
@@ -34,11 +34,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: project.name,
-        href: `/klienci/${project.client.slug}/projekty/${project.id}`,
+        href: `/klienci/${props.project.client.slug}/projekty/${props.project.id}`,
     },
 ];
 
-const serviceOptions: string[] = services.map((service) => service.name);
+const serviceOptions: string[] = props.services.map((service) => service.name);
 const statusOptions: string[] = ['Aktywny', 'Nieaktywny'];
 const typeOptions: string[] = ['Subskrypcja', 'Standard'];
 
@@ -94,8 +94,8 @@ function submitEdit() {
         return data;
     }).put(
         route('projects.update', {
-            client: project.client.slug,
-            project: project.id,
+            client: props.project.client.slug,
+            project: props.project.id,
         }),
         {
             preserveScroll: true,
@@ -180,6 +180,7 @@ const editableFields: editableField[] = [
                             :type="field.type || 'text'"
                             :options="field.options || []"
                             :minDate="field.key === 'end_date' ? new Date(form.start_date) : undefined"
+                            :error="form.errors[field.key]"
                         />
                     </li>
                 </ul>

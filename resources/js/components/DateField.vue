@@ -2,7 +2,7 @@
 import FormField from '@/components/FormField.vue';
 import DatePicker from '@/components/volt/DatePicker.vue';
 
-const { id, label, modelValue, placeholder } = defineProps<{
+defineProps<{
     id: string;
     label: string;
     modelValue: any;

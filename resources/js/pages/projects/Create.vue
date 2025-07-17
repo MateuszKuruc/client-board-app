@@ -19,7 +19,7 @@ interface Option {
     label: string;
 }
 
-const { clients, services } = defineProps<{
+const props = defineProps<{
     clients: Option[];
     services: Option[];
 }>();

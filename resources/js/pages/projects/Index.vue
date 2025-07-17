@@ -21,14 +21,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { projects, filters } = defineProps<{
+const props = defineProps<{
     projects: Paginated<Project>;
     filters: Filter;
 }>();
 
-const { globalSearch } = useServerSearch(filters.search || '', 'projects.index');
+const { globalSearch } = useServerSearch(props.filters.search || '', 'projects.index');
 
-const { expandedRows, expandAll, collapseAll } = useExpandableRows(projects.data);
+const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.projects.data);
 
 function getSortedPayments(project) {
     return [...project.payments].sort((a, b) => {

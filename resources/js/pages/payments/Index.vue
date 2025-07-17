@@ -20,12 +20,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { payments, filters } = defineProps<{
+const props = defineProps<{
     payments: Paginated<Payment>;
     filters: Filters;
 }>();
 
-const { globalSearch } = useServerSearch(filters.search || '', 'payments.index');
+const { globalSearch } = useServerSearch(props.filters.search || '', 'payments.index');
 </script>
 
 <template>

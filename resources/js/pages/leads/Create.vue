@@ -4,7 +4,6 @@ import InputField from '@/components/InputField.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Project } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 
@@ -20,10 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/leady',
     },
 ];
-
-const { projects } = defineProps<{
-    projects: Project[];
-}>();
 
 const form = useForm<Payment>({
     email: null,

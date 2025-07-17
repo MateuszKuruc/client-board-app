@@ -4,7 +4,7 @@ import Button from '@/components/volt/Button.vue';
 import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import { Pencil, X } from 'lucide-vue-next';
 
-const { buttonLabel, isEditing } = defineProps<{
+const props = defineProps<{
     isEditing: boolean;
     buttonLabel?: string;
 }>();
@@ -27,19 +27,19 @@ function onSave() {
 <template>
     <div class="mt-5 flex items-center lg:mt-0">
         <span>
-            <SecondaryButton v-if="!isEditing" @click="onEdit">
+            <SecondaryButton v-if="!props.isEditing" @click="onEdit">
                 <Pencil class="w-5 text-gray-400" />
-                {{ buttonLabel }}
+                {{ props.buttonLabel }}
             </SecondaryButton>
 
-            <SecondaryButton v-if="isEditing" @click="onCancel">
+            <SecondaryButton v-if="props.isEditing" @click="onCancel">
                 <X class="w-5 text-gray-400" />
                 Anuluj
             </SecondaryButton>
         </span>
 
         <span>
-            <Button v-if="isEditing" @click="onSave" class="ml-2">
+            <Button v-if="props.isEditing" @click="onSave" class="ml-2">
                 <svg class="mr-1.5 -ml-0.5 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                     <path
                         fill-rule="evenodd"

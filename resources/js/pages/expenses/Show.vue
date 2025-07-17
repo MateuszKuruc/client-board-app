@@ -3,19 +3,19 @@ import ActionButtons from '@/components/ActionButtons.vue';
 import EditableField from '@/components/EditableField.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
-import { booleanPaidOptions } from '@/constants/booleanPaidOptions';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
-import { Payment } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
+import ExpensesTable from '@/components/ExpensesTable.vue';
 
 const toast = useToast();
 
-const { expense } = defineProps<{
+const { expense, expenses } = defineProps<{
     expense: Expense;
+    expenses: Expense[];
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -49,40 +49,19 @@ type EditableField =
           type: 'picker';
       };
 
-// const paidToString = (is_paid: boolean): string => {
-//     return is_paid ? 'Aktywny' : 'Nieaktywny';
-// };
-//
-// const stringToPaid = (is_paid: string): boolean => {
-//     return is_paid === 'Aktywny';
-// };
-
-const paidToString = (is_paid: boolean): string => is_paid ? 'Opłacona' : 'Nieopłacona';
+const paidToString = (is_paid: boolean): string => (is_paid ? 'Opłacona' : 'Nieopłacona');
 const stringToPaid = (label: string): boolean => label === 'Opłacona';
-
 
 const isEditing: Ref<boolean> = ref(false);
 
 function submitEdit() {
     form.transform((data) => {
-
         data.is_paid = stringToPaid(data.is_paid_status); // <-- map back to boolean
         delete data.is_paid_status;
 
-        data.payment_date = data.payment_date
-            ? dayjs(data.payment_date).format('YYYY-MM-DD')
-            : null;
+        data.payment_date = data.payment_date ? dayjs(data.payment_date).format('YYYY-MM-DD') : null;
 
         return data;
-
-
-        // if (data.payment_date) {
-        //     data.payment_date = dayjs(data.payment_date).format('YYYY-MM-DD');
-        // } else {
-        //     data.payment_date = null;
-        // }
-        //
-        // return data;
     }).put(route('expenses.update', { expense: expense.id }), {
         preserveScroll: true,
         onSuccess: () => {
@@ -125,8 +104,6 @@ const editableFields: EditableField[] = [
     },
     { key: 'payment_date', label: 'Data płatności', type: 'picker' },
 ] as const;
-
-
 </script>
 
 <template>
@@ -158,18 +135,17 @@ const editableFields: EditableField[] = [
                 </ul>
             </div>
 
-            <!--            <div class="mt-6 flex flex-col gap-4">-->
-            <!--                <div>-->
-            <!--                    <PaymentsTable-->
-            <!--                        :payments="payment.project.payments.filter((p) => p.id !== payment.id)"-->
-            <!--                        :client="payment.project.client"-->
-            <!--                        :project="payment.project"-->
-            <!--                        heading="Powiązane płatności"-->
-            <!--                        subheading="Lista innych płatności przypisanych do tego samego projektu"-->
-            <!--                        button-->
-            <!--                    />-->
-            <!--                </div>-->
-            <!--            </div>-->
+            <div class="mt-6 flex flex-col gap-4">
+                <div>
+                    <ExpensesTable
+                        :expenses="expenses"
+                        :expense="expense"
+                        heading="Powiązane koszty"
+                        subheading="Lista innych płatności przypisanych do tego samego projektu"
+                        button
+                    />
+                </div>
+            </div>
         </div>
     </AppLayout>
 </template>

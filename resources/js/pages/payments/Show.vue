@@ -14,7 +14,7 @@ import { ref, Ref } from 'vue';
 
 const toast = useToast();
 
-const { payment } = defineProps<{
+const props = defineProps<{
     payment: Payment;
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
@@ -24,23 +24,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: payment.project.client.name,
-        href: route('clients.show', payment.project.client.slug),
+        href: route('clients.show', props.payment.project.client.slug),
     },
     {
         title: 'Projekty',
         href: route('projects.index'),
     },
     {
-        title: payment.project.name,
-        href: route('projects.show', { client: payment.project.client.slug, project: payment.project.id }),
+        title: props.payment.project.name,
+        href: route('projects.show', { client: props.payment.project.client.slug, project: props.payment.project.id }),
     },
     {
         title: 'Płatności',
         href: route('payments.index'),
     },
     {
-        title: `Płatność ${payment.id}`,
-        href: `/klienci/${payment.project.client.slug}/projekty/${payment.project.id}/platnosci/${payment.id}`,
+        title: `Płatność ${props.payment.id}`,
+        href: `/klienci/${props.payment.project.client.slug}/projekty/${props.payment.project.id}/platnosci/${props.payment.id}`,
     },
 ];
 
@@ -73,7 +73,7 @@ function submitEdit() {
         }
 
         return data;
-    }).put(route('payments.update', { client: payment.project.client.slug, project: payment.project.id, payment: payment.id }), {
+    }).put(route('payments.update', { client: props.payment.project.client.slug, project: props.payment.project.id, payment: props.payment.id }), {
         preserveScroll: true,
         onSuccess: () => {
             isEditing.value = false;
