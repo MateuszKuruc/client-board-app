@@ -3,13 +3,13 @@ import dayjs from '@/plugins/dayjs';
 import { Client } from '@/types/models';
 import { computed } from 'vue';
 
-const { title, client } = defineProps<{
+const props = defineProps<{
     title: string;
     client: Client;
 }>();
 
 const firstPaidProjectDate = computed(() => {
-    const paidPayments = client.projects
+    const paidPayments = props.client.projects
         .flatMap((p) => p.payments.filter((payment) => payment.status === 'paid'))
         .sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
 
@@ -17,7 +17,7 @@ const firstPaidProjectDate = computed(() => {
 });
 
 const lastPaidProjectEndDate = computed(() => {
-    const paidPaymentsWithProject = client.projects.flatMap((project) =>
+    const paidPaymentsWithProject = props.client.projects.flatMap((project) =>
         project.payments.filter((payment) => payment.status === 'paid').map((payment) => ({ ...payment, project })),
     );
 
@@ -27,7 +27,7 @@ const lastPaidProjectEndDate = computed(() => {
 });
 
 const paymentType = computed(() => {
-    const activeProjects = client.projects.filter((p) => p.active);
+    const activeProjects = props.client.projects.filter((p) => p.active);
     const types = activeProjects.map((p) => p.type);
 
     if (types.includes('Subskrypcja') && types.includes('Standard')) return 'Mieszane';
@@ -54,7 +54,7 @@ const paymentType = computed(() => {
                             d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 0 1-9.274 0C3.985 17.585 3 16.402 3 15.055Z"
                         />
                     </svg>
-                    {{ client.projects.some((p) => p.active) ? 'Aktywny' : 'Nieaktywny' }}
+                    {{ props.client.projects.some((p) => p.active) ? 'Aktywny' : 'Nieaktywny' }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -64,7 +64,7 @@ const paymentType = computed(() => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                    {{ client.location === 'local' ? 'Lokalny' : client.location === 'remote' ? 'Krajowy' : 'Zagraniczny' }}
+                    {{ props.client.location === 'local' ? 'Lokalny' : client.location === 'remote' ? 'Krajowy' : 'Zagraniczny' }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
