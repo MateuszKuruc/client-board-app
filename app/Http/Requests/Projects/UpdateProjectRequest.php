@@ -33,7 +33,8 @@ class UpdateProjectRequest extends FormRequest
     {
         return [
             'name.required' => 'Podaj nazwę projektu',
-            'name.max' => 'Nazwa projektu nie może przekraczać 255 znaków',
+            'name.min' => 'Nazwa projektu musi mieć minimum :min znaki',
+            'name.max' => 'Nazwa projektu nie może przekraczać :max znaków',
 
             'service_id.required' => 'Wybierz rodzaj usługi',
             'service_id.numeric' => 'ID usługi musi być liczbą',
