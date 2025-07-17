@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ClientsExport;
 use App\Http\Requests\Clients\StoreClientRequest;
+use App\Http\Requests\Clients\UpdateClientRequest;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -58,29 +59,9 @@ class ClientController extends Controller
         ]);
     }
 
-    public function update(Request $request, Client $client)
+    public function update(UpdateClientRequest $request, Client $client)
     {
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('clients')->ignore($client->id),
-            ],
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('clients')->ignore($client->id),
-            ],
-            'phone' => ['nullable', 'string', 'max:50'],
-            'nip' => ['nullable', 'string', 'max:20'],
-            'source' => [
-                'required',
-                Rule::in(['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne']),
-            ],
-            'location' => ['required', Rule::in(['local', 'remote', 'international'])],
-        ]);
+        $validated = $request->validated();
 
         $validated['slug'] = Str::slug($validated['name']);
 
