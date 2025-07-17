@@ -48,7 +48,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Nowa płatność" />
+    <Head title="Nowy klient" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <FormLayout title="Dodaj nowego klienta" description="Uzupełnij wymagane pola i utwórz profil klienta">
