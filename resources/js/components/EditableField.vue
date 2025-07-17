@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DatePicker from '@/components/volt/DatePicker.vue';
 import InputText from '@/components/volt/InputText.vue';
+import Message from '@/components/volt/Message.vue';
 import Select from '@/components/volt/Select.vue';
 import { viewLabels } from '@/constants/viewLabels';
 import dayjs from '@/plugins/dayjs';
@@ -13,9 +14,25 @@ interface EditableFieldProps {
     type?: 'text' | 'select' | 'picker';
     options?: string[] | { value: string; label: string }[];
     minDate?: string | Date;
+    error?: string[] | null;
 }
 
-const { label, isEditing, modelValue, type, options, minDate } = defineProps({
+// const { label, isEditing, modelValue, type, options, minDate } = defineProps({
+//     label: String as PropType<EditableFieldProps['label']>,
+//     isEditing: Boolean as PropType<EditableFieldProps['isEditing']>,
+//     modelValue: [String, Date] as PropType<EditableFieldProps['modelValue']>,
+//     type: {
+//         type: String as PropType<EditableFieldProps['type']>,
+//         default: 'text',
+//     },
+//     options: {
+//         type: Array as PropType<EditableFieldProps['options']>,
+//         default: () => [] as string[],
+//     },
+//     minDate: [String, Date] as PropType<EditableFieldProps['minDate']>,
+// } as const);
+
+const props = defineProps({
     label: String as PropType<EditableFieldProps['label']>,
     isEditing: Boolean as PropType<EditableFieldProps['isEditing']>,
     modelValue: [String, Date] as PropType<EditableFieldProps['modelValue']>,
@@ -28,6 +45,10 @@ const { label, isEditing, modelValue, type, options, minDate } = defineProps({
         default: () => [] as string[],
     },
     minDate: [String, Date] as PropType<EditableFieldProps['minDate']>,
+    error: {
+        type: Array as PropType<string[]>,
+        default: () => [],
+    },
 } as const);
 
 const emit = defineEmits<{
@@ -50,32 +71,39 @@ const emit = defineEmits<{
             {{ modelValue ? dayjs(modelValue).format('DD.MM.YYYY') : '-' }}
         </p>
 
-        <Select
-            v-if="isEditing && type === 'select'"
-            :options="options"
-            :optionLabel="typeof options[0] === 'string' ? undefined : 'label'"
-            :optionValue="typeof options[0] === 'string' ? undefined : 'value'"
-            :modelValue="modelValue"
-            @update:modelValue="(val) => emit('update:modelValue', val)"
-        />
+        <div v-if="isEditing && type === 'select'" class="flex flex-col gap-2">
+            <Select
+                v-if="isEditing && type === 'select'"
+                :options="options"
+                :optionLabel="typeof options[0] === 'string' ? undefined : 'label'"
+                :optionValue="typeof options[0] === 'string' ? undefined : 'value'"
+                :modelValue="modelValue"
+                @update:modelValue="(val) => emit('update:modelValue', val)"
+            />
+            <Message v-if="props.error.length" severity="error" size="small">{{ error }}</Message>
+        </div>
 
-        <DatePicker
-            v-else-if="isEditing && type === 'picker'"
-            showIcon
-            fluid
-            iconDisplay="input"
-            dateFormat="dd.mm.yy"
-            :minDate="minDate"
-            :modelValue="modelValue"
-            @update:modelValue="(val) => emit('update:modelValue', val)"
-        />
+        <div v-else-if="isEditing && type === 'picker'" class="flex flex-col gap-2">
+            <DatePicker
+                showIcon
+                fluid
+                iconDisplay="input"
+                dateFormat="dd.mm.yy"
+                :minDate="minDate"
+                :modelValue="modelValue"
+                @update:modelValue="(val) => emit('update:modelValue', val)"
+            />
+            <Message v-if="props.error.length" severity="error" size="small">{{ error }}</Message>
+        </div>
 
-        <InputText
-            v-else-if="isEditing"
-            type="text"
-            :value="modelValue"
-            @input="(e) => emit('update:modelValue', e.target.value)"
-            class="mt-1 px-2 py-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"
-        />
+        <div v-else-if="isEditing" class="flex flex-col gap-2">
+            <InputText
+                type="text"
+                :value="modelValue"
+                @input="(e) => emit('update:modelValue', e.target.value)"
+                class="mt-1 px-2 py-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"
+            />
+            <Message v-if="props.error.length" severity="error" size="small">{{ error }}</Message>
+        </div>
     </div>
 </template>
