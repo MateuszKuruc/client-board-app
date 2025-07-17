@@ -75,6 +75,14 @@ export interface Service {
     updated_at: string;
 }
 
+export interface Expense {
+    id: number;
+    name: string;
+    amount: number;
+    type: string;
+    payment_date: date | null;
+}
+
 export interface Paginated<T> {
     current_page: number;
     data: T[];
