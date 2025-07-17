@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
-import Button from '@/components/volt/Button.vue';
-import ContrastButton from '@/components/volt/ContrastButton.vue';
+import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
@@ -11,10 +10,9 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Filter, Paginated, Payment, Project } from '@/types/models';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import StyledLink from '@/components/StyledLink.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -65,21 +63,21 @@ function getSortedPayments(project) {
                 <Column field="name" header="Projekt" />
                 <Column field="client.name" header="Klient" />
                 <Column field="price" header="Cena">
-                    <template #body="{ data }: { data: Project }"> {{ data.price }} zł </template>
+                    <template #body="{ data: project }: { data: Project }"> {{ project.price }} zł </template>
                 </Column>
                 <Column field="start_date" header="Data startu">
-                    <template #body="{ data }: { data: Project }">
-                        {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
+                    <template #body="{ data: project }: { data: Project }">
+                        {{ project.start_date ? dayjs(project.start_date).format('DD.MM.YYYY') : '-' }}
                     </template>
                 </Column>
                 <Column field="end_date" header="Data zakończenia">
-                    <template #body="{ data }: { data: Project }">
-                        {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
+                    <template #body="{ data: project }: { data: Project }">
+                        {{ project.end_date ? dayjs(project.end_date).format('DD.MM.YYYY') : '-' }}
                     </template>
                 </Column>
                 <Column header="Szczegóły">
-                    <template #body="{ data }: { data: Project }">
-                        <StyledLink :href="route('projects.show', { client: data.client?.slug, project: data.id })">
+                    <template #body="{ data: project }: { data: Project }">
+                        <StyledLink :href="route('projects.show', { client: project.client?.slug, project: project.id })">
                             <FolderOpenDot />
                         </StyledLink>
                     </template>
@@ -110,7 +108,8 @@ function getSortedPayments(project) {
                                 <Column header="Akcja">
                                     <template #body="{ data: payment }: { data: Payment }">
                                         <StyledLink
-                                            variant="text" :href="route('payments.show', { client: project.client.slug, project: project.id, payment: payment.id })"
+                                            variant="text"
+                                            :href="route('payments.show', { client: project.client.slug, project: project.id, payment: payment.id })"
                                         >
                                             Zarządzaj płatnością
                                         </StyledLink>
