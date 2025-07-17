@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 
-class StoreProjectRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +20,6 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:3', 'max:255', 'string'],
-            'client_id' => ['required', 'numeric', Rule::exists('clients', 'id')],
             'service_id' => ['required', 'numeric', Rule::exists('services', 'id')],
             'active' => ['required', 'boolean'],
             'price' => ['required', 'numeric', 'min:1', 'max:999999.99'],
@@ -35,10 +34,6 @@ class StoreProjectRequest extends FormRequest
         return [
             'name.required' => 'Podaj nazwę projektu',
             'name.max' => 'Nazwa projektu nie może przekraczać 255 znaków',
-
-            'client_id.required' => 'Przypisz projekt do klienta',
-            'client_id.numeric' => 'ID klienta musi być liczbą',
-            'client_id.exists' => 'Wybrany klient nie istnieje',
 
             'service_id.required' => 'Wybierz rodzaj usługi',
             'service_id.numeric' => 'ID usługi musi być liczbą',
