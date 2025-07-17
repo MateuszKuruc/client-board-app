@@ -2,15 +2,15 @@
 import ActionButtons from '@/components/ActionButtons.vue';
 import EditableField from '@/components/EditableField.vue';
 import PageHeadingProject from '@/components/PageHeadingProject.vue';
+import PaymentsTable from '@/components/PaymentsTable.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import { Project, Service } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
-import { ref, Ref } from 'vue';
-import PaymentsTable from '@/components/PaymentsTable.vue';
 import { useToast } from 'primevue/usetoast';
+import { ref, Ref } from 'vue';
 
 const toast = useToast();
 
@@ -85,9 +85,8 @@ function submitEdit() {
         data.service_id = serviceNameToId(data.service_name);
         data.active = stringToActive(data.active_status);
 
-        data.start_date = dayjs(data.start_date).format('YYYY-MM-DD');
-
-        data.end_date = dayjs(data.end_date).format('YYYY-MM-DD');
+        data.start_date = data.start_date ? dayjs(data.start_date).format('YYYY-MM-DD') : null;
+        data.end_date = data.end_date ? dayjs(data.end_date).format('YYYY-MM-DD') : null;
 
         delete data.service_name;
         delete data.active_status;
@@ -109,7 +108,7 @@ function submitEdit() {
             },
             onError: () => {
                 toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Zmiany nie zostały zapisane', life: 3000 });
-            }
+            },
         },
     );
 }
@@ -157,7 +156,7 @@ const editableFields: editableField[] = [
 </script>
 
 <template>
-    <Head :title="breadcrumbs[0].title" />
+    <Head :title="breadcrumbs[3].title" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
@@ -186,7 +185,7 @@ const editableFields: editableField[] = [
                 </ul>
             </div>
 
-            <div class="flex flex-col mt-6 gap-4">
+            <div class="mt-6 flex flex-col gap-4">
                 <div>
                     <PaymentsTable
                         :payments="project.payments.filter((p) => p.status === 'paid')"
