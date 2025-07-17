@@ -5,10 +5,10 @@ import InputField from '@/components/InputField.vue';
 import SelectField from '@/components/SelectField.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 import { booleanPaidOptions } from '@/constants/booleanPaidOptions';
+import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Expense } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 
@@ -24,12 +24,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/koszty/dodaj',
     },
 ];
-
-const { expenses } = defineProps<{
-    expenses: Expense[];
-}>();
-
-const typeOptions = ['Miesięczna', 'Roczna', 'Jednorazowa'];
 
 const form = useForm<Payment>({
     name: null,
@@ -105,7 +99,7 @@ const submit = () => {
                             label="Rodzaj płatności"
                             :error="form.errors.type"
                             v-model="form.type"
-                            :options="typeOptions"
+                            :options="expenseTypeOptions"
                             placeholder="Wybierz status"
                             required
                         />
