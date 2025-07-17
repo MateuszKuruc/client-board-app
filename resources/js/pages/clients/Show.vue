@@ -7,7 +7,6 @@ import ProjectsTable from '@/components/ProjectsTable.vue';
 import ReusableCard from '@/components/ReusableCard.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
-import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import { locationOptions } from '@/constants/locationOptions';
 import { sourceOptions } from '@/constants/sourceOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -15,9 +14,9 @@ import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Client } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
-import { Plus } from 'lucide-vue-next';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, Ref } from 'vue';
+import NotesBlock from '@/pages/clients/NotesBlock.vue';
 
 const toast = useToast();
 
@@ -229,15 +228,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                     </div>
                 </div>
 
-                <div>
-                    <div class="flex items-center justify-between">
-                        <SectionHeading heading="Notatki" subheading="Sprawdź dodatkowe informacje o kliencie" />
-                        <SecondaryButton>
-                            <Plus class="text-gray-400" />
-                            Dodaj notatkę</SecondaryButton
-                        >
-                    </div>
-                </div>
+                <NotesBlock href="#" />
             </div>
         </div>
     </AppLayout>

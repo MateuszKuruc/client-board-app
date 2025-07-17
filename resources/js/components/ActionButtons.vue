@@ -27,7 +27,7 @@ function onSave() {
 <template>
     <div class="mt-5 flex items-center lg:mt-0">
         <span>
-            <SecondaryButton v-if="!props.isEditing" @click="onEdit">
+            <SecondaryButton v-if="!props.isEditing" @click="onEdit" >
                 <Pencil class="w-5 text-gray-400" />
                 {{ props.buttonLabel }}
             </SecondaryButton>

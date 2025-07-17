@@ -3,7 +3,6 @@ import SectionHeading from '@/components/SectionHeading.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Divider from '@/components/volt/Divider.vue';
-import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import dayjs from '@/plugins/dayjs';
 import { Expense } from '@/types/models';
 import { Plus } from 'lucide-vue-next';
@@ -15,7 +14,7 @@ const props = withDefaults(
         heading: string;
         subheading?: string;
         button?: boolean;
-        href: string;
+        href?: string;
     }>(),
     {
         button: false,

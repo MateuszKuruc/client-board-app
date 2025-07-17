@@ -10,12 +10,14 @@ import dayjs from '@/plugins/dayjs';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
+import NotesBlock from '@/pages/clients/NotesBlock.vue';
 
 const toast = useToast();
 
 const props = defineProps<{
     expense: Expense;
-    expenses: Expense[];
+    latestExpenses: Expense[];
+    biggestExpenses: Expense[];
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -140,14 +142,24 @@ const editableFields: EditableField[] = [
             <div class="mt-6 flex flex-col gap-4">
                 <div>
                     <ExpensesTable
-                        :expenses="expenses"
-                        :expense="expense"
-                        heading="Powiązane koszty"
-                        subheading="Lista innych płatności przypisanych do tego samego projektu"
+                        :expenses="latestExpenses"
+                        heading="Ostatnie koszty"
+                        subheading="Sprawdź 3 ostatnio dodane koszty"
                         button
+                        href="#"
+                    />
+                </div>
+
+                <div>
+                    <ExpensesTable
+                        :expenses="biggestExpenses"
+                        heading="Największe wydatki"
+                        subheading="Lista najwyższych wydatków w historii"
                     />
                 </div>
             </div>
+
+            <NotesBlock subheading="" />
         </div>
     </AppLayout>
 </template>
