@@ -4,7 +4,7 @@ import FormLayout from '@/components/FormLayout.vue';
 import InputField from '@/components/InputField.vue';
 import SelectField from '@/components/SelectField.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
-import { booleanOptions } from '@/constants/booleanOptions';
+import { booleanActiveOptions } from '@/constants/booleanActiveOptions';
 import { projectTypeOptions } from '@/constants/projectTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
@@ -108,7 +108,7 @@ const submit = () => {
                             label="Status"
                             :error="form.errors.active"
                             v-model="form.active"
-                            :options="booleanOptions"
+                            :options="booleanActiveOptions"
                             optionLabel="label"
                             optionValue="value"
                             placeholder="Wybierz status projektu"
