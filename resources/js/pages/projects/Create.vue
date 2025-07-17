@@ -50,10 +50,15 @@ const submit = () => {
     form.clearErrors();
 
     form.transform((data) => {
-        if (data.payment_date) {
-            data.payment_date = dayjs(data.payment_date).format('YYYY-MM-DD');
+        if (data.start_date) {
+            data.start_date = dayjs(data.start_date).format('YYYY-MM-DD');
         } else {
-            data.payment_date = null;
+            data.start_date = null;
+        }
+        if (data.end_date) {
+            data.end_date = dayjs(data.end_date).format('YYYY-MM-DD');
+        } else {
+            data.end_date = null;
         }
 
         return data;
@@ -62,8 +67,17 @@ const submit = () => {
             form.reset();
             toast.add({ severity: 'success', summary: 'Projekt dodany poprawnie', detail: 'Dane zostały zapisane w systemie', life: 3000 });
         },
-        onError: () => {
-            toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Projekt nie został zapisany', life: 3000 });
+        onError: (errors) => {
+            if (errors.end_date) {
+                toast.add({
+                    severity: 'error',
+                    summary: 'Błąd daty',
+                    detail: 'Data zakończenia musi być późniejsza niż data startu projektu',
+                    life: 3000,
+                });
+            } else {
+                toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Projekt nie został zapisany', life: 3000 });
+            }
         },
     });
 };
@@ -135,7 +149,13 @@ const submit = () => {
                             buttonLabel="Utwórz projekt"
                             loadingLabel="Zapisywanie..."
                             :disabled="
-                                form.processing || !form.name || !form.client_id || !form.service_id || !form.active || !form.price || !form.type
+                                form.processing ||
+                                !form.name ||
+                                !form.client_id ||
+                                !form.service_id ||
+                                form.active === null ||
+                                !form.price ||
+                                !form.type
                             "
                         />
                     </div>
