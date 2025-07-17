@@ -22,7 +22,10 @@ class ExpenseController extends Controller
             ->withQueryString();;
 
         return Inertia::render('expenses/Index', [
-            'expenses' => $expenses
+            'expenses' => $expenses,
+            'filters' => [
+                'search' => $search,
+            ]
         ]);
     }
 
