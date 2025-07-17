@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { Project } from '@/types/models';
 import dayjs from '@/plugins/dayjs';
+import { Project } from '@/types/models';
 import { MonitorPlay } from 'lucide-vue-next';
+import { computed } from 'vue';
 
-const { title, project } = defineProps<{
+const props = defineProps<{
     title: string;
     project: Project;
 }>();
+
+const projectDuration = computed(() => {
+    if (props.project.start_date && props.project.end_date) {
+        return `${dayjs(props.project.start_date).format('DD.MM.YYYY')} do ${dayjs(props.project.end_date).format('DD.MM.YYYY')}`;
+    }
+    return 'Brak informacji';
+});
 </script>
 
 <template>
@@ -16,7 +24,7 @@ const { title, project } = defineProps<{
             <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <MonitorPlay class="mr-1.5 size-5 shrink-0 text-gray-400" />
-                    {{ project.service.name }}
+                    {{ props.project.service.name }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -29,7 +37,7 @@ const { title, project } = defineProps<{
                             d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 0 1-9.274 0C3.985 17.585 3 16.402 3 15.055Z"
                         />
                     </svg>
-                    {{ project.active ? 'Aktywny' : 'Nieaktywny' }}
+                    {{ props.project.active ? 'Aktywny' : 'Nieaktywny' }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -39,7 +47,9 @@ const { title, project } = defineProps<{
                             clip-rule="evenodd"
                         />
                     </svg>
-                                        {{ project.client.location === 'local' ? 'Lokalny' : project.client.location === 'remote' ? 'Krajowy' : 'Zagraniczny' }}
+                    {{
+                        props.project.client.location === 'local' ? 'Lokalny' : props.project.client.location === 'remote' ? 'Krajowy' : 'Zagraniczny'
+                    }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -52,7 +62,7 @@ const { title, project } = defineProps<{
                             clip-rule="evenodd"
                         />
                     </svg>
-                    {{ project.type }}
+                    {{ props.project.type }}
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -62,9 +72,8 @@ const { title, project } = defineProps<{
                             clip-rule="evenodd"
                         />
                     </svg>
-                    {{ dayjs(project.start_date).format('DD.MM.YYYY') }} do {{ dayjs(project.end_date).format('DD.MM.YYYY') }}
+                    {{ projectDuration }}
                 </div>
-
             </div>
         </div>
     </div>
