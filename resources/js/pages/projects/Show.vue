@@ -33,7 +33,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('projects.index'),
     },
     {
-        title: project.name,
+        title: props.project.name,
         href: `/klienci/${props.project.client.slug}/projekty/${props.project.id}`,
     },
 ];
@@ -61,12 +61,12 @@ type editableField =
       };
 
 const serviceIdToName = (serviceId: number): string => {
-    const service = services.find((s) => s.id === serviceId);
+    const service = props.services.find((s) => s.id === serviceId);
     return service ? service.name : '';
 };
 
 const serviceNameToId = (serviceName: string): number => {
-    const service = services.find((s) => s.name === serviceName);
+    const service = props.services.find((s) => s.name === serviceName);
     return service ? service.id : 0;
 };
 
@@ -119,19 +119,20 @@ function startEdit() {
 
 function cancelEdit() {
     form.reset();
+    form.clearErrors();
     isEditing.value = !isEditing.value;
 }
 
 const form = useForm<Project>({
-    name: project.name,
-    service_id: project.service_id,
-    service_name: serviceIdToName(project.service_id),
-    active: project.active,
-    active_status: activeToString(project.active),
-    price: project.price,
-    type: project.type,
-    start_date: project.start_date,
-    end_date: project.end_date,
+    name: props.project.name,
+    service_id: props.project.service_id,
+    service_name: serviceIdToName(props.project.service_id),
+    active: props.project.active,
+    active_status: activeToString(props.project.active),
+    price: props.project.price,
+    type: props.project.type,
+    start_date: props.project.start_date,
+    end_date: props.project.end_date,
 });
 
 const editableFields: editableField[] = [

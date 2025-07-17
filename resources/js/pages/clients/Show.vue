@@ -65,16 +65,16 @@ const editableFields: EditableField = [
 ] as const;
 
 const form = useForm<Client>({
-    id: client.id,
-    name: client.name,
-    slug: client.slug,
-    email: client.email,
-    phone: client.phone,
-    nip: client.nip,
-    source: client.source,
-    location: client.location,
-    created_at: client.created_at,
-    updated_at: client.updated_at,
+    id: props.client.id,
+    name: props.client.name,
+    slug: props.client.slug,
+    email: props.client.email,
+    phone: props.client.phone,
+    nip: props.client.nip,
+    source: props.client.source,
+    location: props.client.location,
+    created_at: props.client.created_at,
+    updated_at: props.client.updated_at,
 });
 
 const isEditing: Ref<boolean> = ref(false);
@@ -98,6 +98,7 @@ function startEdit() {
 
 function cancelEdit() {
     form.reset();
+    form.clearErrors();
     isEditing.value = !isEditing.value;
 }
 

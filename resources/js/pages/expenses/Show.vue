@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ActionButtons from '@/components/ActionButtons.vue';
 import EditableField from '@/components/EditableField.vue';
+import ExpensesTable from '@/components/ExpensesTable.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
@@ -9,11 +10,10 @@ import dayjs from '@/plugins/dayjs';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
-import ExpensesTable from '@/components/ExpensesTable.vue';
 
 const toast = useToast();
 
-const { expense, expenses } = defineProps<{
+const props = defineProps<{
     expense: Expense;
     expenses: Expense[];
 }>();
@@ -24,7 +24,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 
     {
-        title: expense.title,
+        title: props.expense.title,
         href: '/koszty',
     },
 ];
@@ -62,7 +62,7 @@ function submitEdit() {
         data.payment_date = data.payment_date ? dayjs(data.payment_date).format('YYYY-MM-DD') : null;
 
         return data;
-    }).put(route('expenses.update', { expense: expense.id }), {
+    }).put(route('expenses.update', { expense: props.expense.id }), {
         preserveScroll: true,
         onSuccess: () => {
             isEditing.value = false;
@@ -80,16 +80,17 @@ function startEdit() {
 
 function cancelEdit() {
     form.reset();
+    form.clearErrors();
     isEditing.value = !isEditing.value;
 }
 
 const form = useForm<Expense>({
-    name: expense.name,
-    amount: expense.amount,
-    is_paid: expense.is_paid,
-    is_paid_status: paidToString(expense.is_paid),
-    type: expense.type,
-    payment_date: expense.payment_date,
+    name: props.expense.name,
+    amount: props.expense.amount,
+    is_paid: props.expense.is_paid,
+    is_paid_status: paidToString(props.expense.is_paid),
+    type: props.expense.type,
+    payment_date: props.expense.payment_date,
 });
 
 const editableFields: EditableField[] = [
@@ -130,6 +131,7 @@ const editableFields: EditableField[] = [
                             :type="field.type || 'text'"
                             :options="field.options || []"
                             :minDate="field.key === 'end_date' ? new Date(form.start_date) : undefined"
+                            :error="form.errors[field.key]"
                         />
                     </li>
                 </ul>

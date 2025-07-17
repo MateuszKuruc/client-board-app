@@ -23,7 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('clients.index'),
     },
     {
-        title: payment.project.client.name,
+        title: props.payment.project.client.name,
         href: route('clients.show', props.payment.project.client.slug),
     },
     {
@@ -91,13 +91,14 @@ function startEdit() {
 
 function cancelEdit() {
     form.reset();
+    form.clearErrors();
     isEditing.value = !isEditing.value;
 }
 
 const form = useForm<Payment>({
-    amount: payment.amount,
-    status: payment.status,
-    payment_date: payment.payment_date,
+    amount: props.payment.amount,
+    status: props.payment.status,
+    payment_date: props.payment.payment_date,
 });
 
 const editableFields: EditableField[] = [
@@ -136,6 +137,7 @@ const editableFields: EditableField[] = [
                             :type="field.type || 'text'"
                             :options="field.options || []"
                             :minDate="field.key === 'end_date' ? new Date(form.start_date) : undefined"
+                            :error="form.errors[field.key]"
                         />
                     </li>
                 </ul>
