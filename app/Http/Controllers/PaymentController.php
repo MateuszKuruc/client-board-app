@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PaymentsExport;
 use App\Http\Requests\Payments\StorePaymentRequest;
+use App\Http\Requests\Payments\UpdatePaymentRequest;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Project;
@@ -68,16 +69,11 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function update(Request $request, Client $client, Project $project, Payment $payment)
+    public function update(UpdatePaymentRequest $request, Client $client, Project $project, Payment $payment)
     {
-        $validated = $request->validate([
-            'amount' => ['required', 'numeric', 'max:999999.99'],
-            'status' => ['required', 'string'],
-            'payment_date' => ['nullable', 'date'],
-        ]);
+        $validated = $request->validated();
 
         $payment->update($validated);
-
 
         return redirect()->route('payments.show',
             ['client' => $client->slug, 'project' => $project->id, 'payment' => $payment->id]);
