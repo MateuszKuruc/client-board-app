@@ -9,4 +9,12 @@ class Expense extends Model
 {
     /** @use HasFactory<\Database\Factories\ExpenseFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'amount',
+        'is_paid',
+        'type',
+        'payment_date',
+    ];
 }
