@@ -19,20 +19,32 @@ class StoreExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'max:255', Rule::unique('leads', 'email')],
-            'phone' => ['nullable', 'digits_between:9,11', Rule::unique('leads', 'phone')],
+            'name' => ['required', 'max:255', 'string', 'min:3'],
+            'amount' => ['required', 'numeric', 'min:1', 'max:999999.99'],
+            'is_paid' => ['required', 'boolean'],
+            'type' => ['required', Rule::in(['Miesięczna', 'Roczna', 'Jednorazowa'])],
+            'payment_date' => ['nullable', 'date']
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.required' => 'Podaj adres e-mail',
-            'email.email' => 'Podaj poprawny adres e-mail',
-            'email.unique' => 'Ten adres email już istnieje',
+            'name.required' => 'Nazwa produktu jest wymagana',
+            'name.min' => 'Nazwa musi mieć co najmniej :min znaki',
+            'name.max' => 'Nazwa nie może mieć więcej niż :max znaków.',
 
-            'phone.unique' => 'Ten numer telefonu już istnieje',
-            'phone.digits_between' => 'Telefon musi mieć między 9 a 11 cyfr',
+            'amount.required' => 'Kwota jest wymagana',
+            'amount.numeric' => 'Kwota musi być liczbą',
+            'amount.min' => 'Kwota musi wynosić co najmniej :min zł',
+            'amount.max' => 'Kwota nie może przekraczać :max zł',
+
+            'is_paid.required' => 'Wybierz status płatności',
+
+            'type.required' => 'Wybierz rodzaj płatności',
+            'type.in' => 'Wybrano nieprawidłowy rodzaj płatności',
+
+            'payment_date.date' => 'Wybierz prawidłową datę płatności',
         ];
     }
 }
