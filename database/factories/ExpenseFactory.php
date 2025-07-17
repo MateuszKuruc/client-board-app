@@ -19,7 +19,8 @@ class ExpenseFactory extends Factory
         return [
             'name' => $this->faker->word() . ' subscription',
             'amount' => $this->faker->randomFloat(2, 10, 500),
-            'type' => $this->faker->randomElement(['miesięczna', 'roczna', 'jednorazowa']),
+            'is_paid' => $this->faker->boolean(),
+            'type' => $this->faker->randomElement(['Miesięczna', 'Roczna', 'Jednorazowa']),
             'payment_date' => $this->faker->boolean(70) ? $this->faker->date() : null,
         ];
     }

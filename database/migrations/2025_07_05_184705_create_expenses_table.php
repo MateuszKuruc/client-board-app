@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('amount', 8, 2);
-            $table->enum('type', ['miesięczna', 'roczna', 'jednorazowa']);
+            $table->boolean('is_paid');
+            $table->enum('type', ['Miesięczna', 'Roczna', 'Jednorazowa']);
             $table->date('payment_date')->nullable();
             $table->timestamps();
         });
