@@ -11,11 +11,13 @@ import { Payment } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
+import NotesBlock from '@/pages/clients/NotesBlock.vue';
 
 const toast = useToast();
 
 const props = defineProps<{
     payment: Payment;
+    latestPayments: Payment[];
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -146,14 +148,35 @@ const editableFields: EditableField[] = [
             <div class="mt-6 flex flex-col gap-4">
                 <div>
                     <PaymentsTable
-                        :payments="payment.project.payments.filter((p) => p.id !== payment.id)"
+                        :payments="
+                            payment.project.payments
+                                .filter((p) => p.id !== payment.id)
+                                .sort((a, b) => new Date(b.payment_date) - new Date(a.payment_date))
+                                .slice(0, 3)
+                        "
                         :client="payment.project.client"
                         :project="payment.project"
                         heading="Powiązane płatności"
                         subheading="Lista innych płatności przypisanych do tego samego projektu"
                         button
+                        :href="route('payments.create')"
                     />
                 </div>
+
+                <div>
+                    <PaymentsTable
+                        :payments="latestPayments"
+                        :client="payment.project.client"
+                        :project="payment.project"
+                        heading="Najnowsze płatności"
+                        subheading="Sprawdź najświeższe potwierdzone płatności"
+                    />
+                </div>
+
+                <NotesBlock href="#">
+
+                </NotesBlock>
+
             </div>
         </div>
     </AppLayout>
