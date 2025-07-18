@@ -63,9 +63,11 @@ class PaymentController extends Controller
     public function show(Request $request, Client $client, Project $project, Payment $payment)
     {
         $payment->load('project.client', 'project.payments');
+        $latestPayments = Payment::where('status', 'paid')->orderBy('payment_date', 'desc')->take(3)->get();
 
         return Inertia::render('payments/Show', [
             'payment' => $payment,
+            'latestPayments' => $latestPayments,
         ]);
     }
 
