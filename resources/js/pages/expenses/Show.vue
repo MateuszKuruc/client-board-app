@@ -6,11 +6,11 @@ import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
+import NotesBlock from '@/pages/clients/NotesBlock.vue';
 import dayjs from '@/plugins/dayjs';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
-import NotesBlock from '@/pages/clients/NotesBlock.vue';
 
 const toast = useToast();
 
@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 
     {
-        title: props.expense.title,
+        title: `${props.expense.name} (${props.expense.payment_date})`,
         href: '/koszty',
     },
 ];
@@ -146,16 +146,12 @@ const editableFields: EditableField[] = [
                         heading="Ostatnie koszty"
                         subheading="Sprawdź 3 ostatnio dodane koszty"
                         button
-                        href="#"
+                        :href="route('expenses.create')"
                     />
                 </div>
 
                 <div>
-                    <ExpensesTable
-                        :expenses="biggestExpenses"
-                        heading="Największe wydatki"
-                        subheading="Lista najwyższych wydatków w historii"
-                    />
+                    <ExpensesTable :expenses="biggestExpenses" heading="Największe wydatki" subheading="Lista najwyższych wydatków w historii" />
                 </div>
             </div>
 
