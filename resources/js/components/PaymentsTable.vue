@@ -3,7 +3,6 @@ import SectionHeading from '@/components/SectionHeading.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Divider from '@/components/volt/Divider.vue';
-import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import dayjs from '@/plugins/dayjs';
 import { Client, Payment, Project } from '@/types/models';
 import { Plus } from 'lucide-vue-next';
@@ -17,6 +16,7 @@ const { heading, subheading, payments } = withDefaults(
         heading: string;
         subheading?: string;
         button?: boolean;
+        href?: string;
     }>(),
     {
         button: false,
@@ -27,9 +27,9 @@ const { heading, subheading, payments } = withDefaults(
 <template>
     <div class="flex items-center justify-between">
         <SectionHeading :heading="heading" :subheading="subheading" />
-        <SecondaryButton v-if="button">
+        <StyledLink :href="href" variant="outline" v-if="button">
             <Plus class="w-5 text-gray-400" />
-            Dodaj płatność</SecondaryButton
+            Dodaj płatność</StyledLink
         >
     </div>
     <div v-if="payments.length < 1" class="mt-4 flex flex-col gap-4 text-xl font-semibold text-gray-500">
@@ -53,7 +53,7 @@ const { heading, subheading, payments } = withDefaults(
         </Column>
         <Column>
             <template #body="{ data: payment }: { data: Payment }">
-                <StyledLink variant="text" :href="route('payments.show', { client: client.slug, project: project.id, payment: payment.id })">
+                <StyledLink v-if="client" variant="text" :href="route('payments.show', { client: client.slug, project: project.id, payment: payment.id })">
                     Zarządzaj
                 </StyledLink>
             </template>
