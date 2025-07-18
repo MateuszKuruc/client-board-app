@@ -60,7 +60,7 @@ const submit = () => {
     <Head title="Nowy koszt" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <FormLayout title="Dodaj nową płatność" description="Uzupełnij wymagane pola i zapisz płatność">
+        <FormLayout title="Dodaj nowy koszt" description="Uzupełnij wymagane pola i zapisz koszt w systemie">
             <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <form @submit.prevent="submit" class="flex flex-col gap-6">
                     <div class="grid gap-6">
