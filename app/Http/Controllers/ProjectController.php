@@ -21,7 +21,7 @@ class ProjectController extends Controller
     {
         $search = $request->input('search');
 
-        $projects = Project::with('client', 'service', 'payments')
+        $projects = Project::with('client', 'service', 'payments', 'users')
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhereHas('client', function ($q) use ($search) {
