@@ -8,9 +8,10 @@ use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -75,29 +76,27 @@ class ProjectController extends Controller
             abort(403);
         }
 
-        $project->load('client', 'service', 'payments');
+        $project->load('client', 'service', 'payments', 'users');
 
         $services = Service::all();
+        $users = User::get(['id', 'name']);
 
         return Inertia::render('projects/Show', [
             'project' => $project,
             'services' => $services,
+            'users' => $users,
         ]);
     }
 
     public function update(UpdateProjectRequest $request, Client $client, Project $project)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'service_id' => ['required', 'integer', Rule::exists('services', 'id')],
-            'active' => ['required', 'boolean'],
-            'price' => ['required', 'numeric', 'max:999999.99'],
-            'type' => ['required', 'string'],
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after:start_date'],
-        ]);
+        $validated = $request->validated();
+
+        $userIds = Arr::pull($validated, 'user_ids', []);
 
         $project->update($validated);
+        $project->users()->sync($userIds);
+
 
         return redirect()->route('projects.show', ['client' => $client->slug, 'project' => $project->id]);
     }
