@@ -181,5 +181,3 @@ const editableFields: EditableField[] = [
         </div>
     </AppLayout>
 </template>
-
-<style scoped></style>

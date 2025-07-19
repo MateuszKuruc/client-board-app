@@ -155,7 +155,7 @@ const editableFields: EditableField[] = [
                 </div>
             </div>
 
-            <NotesBlock subheading="" />
+            <NotesBlock subheading="" href="#" />
         </div>
     </AppLayout>
 </template>

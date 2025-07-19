@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { Plus } from 'lucide-vue-next';
+import StyledLink from '@/components/StyledLink.vue';
 </script>
 
 <template>
@@ -15,9 +15,9 @@ import { Plus } from 'lucide-vue-next';
             <Tag value="Kontakt przez e-mail" severity="danger" />
             <Tag value="Testowy" severity="contrast" />
         </div>
-        <SecondaryButton>
+        <StyledLink href="#" variant="outline" >
             <Plus class="w-5 text-gray-400" />
-            Edytuj tagi</SecondaryButton
+            Edytuj tagi</StyledLink
         >
     </div>
 </template>
