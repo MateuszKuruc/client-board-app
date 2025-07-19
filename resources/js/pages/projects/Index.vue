@@ -61,6 +61,17 @@ function getSortedPayments(project) {
                 </template>
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Projekt" />
+                <Column header="Opiekun">
+                    <template #body="{ data: project }: { data: project }">
+                        <template v-if="project.users?.length">
+                            <Tag v-for="user in project.users" :key="user.id" class="mr-1" severity="info">
+                                {{ user.name }}
+                            </Tag>
+                        </template>
+
+                        <template v-else> - </template>
+                    </template>
+                </Column>
                 <Column field="client.name" header="Klient" />
                 <Column field="price" header="Cena">
                     <template #body="{ data: project }: { data: Project }"> {{ project.price }} zł </template>
