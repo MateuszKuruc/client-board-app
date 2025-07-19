@@ -90,7 +90,7 @@ const theme = ref<SelectPassThroughOptions>({
         p-focus:bg-surface-100 dark:p-focus:bg-surface-800 p-focus:text-surface-800 dark:p-focus:text-surface-0
         p-selected:bg-highlight p-focus:p-selected:bg-highlight-emphasis
         transition-colors duration-200`,
-    optionLabel: ``,
+    optionLabel: `text-sm`,
     optionCheckIcon: `relative -ms-[0.375rem] me-[0.375rem] text-surface-700 dark:text-surface-0`,
     optionBlankIcon: ``,
     emptyMessage: `px-3 py-2`,
