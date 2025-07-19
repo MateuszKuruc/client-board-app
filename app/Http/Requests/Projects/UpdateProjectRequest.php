@@ -26,6 +26,9 @@ class UpdateProjectRequest extends FormRequest
             'type' => ['required', Rule::in(['Standard', 'Subskrypcja'])],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after:start_date'],
+
+            'user_ids'    => ['nullable','array'],
+            'user_ids.*'  => ['integer','exists:users,id'],
         ];
     }
 
