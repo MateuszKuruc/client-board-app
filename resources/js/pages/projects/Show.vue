@@ -7,7 +7,7 @@ import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
-import { Project, Service } from '@/types/models';
+import { Project, Service, User } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
@@ -17,6 +17,7 @@ const toast = useToast();
 const props = defineProps<{
     project: Project;
     services: Service[];
+    users: User[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -41,6 +42,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 const serviceOptions: string[] = props.services.map((service) => service.name);
 const statusOptions: string[] = ['Aktywny', 'Nieaktywny'];
 const typeOptions: string[] = ['Subskrypcja', 'Standard'];
+const userSelectOptions: { value: string; label: string }[] = props.users.map((user) => ({
+    value: user.id,
+    label: user.name,
+}));
 
 type editableField =
     | {
@@ -80,6 +85,32 @@ const stringToActive = (status: string): boolean => {
 
 const isEditing: Ref<boolean> = ref(false);
 
+function startEdit() {
+    isEditing.value = !isEditing.value;
+}
+
+function cancelEdit() {
+    form.reset();
+    form.clearErrors();
+    isEditing.value = !isEditing.value;
+}
+
+const form = useForm<Project>({
+    name: props.project.name,
+    service_id: props.project.service_id,
+    service_name: serviceIdToName(props.project.service_id),
+    active: props.project.active,
+    active_status: activeToString(props.project.active),
+    price: props.project.price,
+    type: props.project.type,
+    start_date: props.project.start_date,
+    end_date: props.project.end_date,
+
+    user_ids: props.project.users?.map((user) => user.id),
+});
+
+console.log('user_ids', form.user_ids);
+
 function submitEdit() {
     form.transform((data) => {
         data.service_id = serviceNameToId(data.service_name);
@@ -113,28 +144,6 @@ function submitEdit() {
     );
 }
 
-function startEdit() {
-    isEditing.value = !isEditing.value;
-}
-
-function cancelEdit() {
-    form.reset();
-    form.clearErrors();
-    isEditing.value = !isEditing.value;
-}
-
-const form = useForm<Project>({
-    name: props.project.name,
-    service_id: props.project.service_id,
-    service_name: serviceIdToName(props.project.service_id),
-    active: props.project.active,
-    active_status: activeToString(props.project.active),
-    price: props.project.price,
-    type: props.project.type,
-    start_date: props.project.start_date,
-    end_date: props.project.end_date,
-});
-
 const editableFields: editableField[] = [
     { key: 'name', label: 'Nazwa' },
     {
@@ -142,6 +151,12 @@ const editableFields: editableField[] = [
         label: 'Usługa',
         type: 'select',
         options: serviceOptions,
+    },
+    {
+        key: 'user_ids',
+        label: 'Obsługa projektu',
+        type: 'multiselect',
+        options: userSelectOptions,
     },
     { key: 'price', label: 'Cena' },
     {
@@ -196,6 +211,7 @@ const editableFields: editableField[] = [
                         heading="Lista zaksięgowanych płatności"
                         subheading="Śledź potwierdzone płatności związane z projektem"
                         button
+                        :href="route('payments.create')"
                     />
                 </div>
 
