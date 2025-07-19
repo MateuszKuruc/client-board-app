@@ -4,6 +4,7 @@ import InputText from '@/components/volt/InputText.vue';
 import Message from '@/components/volt/Message.vue';
 import MultiSelect from '@/components/volt/MultiSelect.vue';
 import Select from '@/components/volt/Select.vue';
+import Tag from '@/components/volt/Tag.vue';
 import { viewLabels } from '@/constants/viewLabels';
 import dayjs from '@/plugins/dayjs';
 import { User } from 'lucide-vue-next';
@@ -61,7 +62,9 @@ const multiselectLabels = computed<string[]>(() => {
         </p>
 
         <p v-if="!isEditing && type === 'multiselect'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            {{ multiselectLabels.join(', ') }}
+            <Tag v-for="user in multiselectLabels" :key="user" severity="info" class="mr-1">
+                {{ user }}
+            </Tag>
         </p>
 
         <p v-else-if="!isEditing && type === 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -93,7 +96,6 @@ const multiselectLabels = computed<string[]>(() => {
                 filter
                 size="small"
                 placeholder="Przypisz opiekuna projektu"
-                selectAllLabel="sss"
                 @update:modelValue="(val) => emit('update:modelValue', val)"
             >
                 <template #dropdownicon>
