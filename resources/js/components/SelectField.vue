@@ -32,6 +32,7 @@ const emit = defineEmits<{
             editable
             :placeholder="placeholder"
             required
+            size="small"
             v-bind="attrs"
         />
     </FormField>

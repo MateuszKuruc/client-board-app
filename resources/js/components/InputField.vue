@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import InputText from '@/components/volt/InputText.vue';
 import FormField from '@/components/FormField.vue';
+import { useAttrs } from 'vue';
+
+const attrs = useAttrs();
 
 const { id, label, error, modelValue, placeholder } = defineProps<{
     id: string;
@@ -17,6 +20,6 @@ const emit = defineEmits<{
 
 <template>
     <FormField :id="id" :label="label" :error="error">
-        <InputText :id="id" :modelValue="modelValue" @update:modelValue="(value) => emit('update:modelValue', value)" :placeholder="placeholder" />
+        <InputText :id="id" :modelValue="modelValue" @update:modelValue="(value) => emit('update:modelValue', value)" size="small" :placeholder="placeholder" v-bind="attrs" />
     </FormField>
 </template>

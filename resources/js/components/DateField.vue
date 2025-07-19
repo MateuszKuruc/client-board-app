@@ -21,6 +21,7 @@ const emit = defineEmits<{
             @update:modelValue="(value) => emit('update:modelValue', value)"
             showIcon
             iconDisplay="input"
+            size="small"
             :placeholder="placeholder"
         />
     </FormField>
