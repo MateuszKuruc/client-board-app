@@ -66,6 +66,7 @@ export interface Project {
     payments?: Payment[];
     service?: Service;
     client?: Client;
+    users?: User[];
 }
 
 export interface Service {
@@ -81,6 +82,14 @@ export interface Expense {
     amount: number;
     type: string;
     payment_date: date | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    email?: string;
 }
 
 export interface Paginated<T> {
