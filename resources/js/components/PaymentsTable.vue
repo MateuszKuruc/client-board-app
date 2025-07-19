@@ -8,7 +8,7 @@ import { Client, Payment, Project } from '@/types/models';
 import { Plus } from 'lucide-vue-next';
 import Column from 'primevue/column';
 
-const { heading, subheading, payments } = withDefaults(
+const props = withDefaults(
     defineProps<{
         payments: Payment[];
         client?: Client;
@@ -27,7 +27,7 @@ const { heading, subheading, payments } = withDefaults(
 <template>
     <div class="flex items-center justify-between">
         <SectionHeading :heading="heading" :subheading="subheading" />
-        <StyledLink :href="href" variant="outline" v-if="button">
+        <StyledLink v-if="href" :href="href" variant="outline">
             <Plus class="w-5 text-gray-400" />
             Dodaj płatność</StyledLink
         >
@@ -53,9 +53,10 @@ const { heading, subheading, payments } = withDefaults(
         </Column>
         <Column>
             <template #body="{ data: payment }: { data: Payment }">
-                <StyledLink v-if="client" variant="text" :href="route('payments.show', { client: client.slug, project: project.id, payment: payment.id })">
+                <StyledLink v-if="client && project && href" variant="text" :href="href">
                     Zarządzaj
                 </StyledLink>
+
             </template>
         </Column>
     </DataTable>
