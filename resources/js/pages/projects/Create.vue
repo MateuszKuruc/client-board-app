@@ -67,17 +67,8 @@ const submit = () => {
             form.reset();
             toast.add({ severity: 'success', summary: 'Projekt dodany poprawnie', detail: 'Dane zostały zapisane w systemie', life: 3000 });
         },
-        onError: (errors) => {
-            if (errors.end_date) {
-                toast.add({
-                    severity: 'error',
-                    summary: 'Błąd daty',
-                    detail: 'Data zakończenia musi być późniejsza niż data startu projektu',
-                    life: 3000,
-                });
-            } else {
-                toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Projekt nie został zapisany', life: 3000 });
-            }
+        onError: () => {
+            toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Projekt nie został zapisany', life: 3000 });
         },
     });
 };
