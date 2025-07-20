@@ -4,12 +4,21 @@ import FormLayout from '@/components/FormLayout.vue';
 import InputField from '@/components/InputField.vue';
 import SelectField from '@/components/SelectField.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
+import Message from '@/components/volt/Message.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Project } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
+import { computed } from 'vue';
+
+const props = defineProps<{
+    projects: Project[];
+    project: Project | null;
+}>();
+
+const projectParam = props.project?.id ?? null;
 
 const toast = useToast();
 
@@ -23,10 +32,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/platnosci',
     },
 ];
-
-const props = defineProps<{
-    projects: Project[];
-}>();
 
 const statusOptions = [
     {
@@ -44,7 +49,7 @@ const statusOptions = [
 ];
 
 const form = useForm<Payment>({
-    project_id: null,
+    project_id: projectParam,
     amount: null,
     status: null,
     payment_date: null,
@@ -71,6 +76,13 @@ const submit = () => {
         },
     });
 };
+
+const projectOptions = computed(() =>
+    props.projects.map((project) => ({
+        value: project.id,
+        label: `${project.name} [${project.client.name}]`,
+    })),
+);
 </script>
 
 <template>
@@ -79,6 +91,9 @@ const submit = () => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <FormLayout title="Dodaj nową płatność" description="Uzupełnij wymagane pola i zapisz płatność">
             <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <Message v-if="project !== null" size="small" severity="info" class="mb-2"
+                    >Przypisz płatność do projektu: <span class="block">{{ project.name }}</span></Message
+                >
                 <form @submit.prevent="submit" class="flex flex-col gap-6">
                     <div class="grid gap-6">
                         <SelectField
@@ -86,9 +101,9 @@ const submit = () => {
                             label="Projekt"
                             :error="form.errors.project_id"
                             v-model="form.project_id"
-                            :options="projects"
-                            optionLabel="name"
-                            optionValue="id"
+                            :options="projectOptions"
+                            optionLabel="label"
+                            optionValue="value"
                             placeholder="Wybierz projekt"
                             required
                         />
