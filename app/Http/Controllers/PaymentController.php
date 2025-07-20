@@ -46,6 +46,10 @@ class PaymentController extends Controller
     {
         $projects = Project::with('client')->latest()->get();
 
+        if ($project !== null) {
+            $project->load('client');
+        }
+
         return Inertia::render('payments/Create', [
             'projects' => $projects,
             'project' => $project,
