@@ -5,7 +5,19 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BadgeDollarSign, Banknote, BookA, BookOpen, Cog, Folder, FolderOpen, LayoutGrid, PiggyBank, Plus, SquareUserRound } from 'lucide-vue-next';
+import {
+    BadgeDollarSign,
+    Banknote,
+    BookA,
+    BookOpen,
+    Cog,
+    FolderOpen,
+    LayoutGrid,
+    PiggyBank,
+    Plus,
+    ScrollText,
+    SquareUserRound,
+} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -16,33 +28,38 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Klienci',
-        href: '/klienci',
+        href: route('clients.index'),
         icon: SquareUserRound,
     },
     {
         title: 'Projekty',
-        href: '/projekty',
+        href: route('projects.index'),
         icon: FolderOpen,
     },
     {
         title: 'Płatności',
-        href: '/platnosci',
+        href: route('payments.index'),
         icon: BadgeDollarSign,
     },
     {
         title: 'Koszty',
-        href: '/koszty',
+        href: route('expenses.index'),
         icon: Banknote,
     },
     {
         title: 'Finanse',
-        href: '/finanse',
+        href: route('finances.index'),
         icon: PiggyBank,
     },
     {
         title: 'Leady',
-        href: '/leady',
+        href: route('leads.index'),
         icon: BookA,
+    },
+    {
+        title: 'Moje projekty',
+        href: '/projekty/przypisane',
+        icon: ScrollText,
     },
 ];
 
@@ -53,27 +70,27 @@ const footerNavItems: NavItem[] = [
         children: [
             {
                 title: 'Klient',
-                href: '/klienci/dodaj',
+                href: route('clients.create'),
                 icon: SquareUserRound,
             },
             {
                 title: 'Projekt',
-                href: '/projekty/dodaj',
+                href: route('projects.create'),
                 icon: FolderOpen,
             },
             {
                 title: 'Płatność',
-                href: '/platnosci/dodaj',
+                href: route('payments.create'),
                 icon: BadgeDollarSign,
             },
             {
                 title: 'Koszt',
-                href: '/koszty/dodaj',
+                href: route('expenses.create'),
                 icon: Banknote,
             },
             {
                 title: 'Lead',
-                href: '/leady/dodaj',
+                href: route('leads.create'),
                 icon: BookA,
             },
         ],
