@@ -4,11 +4,13 @@ import FormLayout from '@/components/FormLayout.vue';
 import InputField from '@/components/InputField.vue';
 import SelectField from '@/components/SelectField.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
+import Message from '@/components/volt/Message.vue';
 import { booleanActiveOptions } from '@/constants/booleanActiveOptions';
 import { projectTypeOptions } from '@/constants/projectTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
+import { Client } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 
@@ -22,7 +24,10 @@ interface Option {
 const props = defineProps<{
     clients: Option[];
     services: Option[];
+    client: Client | null;
 }>();
+
+const clientParam = props.client?.id != null ? Number(props.client.id) : null;
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,7 +42,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const form = useForm<Payment>({
     name: null,
-    client_id: null,
+    client_id: clientParam,
     service_id: null,
     active: null,
     price: null,
@@ -94,7 +99,13 @@ const submit = () => {
                             optionValue="value"
                             placeholder="Wybierz klienta"
                             required
+                            editable
+                            :disabled="client !== null"
                         />
+
+                        <Message v-if="client !== null" size="small" severity="info" class="mb-2"
+                            >Projekt zostanie automatycznie przypisany do: <span class="block">{{ client?.name }}</span></Message
+                        >
 
                         <SelectField
                             id="service_id"
