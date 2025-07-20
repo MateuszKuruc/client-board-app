@@ -211,7 +211,7 @@ const editableFields: editableField[] = [
                         heading="Lista zaksięgowanych płatności"
                         subheading="Śledź potwierdzone płatności związane z projektem"
                         button
-                        :href="route('payments.create')"
+                        :href="route('payments.create', project.id)"
                     />
                 </div>
 
