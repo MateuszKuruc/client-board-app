@@ -159,7 +159,7 @@ const editableFields: EditableField[] = [
                         heading="Powiązane płatności"
                         subheading="Lista innych płatności przypisanych do tego samego projektu"
                         button
-                        :href="route('payments.create')"
+                        :href="route('payments.create', payment.project.id)"
                     />
                 </div>
 
