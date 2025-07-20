@@ -215,6 +215,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                                 heading="Lista aktywnych projektów"
                                 subheading="Śledź projekty, które są aktualnie w toku"
                                 button
+                                :href="route('projects.create', client.slug)"
                             />
                         </div>
 
