@@ -29,7 +29,6 @@ const emit = defineEmits<{
             :options="options"
             :optionLabel="optionLabel"
             :optionValue="optionValue"
-            editable
             :placeholder="placeholder"
             required
             size="small"
