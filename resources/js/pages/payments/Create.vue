@@ -18,7 +18,7 @@ const props = defineProps<{
     project: Project | null;
 }>();
 
-const projectParam = props.project?.id ?? null;
+const projectParam = Number(props.project?.id) ?? null;
 
 const toast = useToast();
 
@@ -91,9 +91,6 @@ const projectOptions = computed(() =>
     <AppLayout :breadcrumbs="breadcrumbs">
         <FormLayout title="Dodaj nową płatność" description="Uzupełnij wymagane pola i zapisz płatność">
             <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <Message v-if="project !== null" size="small" severity="info" class="mb-2"
-                    >Przypisz płatność do projektu: <span class="block">{{ project.name }}</span></Message
-                >
                 <form @submit.prevent="submit" class="flex flex-col gap-6">
                     <div class="grid gap-6">
                         <SelectField
@@ -106,7 +103,12 @@ const projectOptions = computed(() =>
                             optionValue="value"
                             placeholder="Wybierz projekt"
                             required
+                            :disabled="project !== null"
                         />
+
+                        <Message v-if="project !== null" size="small" severity="info" class="mb-2"
+                            >Projekt: {{ project.name }} <span class="block">Klient: {{ project.client.name }}</span></Message
+                        >
 
                         <InputField
                             id="amount"
