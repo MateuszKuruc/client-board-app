@@ -40,7 +40,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(Client $client = null)
     {
         $clients = Client::latest()
             ->select('id', 'name')
@@ -56,6 +56,7 @@ class ProjectController extends Controller
 
         return Inertia::render('projects/Create', [
             'clients' => $clients,
+            'client' => $client,
             'services' => $services
         ]);
     }
