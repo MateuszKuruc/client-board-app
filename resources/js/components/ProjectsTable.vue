@@ -2,11 +2,11 @@
 import SectionHeading from '@/components/SectionHeading.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Divider from '@/components/volt/Divider.vue';
-import SecondaryButton from '@/components/volt/SecondaryButton.vue';
 import dayjs from '@/plugins/dayjs';
 import { Project } from '@/types/models';
 import { Plus } from 'lucide-vue-next';
 import Column from 'primevue/column';
+import StyledLink from '@/components/StyledLink.vue';
 
 const { projects, heading, subheading } = withDefaults(
     defineProps<{
@@ -14,6 +14,7 @@ const { projects, heading, subheading } = withDefaults(
         heading: string;
         subheading?: string;
         button?: boolean;
+        href?: string;
     }>(),
     {
         button: false,
@@ -24,9 +25,9 @@ const { projects, heading, subheading } = withDefaults(
 <template>
     <div class="flex items-center justify-between">
         <SectionHeading :heading="heading" :subheading="subheading" />
-        <SecondaryButton v-if="button">
+        <StyledLink v-if="button" :href="href" variant="outline">
             <Plus class="w-5 text-gray-400" />
-            Dodaj projekt</SecondaryButton
+            Dodaj projekt</StyledLink
         >
     </div>
     <div v-if="projects.length < 1" class="mt-4 flex flex-col gap-4 text-xl font-semibold text-gray-500">
