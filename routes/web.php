@@ -46,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
 
     });
     Route::get('/projekty', [ProjectController::class, 'index'])->name('projects.index');
-    Route::get('/projekty/dodaj', [ProjectController::class, 'create'])->name('projects.create');
+    Route::get('/projekty/dodaj/{client?}', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projekty', [ProjectController::class, 'store'])->name('projects.store');
     Route::get('/projekty/eksport', [ProjectController::class, 'export'])->name('projects.export');
 
@@ -54,8 +54,8 @@ Route::middleware(['auth'])->group(function () {
     //  Payments
     Route::get('/platnosci', [PaymentController::class, 'index'])->name('payments.index');
     Route::post('/platnosci', [PaymentController::class, 'store'])->name('payments.store');
-    Route::get('/platnosci/dodaj', [PaymentController::class, 'create'])->name('payments.create');
     Route::get('/platnosci/eksport', [PaymentController::class, 'export'])->name('payments.export');
+    Route::get('/platnosci/dodaj/{project?}', [PaymentController::class, 'create'])->name('payments.create');
 
 
     // Expenses
