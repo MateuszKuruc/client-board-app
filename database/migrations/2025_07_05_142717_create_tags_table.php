@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('severity', ['primary', 'secondary', 'success', 'info', 'warn', 'danger', 'contrast']);
             $table->timestamps();
         });
     }
