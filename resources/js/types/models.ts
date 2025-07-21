@@ -92,6 +92,12 @@ export interface User {
     email?: string;
 }
 
+export interface Tag {
+    id: number;
+    name: string;
+    severity: string;
+}
+
 export interface Paginated<T> {
     current_page: number;
     data: T[];
