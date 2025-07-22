@@ -7,7 +7,7 @@ import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
-import { Project, Service, User } from '@/types/models';
+import { Project, Service, User, Tag } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
@@ -18,6 +18,7 @@ const props = defineProps<{
     project: Project;
     services: Service[];
     users: User[];
+    tags: Tag[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -109,8 +110,6 @@ const form = useForm<Project>({
     user_ids: props.project.users?.map((user) => user.id),
 });
 
-console.log('user_ids', form.user_ids);
-
 function submitEdit() {
     form.transform((data) => {
         data.service_id = serviceNameToId(data.service_name);
@@ -178,7 +177,7 @@ const editableFields: editableField[] = [
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
             <div class="flex flex-col gap-4">
                 <PageHeadingProject :title="form.name" :project="project" />
-                <TagSection />
+                <TagSection :tags="tags" :project="project" />
             </div>
 
             <div class="flex items-center justify-between">

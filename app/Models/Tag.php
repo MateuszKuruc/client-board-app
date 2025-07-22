@@ -11,7 +11,7 @@ class Tag extends Model
     /** @use HasFactory<\Database\Factories\TagFactory> */
     use HasFactory;
 
-    public function clients()
+    public function clients(): MorphToMany
     {
         return $this->morphedByMany(Client::class, 'taggable');
     }

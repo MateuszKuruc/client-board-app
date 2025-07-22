@@ -12,7 +12,7 @@ import { sourceOptions } from '@/constants/sourceOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Client } from '@/types/models';
+import { Client, Tag } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, Ref } from 'vue';
@@ -22,6 +22,7 @@ const toast = useToast();
 
 const props = defineProps<{
     client: Client;
+    tags: Tag[];
 }>();
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => [
@@ -174,7 +175,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
             <PageHeadingClient :title="form.name" :client="client" />
-            <TagSection />
+            <TagSection :tags="tags" :client="client" />
 
             <div class="grid grid-cols-3 gap-4 py-8">
                 <ReusableCard :value="lifetimeValue" heading="Łączna wartość klienta" subheading="Lifetime value" />
