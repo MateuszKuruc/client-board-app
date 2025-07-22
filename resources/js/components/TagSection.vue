@@ -81,14 +81,22 @@ function submitEdit() {
         </div>
 
         <div v-if="isEditing">
-            <MultiSelect v-model="form.tags" :options="tags" optionLabel="name" optionValue="id" display="chip" />
+            <MultiSelect
+                v-model="form.tags"
+                :options="tags"
+                optionLabel="name"
+                optionValue="id"
+                display="chip"
+                class="max-w-[500px]"
+                placeholder="Wybierz tagi"
+            />
         </div>
 
         <div class="mt-5 flex items-center lg:mt-0">
             <span>
                 <SecondaryButton v-if="!isEditing" @click="startEdit">
                     <Pencil class="w-5 text-gray-400" />
-                    Edytuj tagi
+                    {{ form.tags.length ? 'Edytuj tagi' : 'Dodaj tagi' }}
                 </SecondaryButton>
 
                 <SecondaryButton v-if="isEditing" @click="cancelEdit">
