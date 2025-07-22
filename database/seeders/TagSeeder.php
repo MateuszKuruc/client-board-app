@@ -25,9 +25,20 @@ class TagSeeder extends Seeder
             'Kontakt przez komunikator',
         ];
 
+        $severity = [
+            'primary',
+            'secondary',
+            'success',
+            'info',
+            'warn',
+            'danger',
+            'contrast'
+        ];
+
         foreach($tags as $tag) {
             Tag::firstOrCreate([
                 'name' => $tag,
+                'severity' => $severity[array_rand($severity)]
             ]);
         }
     }
