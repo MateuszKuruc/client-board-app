@@ -4,6 +4,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProjectController;
@@ -29,18 +30,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/klienci/eksport', [ClientController::class, 'export'])->name('clients.export');
     Route::get('/klienci/{client}', [ClientController::class, 'show'])->name('clients.show');
     Route::put('/klienci/{client}', [ClientController::class, 'update'])->name('clients.update');
-    Route::get('/klienci/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+    Route::put('/klienci/{client}/tags', [ClientController::class, 'updateTags'])->name('clients.tags.update');
 
 
     //  Projects
     Route::prefix('/klienci/{client}')->group(function () {
         Route::get('/projekty/{project}', [ProjectController::class, 'show'])->name('projects.show');
         Route::put('/projekty/{project}', [ProjectController::class, 'update'])->name('projects.update');
-        Route::get('/projekty/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
 
         Route::prefix('/projekty/{project}')->group(function () {
             Route::get('/platnosci/{payment}', [PaymentController::class, 'show'])->name('payments.show');
-            Route::get('/platnosci/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
             Route::put('/platnosci/{payment}', [PaymentController::class, 'update'])->name('payments.update');
         });
 
@@ -49,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/projekty/dodaj/{client?}', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projekty', [ProjectController::class, 'store'])->name('projects.store');
     Route::get('/projekty/eksport', [ProjectController::class, 'export'])->name('projects.export');
+    Route::put('/projekty/{project}', [ProjectController::class, 'updateTags'])->name('projects.tags.update');
 
 
     //  Payments
@@ -65,12 +65,16 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/koszty/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::post('/koszty', [ExpenseController::class, 'store'])->name('expenses.store');
 
+    // Finances
+    Route::get('/finanse', [FinanceController::class, 'index'])->name('finances.index');
+
     // Leads
     Route::get('/leady', [LeadController::class, 'index'])->name('leads.index');
     Route::get('/leady/dodaj', [LeadController::class, 'create'])->name('leads.create');
     Route::put('/leady/{lead}', [LeadController::class, 'update'])->name('leads.update');
     Route::post('/leady', [LeadController::class, 'store'])->name('leads.store');
     Route::get('/leady/eksport', [LeadController::class, 'export'])->name('leads.export');
+
 
     // Configuration
     Route::get('/konfiguracja', [ConfigurationController::class, 'index'])->name('configurations.index');
