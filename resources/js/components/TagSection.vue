@@ -9,6 +9,13 @@ import { Pencil, X } from 'lucide-vue-next';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref } from 'vue';
 
+interface FormData {
+    tags: number[];
+}
+
+type RouteName = 'project.tags.update' | 'clients.tags.update';
+type RouteParam = string | number;
+
 const toast = useToast();
 
 const props = defineProps<{
@@ -28,17 +35,17 @@ const initialTags = computed(() => {
     return [];
 });
 
-const isEditing = ref(false);
+const isEditing = ref<boolean>(false);
 
-const form = useForm({
+const form = useForm<FormData>({
     tags: initialTags.value,
 });
 
-function startEdit() {
+function startEdit(): void {
     isEditing.value = !isEditing.value;
 }
 
-function cancelEdit() {
+function cancelEdit(): void {
     form.reset({
         tags: initialTags.value,
     });
@@ -46,18 +53,9 @@ function cancelEdit() {
     isEditing.value = !isEditing.value;
 }
 
-function submitEdit() {
-    let routeName = '';
-    let routeParam = '';
-
-    if (props.project) {
-        routeName = 'projects.tags.update';
-        routeParam = props.project.id;
-    }
-    if (props.client) {
-        routeName = 'clients.tags.update';
-        routeParam = props.client.slug;
-    }
+function submitEdit(): void {
+    const routeName: RouteName = props.project ? 'projects.tags.update' : 'clients.tags.update';
+    const routeParam: RouteParam = props.project ? props.project.id : props.client!.slug;
 
     form.put(route(routeName, routeParam), {
         onSuccess: () => {
