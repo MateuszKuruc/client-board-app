@@ -6,6 +6,7 @@ import Button from '@/components/volt/Button.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
+import { useExportParams } from '@/composables/useExportParams';
 import { useServerSearch } from '@/composables/useServerSearch';
 import { useServerSorting } from '@/composables/useServerSorting';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -15,7 +16,6 @@ import { Client, Filters, Paginated } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import { computed } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -39,11 +39,7 @@ const { sortBy, sortDir, setSort } = useServerSorting(
     (props.filters.sort_dir as 'asc' | 'desc') || 'desc',
 );
 
-const exportParams = computed(() => ({
-    search: globalSearch.value,
-    sort_by: sortBy.value,
-    sort_dir: sortDir.value,
-}));
+const exportParams = useExportParams(globalSearch, sortBy, sortDir);
 </script>
 
 <template>
