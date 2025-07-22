@@ -2,10 +2,12 @@
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
 import StyledLink from '@/components/StyledLink.vue';
+import Button from '@/components/volt/Button.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
 import { useServerSearch } from '@/composables/useServerSearch';
+import { useServerSorting } from '@/composables/useServerSorting';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
@@ -13,6 +15,7 @@ import { Client, Filters, Paginated } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { Circle, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
+import { computed } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,6 +32,18 @@ const props = defineProps<{
 const { globalSearch } = useServerSearch(props.filters.search || '', 'clients.index');
 
 const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients.data);
+
+const { sortBy, sortDir, setSort } = useServerSorting(
+    'clients.index',
+    props.filters.sort_by || 'created_at',
+    (props.filters.sort_dir as 'asc' | 'desc') || 'desc',
+);
+
+const exportParams = computed(() => ({
+    search: globalSearch.value,
+    sort_by: sortBy.value,
+    sort_dir: sortDir.value,
+}));
 </script>
 
 <template>
@@ -43,11 +58,22 @@ const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.clients
                         :onExpandAll="expandAll"
                         :onCollapseAll="collapseAll"
                         :exportUrl="'clients.export'"
-                        :filters="filters"
+                        :exportParams="exportParams"
+                        :filters="{ ...filters, sort_by: sortBy, sort_dir: sortDir }"
                     />
                 </template>
                 <Column expander style="width: 5rem" />
-                <Column field="name" header="Klient">
+                <Column field="name">
+                    <template #header>
+                        <Button variant="text" class="flex items-center gap-1 font-bold" @click="setSort('name')">
+                            Klient
+                            <span v-if="sortBy === 'name'">
+                                {{ sortDir === 'asc' ? '▲' : '▼' }}
+                            </span>
+                            <span v-else class="text-surface-400" aria-hidden="true">▲▼</span>
+                        </Button>
+                    </template>
+
                     <template #body="{ data }">
                         <div class="flex items-center gap-3">
                             <Circle :fill="data.projects.some((p) => p.active) ? 'green' : 'red'" class="shrink-0" />
