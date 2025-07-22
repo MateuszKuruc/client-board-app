@@ -61,9 +61,11 @@ Route::middleware(['auth'])->group(function () {
     // Expenses
     Route::get('/koszty', [ExpenseController::class, 'index'])->name('expenses.index');
     Route::get('/koszty/dodaj', [ExpenseController::class, 'create'])->name('expenses.create');
+    Route::get('/koszty/eksport', [ExpenseController::class, 'export'])->name('expenses.export');
     Route::get('/koszty/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
     Route::put('/koszty/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::post('/koszty', [ExpenseController::class, 'store'])->name('expenses.store');
+
 
     // Finances
     Route::get('/finanse', [FinanceController::class, 'index'])->name('finances.index');
