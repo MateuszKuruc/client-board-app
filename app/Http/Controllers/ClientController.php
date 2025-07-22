@@ -19,13 +19,21 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+
+        $allowedSorts = ['name', 'email', 'created_at'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
 
         $clients = Client::with(['projects.service', 'projects.client'])
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy($sortBy, $sortDir)
             ->paginate(10)
             ->withQueryString();
 
@@ -33,6 +41,8 @@ class ClientController extends Controller
             'clients' => $clients,
             'filters' => [
                 'search' => $search,
+                'sort_by' => $sortBy,
+                'sort_dir' => $sortDir,
             ],
         ]);
     }
@@ -77,8 +87,16 @@ class ClientController extends Controller
     public function export(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
 
-        return Excel::download(new ClientsExport($search), 'clients.xlsx');
+        $allowed = ['id','name','email','phone','source','created_at'];
+        if (! in_array($sortBy, $allowed)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+
+        return Excel::download(new ClientsExport($search, $sortBy, $sortDir), 'clients.xlsx');
     }
 
     public function updateTags(SyncTagsRequest $request, Client $client)
