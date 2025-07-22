@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Exports\ProjectsExport;
 use App\Http\Requests\Projects\StoreProjectRequest;
+use App\Http\Requests\Tags\SyncTagsRequest;
 use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -77,15 +79,18 @@ class ProjectController extends Controller
             abort(403);
         }
 
-        $project->load('client', 'service', 'payments', 'users');
+        $project->load('client', 'service', 'payments', 'users', 'tags');
 
         $services = Service::all();
         $users = User::get(['id', 'name']);
+
+        $tags = Tag::all();
 
         return Inertia::render('projects/Show', [
             'project' => $project,
             'services' => $services,
             'users' => $users,
+            'tags' => $tags
         ]);
     }
 
@@ -107,5 +112,16 @@ class ProjectController extends Controller
         $search = $request->input('search');
 
         return Excel::download(new ProjectsExport($search), 'projects.xlsx');
+    }
+
+    public function updateTags(SyncTagsRequest $request, Project $project)
+    {
+        $project->load('client');
+
+        $validated = $request->validated();
+
+        $project->tags()->sync($validated['tags']);
+
+        return redirect()->route('projects.show', ['client' => $project->client->slug, 'project' => $project->id]);
     }
 }

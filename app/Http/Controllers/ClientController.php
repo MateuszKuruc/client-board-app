@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Exports\ClientsExport;
 use App\Http\Requests\Clients\StoreClientRequest;
 use App\Http\Requests\Clients\UpdateClientRequest;
+use App\Http\Requests\Tags\SyncTagsRequest;
 use App\Models\Client;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -52,10 +54,12 @@ class ClientController extends Controller
 
     public function show(Request $request, Client $client)
     {
-        $client->load(['projects', 'projects.service', 'projects.payments']);
+        $client->load(['projects', 'projects.service', 'projects.payments', 'tags']);
+        $tags = Tag::all();
 
         return Inertia::render('clients/Show', [
             'client' => $client,
+            'tags' => $tags
         ]);
     }
 
@@ -75,5 +79,14 @@ class ClientController extends Controller
         $search = $request->input('search');
 
         return Excel::download(new ClientsExport($search), 'clients.xlsx');
+    }
+
+    public function updateTags(SyncTagsRequest $request, Client $client)
+    {
+        $validated = $request->validated();
+
+        $client->tags()->sync($validated['tags']);
+
+        return redirect()->route('clients.show', ['client' => $client->slug]);
     }
 }
