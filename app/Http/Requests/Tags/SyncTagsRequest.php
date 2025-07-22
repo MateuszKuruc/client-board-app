@@ -21,7 +21,7 @@ class SyncTagsRequest extends FormRequest
     public function rules()
     {
         return [
-            'tags'   => 'required|array',
+            'tags'   => 'array',
             'tags.*' => 'integer|exists:tags,id',
         ];
     }
