@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
+import SortableHeader from '@/components/SortableHeader.vue';
 import StyledLink from '@/components/StyledLink.vue';
-import Button from '@/components/volt/Button.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
@@ -61,13 +61,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                 <Column expander style="width: 5rem" />
                 <Column field="name">
                     <template #header>
-                        <Button variant="text" class="flex items-center gap-1 font-bold" @click="setSort('name')">
-                            Klient
-                            <span v-if="sortBy === 'name'">
-                                {{ sortDir === 'asc' ? '▲' : '▼' }}
-                            </span>
-                            <span v-else class="text-surface-400" aria-hidden="true">▲▼</span>
-                        </Button>
+                        <SortableHeader field="name" :active="sortBy === 'name'" :direction="sortDir" @sort="setSort">Klient </SortableHeader>
                     </template>
 
                     <template #body="{ data }">
