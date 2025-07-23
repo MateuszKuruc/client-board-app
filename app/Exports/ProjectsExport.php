@@ -9,14 +9,18 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class ProjectsExport implements FromCollection, WithHeadings
 {
     protected $search;
+    protected $sortBy;
+    protected $sortDir;
 
     /**
      * @return \Illuminate\Support\Collection
      */
 
-    public function __construct($search)
+    public function __construct($search, $sortBy, $sortDir)
     {
         $this->search = $search;
+        $this->sortBy = $sortBy;
+        $this->sortDir = $sortDir;
     }
 
     public function collection()
@@ -28,6 +32,7 @@ class ProjectsExport implements FromCollection, WithHeadings
                         $q->where('name', 'like', '%'.$search.'%');
                     });
             })
+            ->orderBy($this->sortBy, $this->sortDir)
             ->get()
             ->map(function ($project) {
                 return [

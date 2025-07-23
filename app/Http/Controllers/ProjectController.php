@@ -22,6 +22,14 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+
+        $allowedSorts = ['price', 'start_date', 'end_date', 'created_at'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
 
         $projects = Project::with('client', 'service', 'payments', 'users')
             ->when($search, function ($query, $search) {
@@ -30,7 +38,7 @@ class ProjectController extends Controller
                         $q->where('name', 'like', '%'.$search.'%');
                     });
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy($sortBy, $sortDir)
             ->paginate(10)
             ->withQueryString();
 
@@ -38,6 +46,8 @@ class ProjectController extends Controller
             'projects' => $projects,
             'filters' => [
                 'search' => $search,
+                'sort_by' => $sortBy,
+                'sort_dir' => $sortDir,
             ]
         ]);
     }
@@ -110,8 +120,16 @@ class ProjectController extends Controller
     public function export(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
 
-        return Excel::download(new ProjectsExport($search), 'projects.xlsx');
+        $allowed = ['name', 'price', 'start_date', 'end_date', 'created_at'];
+        if (!in_array($sortBy, $allowed)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+
+        return Excel::download(new ProjectsExport($search, $sortBy, $sortDir), 'projects.xlsx');
     }
 
     public function updateTags(SyncTagsRequest $request, Project $project)
