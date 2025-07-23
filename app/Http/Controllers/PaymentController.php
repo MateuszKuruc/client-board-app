@@ -19,6 +19,14 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+
+        $allowedSorts = ['id', 'status', 'amount', 'payment_date', 'created_at'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
 
         $payments = Payment::with('project', 'project.client')
             ->when($search, function ($query, $search) {
@@ -30,7 +38,7 @@ class PaymentController extends Controller
                     });
                 });
             })
-            ->orderBy('payment_date', 'desc')
+            ->orderBy($sortBy, $sortDir)
             ->paginate(10)
             ->withQueryString();
 
@@ -38,6 +46,8 @@ class PaymentController extends Controller
             'payments' => $payments,
             'filters' => [
                 'search' => $search,
+                'sort_by' => $sortBy,
+                'sort_dir' => $sortDir,
             ]
         ]);
     }
@@ -89,7 +99,15 @@ class PaymentController extends Controller
     public function export(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
 
-        return Excel::download(new PaymentsExport($search), 'payments.xlsx');
+        $allowedSorts = ['id', 'status', 'amount', 'payment_date', 'created_at'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+
+        return Excel::download(new PaymentsExport($search, $sortBy, $sortDir), 'payments.xlsx');
     }
 }
