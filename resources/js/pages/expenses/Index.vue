@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
+import SortableHeader from '@/components/SortableHeader.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
+import { useExportParams } from '@/composables/useExportParams';
 import { useServerSearch } from '@/composables/useServerSearch';
+import { useServerSorting } from '@/composables/useServerSorting';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import type { Expense, Filters, Paginated } from '@/types/models';
@@ -24,6 +27,14 @@ const props = defineProps<{
 }>();
 
 const { globalSearch } = useServerSearch(props.filters.search || '', 'expenses.index');
+
+const { sortBy, sortDir, setSort } = useServerSorting(
+    'expenses.index',
+    props.filters.sort_by || 'created_at',
+    (props.filters.sort_dir as 'asc' | 'desc') || 'desc',
+);
+
+const exportParams = useExportParams(globalSearch, sortBy, sortDir);
 </script>
 
 <template>
@@ -33,22 +44,54 @@ const { globalSearch } = useServerSearch(props.filters.search || '', 'expenses.i
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable :value="expenses.data" dataKey="id">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :exportUrl="'leads.export'" :filters="filters" />
+                    <DataTableToolbar
+                        v-model="globalSearch"
+                        :exportUrl="'expenses.export'"
+                        :exportParams="exportParams"
+                        :filters="{ ...filters, sort_by: sortBy, sort_dir: sortDir }"
+                    />
                 </template>
                 <Column field="id" header="Numer płatności" />
-                <Column field="name" header="Koszt" />
-                <Column field="amount" header="Cena" />
-                <Column field="type" header="Rodzaj płatności">
+                <Column field="name">
+                    <template #header>
+                        <SortableHeader field="name" :active="sortBy === 'name'" :direction="sortDir" @sort="setSort">Koszt</SortableHeader>
+                    </template>
+                </Column>
+                <Column field="amount">
+                    <template #header>
+                        <SortableHeader field="amount" :active="sortBy === 'amount'" :direction="sortDir" @sort="setSort">Cena</SortableHeader>
+                    </template>
+                </Column>
+                <Column field="type">
+                    <template #header>
+                        <SortableHeader field="type" :active="sortBy === 'type'" :direction="sortDir" @sort="setSort"
+                            >Rodzaj płatności</SortableHeader
+                        >
+                    </template>
                     <template #body="{ data: expense }: { data: Expense }">
                         {{ expense.type }}
                     </template>
                 </Column>
-                <Column field="is_paid" header="Status płatności">
+                <Column field="is_paid">
+                    <template #header>
+                        <SortableHeader field="is_paid" :active="sortBy === 'is_paid'" :direction="sortDir" @sort="setSort"
+                            >Status płatności</SortableHeader
+                        >
+                    </template>
                     <template #body="{ data: expense }: { data: Expense }">
                         {{ expense.is_paid ? 'Opłacona' : 'Nieopłacona' }}
                     </template>
                 </Column>
-                <Column field="payment_date" header="Data płatności" />
+                <Column field="payment_date">
+                    <template #header>
+                        <SortableHeader field="payment_date" :active="sortBy === 'payment_date'" :direction="sortDir" @sort="setSort"
+                            >Data płatności</SortableHeader
+                        >
+                    </template>
+                    <template #body="{ data: expense }: { data: Expense }">
+                        {{ expense.payment_date ? expense.payment_date : '-' }}
+                    </template>
+                </Column>
 
                 <Column header="Opcje">
                     <template #body="{ data: expense }: { data: Expense }">
