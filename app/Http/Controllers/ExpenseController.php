@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExpensesExport;
 use App\Exports\ProjectsExport;
 use App\Http\Requests\Expenses\StoreExpenseRequest;
 use App\Http\Requests\Expenses\UpdateExpenseRequest;
@@ -15,12 +16,20 @@ class ExpenseController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+
+        $allowedSorts = ['name', 'amount', 'type', 'is_paid', 'payment_date', 'created_at'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
 
         $expenses = Expense::when($search, function ($query, $search) {
             $query->where('name', 'like', '%'.$search.'%')
                 ->orWhere('type', 'like', '%'.$search.'%');
         })
-            ->orderBy('payment_date', 'desc')
+            ->orderBy($sortBy, $sortDir)
             ->paginate(10)
             ->withQueryString();;
 
@@ -28,6 +37,8 @@ class ExpenseController extends Controller
             'expenses' => $expenses,
             'filters' => [
                 'search' => $search,
+                'sort_by' => $sortBy,
+                'sort_dir' => $sortDir,
             ]
         ]);
     }
@@ -70,8 +81,16 @@ class ExpenseController extends Controller
     public function export(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
 
-        return Excel::download(new ProjectsExport($search), 'expenses.xlsx');
+        $allowed = ['id', 'name', 'email', 'phone', 'source', 'created_at'];
+        if (!in_array($sortBy, $allowed)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+
+        return Excel::download(new ExpensesExport($search, $sortBy, $sortDir), 'expenses.xlsx');
     }
 }
 
