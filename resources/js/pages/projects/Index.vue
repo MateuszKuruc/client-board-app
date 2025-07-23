@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
+import SortableHeader from '@/components/SortableHeader.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
+import { useExportParams } from '@/composables/useExportParams';
 import { useServerSearch } from '@/composables/useServerSearch';
+import { useServerSorting } from '@/composables/useServerSorting';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Filter, Paginated, Payment, Project } from '@/types/models';
+import { Filters, Paginated, Payment, Project } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
@@ -23,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps<{
     projects: Paginated<Project>;
-    filters: Filter;
+    filters: Filters;
 }>();
 
 const { globalSearch } = useServerSearch(props.filters.search || '', 'projects.index');
@@ -42,6 +45,14 @@ function getSortedPayments(project) {
         return new Date(b.payment_date) - new Date(a.payment_date); // descending
     });
 }
+
+const { sortBy, sortDir, setSort } = useServerSorting(
+    'projects.index',
+    props.filters.sort_by || 'created_at',
+    (props.filters.sort_dir as 'asc' | 'desc') || 'desc',
+);
+
+const exportParams = useExportParams(globalSearch, sortBy, sortDir);
 </script>
 
 <template>
@@ -56,7 +67,8 @@ function getSortedPayments(project) {
                         :onExpandAll="expandAll"
                         :onCollapseAll="collapseAll"
                         :exportUrl="'projects.export'"
-                        :filters="filters"
+                        :exportParams="exportParams"
+                        :filters="{ ...filters, sort_by: sortBy, sort_dir: sortDir }"
                     />
                 </template>
                 <Column expander style="width: 5rem" />
@@ -73,15 +85,28 @@ function getSortedPayments(project) {
                     </template>
                 </Column>
                 <Column field="client.name" header="Klient" />
-                <Column field="price" header="Cena">
+                <Column field="price">
+                    <template #header>
+                        <SortableHeader field="price" :active="sortBy === 'price'" :direction="sortDir" @sort="setSort"> Cena </SortableHeader>
+                    </template>
                     <template #body="{ data: project }: { data: Project }"> {{ project.price }} zł </template>
                 </Column>
-                <Column field="start_date" header="Data startu">
+                <Column field="start_date">
+                    <template #header>
+                        <SortableHeader field="start_date" :active="sortBy === 'start_date'" :direction="sortDir" @sort="setSort">
+                            Data startu
+                        </SortableHeader>
+                    </template>
                     <template #body="{ data: project }: { data: Project }">
                         {{ project.start_date ? dayjs(project.start_date).format('DD.MM.YYYY') : '-' }}
                     </template>
                 </Column>
-                <Column field="end_date" header="Data zakończenia">
+                <Column field="end_date">
+                    <template #header>
+                        <SortableHeader field="end_date" :active="sortBy === 'end_date'" :direction="sortDir" @sort="setSort">
+                            Data zakończenia
+                        </SortableHeader>
+                    </template>
                     <template #body="{ data: project }: { data: Project }">
                         {{ project.end_date ? dayjs(project.end_date).format('DD.MM.YYYY') : '-' }}
                     </template>
