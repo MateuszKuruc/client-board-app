@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
+import SortableHeader from '@/components/SortableHeader.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
+import { useExportParams } from '@/composables/useExportParams';
 import { useServerSearch } from '@/composables/useServerSearch';
+import { useServerSorting } from '@/composables/useServerSorting';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
@@ -26,6 +29,14 @@ const props = defineProps<{
 }>();
 
 const { globalSearch } = useServerSearch(props.filters.search || '', 'payments.index');
+
+const { sortBy, sortDir, setSort } = useServerSorting(
+    'payments.index',
+    props.filters.sort_by || 'created_at',
+    (props.filters.sort_dir as 'asc' | 'desc') || 'desc',
+);
+
+const exportParams = useExportParams(globalSearch, sortBy, sortDir);
 </script>
 
 <template>
@@ -35,12 +46,23 @@ const { globalSearch } = useServerSearch(props.filters.search || '', 'payments.i
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable :value="payments.data" dataKey="id">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :exportUrl="'payments.export'" :filters="filters" />
+                    <DataTableToolbar
+                        v-model="globalSearch"
+                        :exportUrl="'payments.export'"
+                        :exportParams="exportParams"
+                        :filters="{ ...filters, sort_by: sortBy, sort_dir: sortDir }"
+                    />
                 </template>
-                <Column field="id" header="Płatność">
+                <Column field="id">
+                    <template #header>
+                        <SortableHeader field="id" :active="sortBy === 'id'" :direction="sortDir" @sort="setSort">Płatność </SortableHeader>
+                    </template>
                     <template #body="{ data: payment }: { data: Payment }">Nr {{ payment.id }} </template>
                 </Column>
-                <Column field="status" header="Status">
+                <Column field="status">
+                    <template #header>
+                        <SortableHeader field="status" :active="sortBy === 'status'" :direction="sortDir" @sort="setSort">Status </SortableHeader>
+                    </template>
                     <template #body="{ data }: { data: Payment }">
                         <Tag
                             :value="data.status === 'paid' ? 'Opłacona' : data.status === 'pending' ? 'Oczekująca' : 'Anulowana'"
@@ -51,7 +73,10 @@ const { globalSearch } = useServerSearch(props.filters.search || '', 'payments.i
                 <Column field="amount" header="Kwota"></Column>
                 <Column field="project.client.name" header="Klient"></Column>
                 <Column field="project.name" header="Projekt"></Column>
-                <Column field="payment_date" header="Data płatności">
+                <Column field="payment_date">
+                    <template #header>
+                        <SortableHeader field="payment_date" :active="sortBy === 'payment_date'" :direction="sortDir" @sort="setSort">Data płatności </SortableHeader>
+                    </template>
                     <template #body="{ data }: { data: Payment }">
                         {{ data.payment_date ? dayjs(data.payment_date).format('DD.MM.YYYY') : '-' }}
                     </template>
