@@ -84,7 +84,7 @@ class ExpenseController extends Controller
         $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
-        $allowed = ['id', 'name', 'email', 'phone', 'source', 'created_at'];
+        $allowed = ['name', 'amount', 'type', 'is_paid', 'payment_date', 'created_at'];
         if (!in_array($sortBy, $allowed)) {
             $sortBy = 'created_at';
         }

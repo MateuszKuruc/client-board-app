@@ -26,11 +26,10 @@ class ExpensesExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        return Expense::with('client', 'service')
-            ->when($this->search, function ($query, $search) {
-                $query->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('type', 'like', '%'.$search.'%');
-            })
+        return Expense::when($this->search, function ($query, $search) {
+            $query->where('name', 'like', '%'.$search.'%')
+                ->orWhere('type', 'like', '%'.$search.'%');
+        })
             ->orderBy($this->sortBy, $this->sortDir)
             ->get()
             ->map(function ($expense) {
