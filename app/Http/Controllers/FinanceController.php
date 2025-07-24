@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\Payment;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -12,6 +13,18 @@ class FinanceController extends Controller
 {
     public function index(Request $request)
     {
+        $currentDate = Carbon::now();
+        $endOfCurrentMonth = $currentDate->endOfMonth();
+
+        $activeSubs = Project::with('payments')
+            ->where('type', 'Subskrypcja')
+            ->whereDate('end_date', '>=', $endOfCurrentMonth)
+            ->get();
+
+        $activeSubsValue = $activeSubs->sum('price');
+
+        $tab = $request->input('tab', 'Podsumowanie');
+
         $month = $request->input('month', now()->format('Y-m'));
         $current = Carbon::createFromFormat('Y-m', $month);
         $year = $current->format('Y');
@@ -63,6 +76,7 @@ class FinanceController extends Controller
 
         return Inertia::render('finances/Index', [
             'month' => $month,
+            'tab' => $tab,
             'payments' => $payments,
             'expenses' => $expenses,
             'totalPayments' => $totalPayments,
@@ -71,6 +85,7 @@ class FinanceController extends Controller
             'changeInExpenses' => $changeInExpenses,
             'summary' => $summary,
             'changeInSummary' => $changeInSummary,
+            'activeSubsValue' => $activeSubsValue,
         ]);
     }
 }
