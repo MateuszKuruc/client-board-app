@@ -5,7 +5,7 @@ const props = defineProps<{
     firstHeading: string;
     secondHeading: string;
     value?: number;
-    percentage: number;
+    percentage?: number;
     summary?: number;
 }>();
 </script>
