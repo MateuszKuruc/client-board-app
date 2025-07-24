@@ -45,13 +45,21 @@ class FinanceController extends Controller
             ->whereMonth('payment_date', $prevMonth)
             ->sum('amount');
 
-        $changeInPayments = ($totalPayments && $previousTotalPayments) ?
-            round((($totalPayments / $previousTotalPayments) - 1) * 100, 2) : null;
+        $changeInPayments = ($totalPayments && $previousTotalPayments)
+            ? round((($totalPayments / $previousTotalPayments) - 1) * 100, 2)
+            : null;
 
-        $changeInExpenses = ($totalExpenses && $previousTotalExpenses) ?
-            round((($totalExpenses / $previousTotalExpenses) - 1) * 100, 2) : null;
+        $changeInExpenses = ($totalExpenses && $previousTotalExpenses)
+            ? round((($totalExpenses / $previousTotalExpenses) - 1) * 100, 2)
+            : null;
 
-//        $changeInSummary
+        $summary = $totalPayments - $totalExpenses;
+
+        $previousSummary = $previousTotalPayments - $previousTotalExpenses;
+
+        $changeInSummary = ($totalPayments && $previousTotalPayments)
+            ? round((($summary / $previousSummary) - 1) * 100, 2)
+            : null;
 
         return Inertia::render('finances/Index', [
             'month' => $month,
@@ -61,6 +69,8 @@ class FinanceController extends Controller
             'totalExpenses' => $totalExpenses,
             'changeInPayments' => $changeInPayments,
             'changeInExpenses' => $changeInExpenses,
+            'summary' => $summary,
+            'changeInSummary' => $changeInSummary,
         ]);
     }
 }
