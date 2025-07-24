@@ -13,9 +13,7 @@ class FinanceController extends Controller
     public function index(Request $request)
     {
         $month = $request->input('month', now()->format('Y-m'));
-
         $current = Carbon::createFromFormat('Y-m', $month);
-
         $year = $current->format('Y');
         $monthNum = $current->format('m');
 
@@ -27,11 +25,12 @@ class FinanceController extends Controller
         $expensesQuery = Expense::whereYear('payment_date', $year)
             ->whereMonth('payment_date', $monthNum);
 
-        $payments = $paymentsQuery->paginate(10);
-        $expenses = $expensesQuery->paginate(10);
 
-        $totalPayments = $paymentsQuery->sum('amount');
-        $totalExpenses = $expensesQuery->sum('amount');
+        $payments = (clone $paymentsQuery)->paginate(10)->withQueryString();
+        $expenses = (clone $expensesQuery)->paginate(10)->withQueryString();
+
+        $totalPayments = (clone $paymentsQuery)->sum('amount');
+        $totalExpenses = (clone $expensesQuery)->sum('amount');
 
         $prev = $current->copy()->subMonth();
         $prevYear = $prev->format('Y');
