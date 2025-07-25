@@ -75,7 +75,9 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                 <Column field="project.name" header="Projekt"></Column>
                 <Column field="payment_date">
                     <template #header>
-                        <SortableHeader field="payment_date" :active="sortBy === 'payment_date'" :direction="sortDir" @sort="setSort">Data płatności </SortableHeader>
+                        <SortableHeader field="payment_date" :active="sortBy === 'payment_date'" :direction="sortDir" @sort="setSort"
+                            >Data płatności
+                        </SortableHeader>
                     </template>
                     <template #body="{ data }: { data: Payment }">
                         {{ data.payment_date ? dayjs(data.payment_date).format('DD.MM.YYYY') : '-' }}
