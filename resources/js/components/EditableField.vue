@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import Chip from '@/components/volt/Chip.vue';
 import DatePicker from '@/components/volt/DatePicker.vue';
 import InputText from '@/components/volt/InputText.vue';
 import Message from '@/components/volt/Message.vue';
 import MultiSelect from '@/components/volt/MultiSelect.vue';
 import Select from '@/components/volt/Select.vue';
-import Tag from '@/components/volt/Tag.vue';
 import { viewLabels } from '@/constants/viewLabels';
 import dayjs from '@/plugins/dayjs';
 import { User } from 'lucide-vue-next';
@@ -62,9 +62,13 @@ const multiselectLabels = computed<string[]>(() => {
         </p>
 
         <p v-if="!isEditing && type === 'multiselect'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            <Tag v-for="user in multiselectLabels" :key="user" severity="info" class="mr-1">
-                {{ user }}
-            </Tag>
+            <Chip
+                v-for="user in multiselectLabels"
+                :key="user"
+                :label="user"
+                class="mr-1"
+                :image="`/storage/users/avatars/${user.toLowerCase()}.webp`"
+            />
         </p>
 
         <p v-else-if="!isEditing && type === 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
