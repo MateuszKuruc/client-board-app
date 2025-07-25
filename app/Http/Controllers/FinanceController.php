@@ -5,75 +5,43 @@ namespace App\Http\Controllers;
 use App\Models\Expense;
 use App\Models\Payment;
 use App\Models\Project;
+use App\Services\FinanceService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
 
 class FinanceController extends Controller
 {
+
+    public function __construct(
+        private FinanceService $financeService,
+    ) {
+    }
+
     public function index(Request $request)
     {
-        $currentDate = Carbon::now();
-        $startOfCurrentMonth = $currentDate->startOfMonth();
-
-        $activeProjects = Project::where('active', true)
-            ->count();
-
-        $activeSubs = Project::with('payments')
-            ->where('type', 'Subskrypcja')
-            ->whereDate('end_date', '>=', $startOfCurrentMonth)
-            ->get();
-
-        $activeSubsValue = $activeSubs->sum('price');
+        $activeProjects = $this->financeService->getActiveProjectsCOunt();
+        $activeSubsValue = $this->financeService->getActiveSubscriptionsValues();
 
         $tab = $request->input('tab', 'Podsumowanie');
-
         $month = $request->input('month', now()->format('Y-m'));
         $current = Carbon::createFromFormat('Y-m', $month);
         $year = $current->format('Y');
         $monthNum = $current->format('m');
 
+        $payments = $this->financeService->getPayments($year, $monthNum);
+        $expenses = $this->financeService->getExpenses($year, $monthNum);
 
-        $paymentsQuery = Payment::with('project.client')
-            ->whereYear('payment_date', $year)
-            ->whereMonth('payment_date', $monthNum);
+        $totalPayments = $this->financeService->getMonthlyTotalPayments($year, $monthNum);
+        $totalExpenses = $this->financeService->getMonthlyTotalExpenses($year, $monthNum);
 
-        $expensesQuery = Expense::whereYear('payment_date', $year)
-            ->whereMonth('payment_date', $monthNum);
-
-
-        $payments = (clone $paymentsQuery)->paginate(10)->withQueryString();
-        $expenses = (clone $expensesQuery)->paginate(10)->withQueryString();
-
-        $totalPayments = (clone $paymentsQuery)->sum('amount');
-        $totalExpenses = (clone $expensesQuery)->sum('amount');
-
-        $prev = $current->copy()->subMonth();
-        $prevYear = $prev->format('Y');
-        $prevMonth = $prev->format('m');
-
-        $previousTotalPayments = Payment::with('project.client')
-            ->whereYear('payment_date', $prevYear)
-            ->whereMonth('payment_date', $prevMonth)
-            ->sum('amount');
-
-        $previousTotalExpenses = Expense::whereYear('payment_date', $prevYear)
-            ->whereMonth('payment_date', $prevMonth)
-            ->sum('amount');
-
-        $changeInPayments = ($totalPayments && $previousTotalPayments)
-            ? round((($totalPayments / $previousTotalPayments) - 1) * 100, 2)
-            : null;
-
-        $changeInExpenses = ($totalExpenses && $previousTotalExpenses)
-            ? round((($totalExpenses / $previousTotalExpenses) - 1) * 100, 2)
-            : null;
+        $changeInPayments = $this->financeService->getChangeInPayments($current);
+        $changeInExpenses = $this->financeService->getChangeInExpenses($current);
 
         $summary = $totalPayments - $totalExpenses;
+        $previousSummary = $this->financeService->getPreviousMonthSummary($current);
 
-        $previousSummary = $previousTotalPayments - $previousTotalExpenses;
-
-        $changeInSummary = ($totalPayments && $previousTotalPayments)
+        $changeInSummary = ($summary && $previousSummary)
             ? round((($summary / $previousSummary) - 1) * 100, 2)
             : null;
 
