@@ -14,11 +14,14 @@ class FinanceController extends Controller
     public function index(Request $request)
     {
         $currentDate = Carbon::now();
-        $endOfCurrentMonth = $currentDate->endOfMonth();
+        $startOfCurrentMonth = $currentDate->startOfMonth();
+
+        $activeProjects = Project::where('active', true)
+            ->count();
 
         $activeSubs = Project::with('payments')
             ->where('type', 'Subskrypcja')
-            ->whereDate('end_date', '>=', $endOfCurrentMonth)
+            ->whereDate('end_date', '>=', $startOfCurrentMonth)
             ->get();
 
         $activeSubsValue = $activeSubs->sum('price');
@@ -86,6 +89,7 @@ class FinanceController extends Controller
             'summary' => $summary,
             'changeInSummary' => $changeInSummary,
             'activeSubsValue' => $activeSubsValue,
+            'activeProjects' => $activeProjects,
         ]);
     }
 }
