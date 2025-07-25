@@ -29,6 +29,16 @@ const props = defineProps<{
     changeInSummary: number;
     activeSubsValue: number;
     activeProjects: number;
+    subPercentage: number;
+    previousSubPercentage: number;
+    averagePayment: number;
+    biggestSub: number;
+    averageSub: number;
+    averageStandard: number;
+    subCount: number;
+    standardCount: number;
+    subPaymentsTotal: number;
+    standardPaymentsTotal: number;
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -117,8 +127,8 @@ watch(
                                     <div class="grid grid-cols-2">
                                         <BarChart
                                             type="pie"
-                                            :labels="['test', 'test2', 'test3']"
-                                            :values="[223, 2323, 23154]"
+                                            :labels="['Subskrypcje', 'Standard']"
+                                            :values="[subCount, standardCount]"
                                             class="max-w-[500px]"
                                             mainLabel="Udział subskrypcji we wszystkich projektach"
                                             secondaryLabel="Liczba projektów"
@@ -126,9 +136,9 @@ watch(
 
                                         <Fieldset legend="Miesiąc w liczbach" class="h-fit">
                                             <div class="flex flex-col justify-between gap-4 p-4">
-                                                <ReusableCard heading="Subskrypcje stanowiły" :percentage="activeSubsValue" class="h-fit" />
-                                                <ReusableCard heading="Udział miesiąc do miesiąca" :percentage="activeSubsValue" class="h-fit" />
-                                                <ReusableCard heading="Średnia opłata za projekt" :value="activeSubsValue" class="h-fit" />
+                                                <ReusableCard heading="Subskrypcje w tym miesiącu" :percentage="subPercentage" class="h-fit" />
+                                                <ReusableCard heading="Subskrypcje miesiąc temu" :percentage="previousSubPercentage" class="h-fit" />
+                                                <ReusableCard heading="Średnia kwota subskrypcji" :value="averageSub" class="h-fit" />
                                             </div>
                                         </Fieldset>
                                     </div>
@@ -136,16 +146,16 @@ watch(
                                     <div class="grid grid-cols-2">
                                         <Fieldset legend="Dodatkowe statystyki">
                                             <div class="flex flex-col justify-between gap-4 p-4">
-                                                <ReusableCard heading="Najwyższa subskrypcja" :value="activeSubsValue" class="h-fit" />
-                                                <ReusableCard heading="Średnia kwota subskrypcji" :value="activeSubsValue" class="h-fit" />
-                                                <ReusableCard heading="Średnia kwota standardowego projektu" :value="activeSubsValue" class="h-fit" />
+                                                <ReusableCard heading="Najwyższa subskrypcja" :value="biggestSub" class="h-fit" />
+                                                <ReusableCard heading="Średnia opłata za projekt" :value="averagePayment" class="h-fit" />
+                                                <ReusableCard heading="Średnia kwota standardowego projektu" :value="averageStandard" class="h-fit" />
                                             </div>
                                         </Fieldset>
 
                                         <BarChart
                                             type="doughnut"
-                                            :labels="['test', 'test2', 'test3']"
-                                            :values="[223, 2323, 23154]"
+                                            :labels="['Subskrypcje', 'Standard']"
+                                            :values="[subPaymentsTotal, standardPaymentsTotal]"
                                             class="max-w-[500px]"
                                             mainLabel="Wysokość zysków z subskrybcji"
                                             secondaryLabel="Zapłacona kwota"
