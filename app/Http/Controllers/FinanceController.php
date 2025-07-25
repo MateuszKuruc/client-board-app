@@ -20,7 +20,7 @@ class FinanceController extends Controller
 
     public function index(Request $request)
     {
-        $activeProjects = $this->financeService->getActiveProjectsCOunt();
+        $activeProjects = $this->financeService->getActiveProjectsCount();
         $activeSubsValue = $this->financeService->getActiveSubscriptionsValues();
 
         $tab = $request->input('tab', 'Podsumowanie');
@@ -45,6 +45,21 @@ class FinanceController extends Controller
             ? round((($summary / $previousSummary) - 1) * 100, 2)
             : null;
 
+        $subPercentage = $this->financeService->getSubPercentage($year, $monthNum);
+        $previousSubPercentage = $this->financeService->getPreviousSubPercentage($year, $monthNum);
+
+        $averagePayment = $this->financeService->getAveragePayment($year, $monthNum);
+        $biggestSub = $this->financeService->biggestSub($year, $monthNum);
+        $averageSub = $this->financeService->getAverageSubPayment($year, $monthNum);
+        $averageStandard = $this->financeService->getAverageStandardPayment($year, $monthNum);
+
+//        $allProjects = $this->financeService->getAllProjectsCount($year, $monthNum);
+        $subCount = $this->financeService->getSubProjectsCount($year, $monthNum);
+        $standardCount = $this->financeService->getStandardProjectsCount($year, $monthNum);
+
+        $subPaymentsTotal = $this->financeService->getMonthlySubPaymentsTotal($year, $monthNum);
+        $standardPaymentsTotal = $this->financeService->getMonthlyStandardPaymentsTotal($year, $monthNum);
+
         return Inertia::render('finances/Index', [
             'month' => $month,
             'tab' => $tab,
@@ -58,6 +73,16 @@ class FinanceController extends Controller
             'changeInSummary' => $changeInSummary,
             'activeSubsValue' => $activeSubsValue,
             'activeProjects' => $activeProjects,
+            'subPercentage' => $subPercentage,
+            'previousSubPercentage' => $previousSubPercentage,
+            'averagePayment' => $averagePayment,
+            'biggestSub' => $biggestSub,
+            'averageSub' => $averageSub,
+            'averageStandard' => $averageStandard,
+            'subCount' => $subCount,
+            'standardCount' => $standardCount,
+            'subPaymentsTotal' => $subPaymentsTotal,
+            'standardPaymentsTotal' => $standardPaymentsTotal,
         ]);
     }
 }
