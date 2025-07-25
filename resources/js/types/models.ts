@@ -120,4 +120,6 @@ export interface Paginated<T> {
 
 export interface Filters {
     search: string | null;
+    sort_by: string | null;
+    sort_dir: string | null;
 }
