@@ -3,6 +3,8 @@ import DataTableToolbar from '@/components/DataTableToolbar.vue';
 import Paginator from '@/components/Paginator.vue';
 import SortableHeader from '@/components/SortableHeader.vue';
 import StyledLink from '@/components/StyledLink.vue';
+import Avatar from '@/components/volt/Avatar.vue';
+import AvatarGroup from '@/components/volt/AvatarGroup.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useExpandableRows } from '@/composables/useExpandableRows';
@@ -76,9 +78,15 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                 <Column header="Opiekun">
                     <template #body="{ data: project }: { data: project }">
                         <template v-if="project.users?.length">
-                            <Tag v-for="user in project.users" :key="user.id" class="mr-1" severity="info">
-                                {{ user.name }}
-                            </Tag>
+                            <AvatarGroup>
+                                <Avatar
+                                    v-for="user in project.users"
+                                    :key="user.id"
+                                    :image="user.avatar_url || undefined"
+                                    :label="!user.avatar_url ? user.name.charAt(0).toUpperCase() : undefined"
+                                    shape="circle"
+                                />
+                            </AvatarGroup>
                         </template>
 
                         <template v-else> - </template>
