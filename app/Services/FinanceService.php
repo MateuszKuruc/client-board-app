@@ -24,6 +24,22 @@ class FinanceService
             ->whereMonth('payment_date', $monthNum);
     }
 
+    private function projectsQuery(string $year, string $monthNum): Builder
+    {
+        return Project::whereHas('payments', function (Builder $query) use ($year, $monthNum) {
+            $query->whereYear('payment_date', $year)
+                ->whereMonth('payment_date', $monthNum);
+        });
+    }
+
+    private function getYearMonth(Carbon $date): array
+    {
+        return [
+            $date->format('Y'),
+            $date->format('m')
+        ];
+    }
+
     public function getActiveProjectsCount(): int
     {
         return Project::where('active', true)->count();
@@ -67,15 +83,10 @@ class FinanceService
 
     public function getChangeInPayments(Carbon $current): ?float
     {
-        $year = $current->format('Y');
-        $monthNum = $current->format('m');
-
+        [$year, $monthNum] = $this->getYearMonth($current);
         $thisMonth = $this->getMonthlyTotalPayments($year, $monthNum);
 
-        $prev = $current->copy()->subMonth();
-        $prevYear = $prev->format('Y');
-        $prevMonth = $prev->format('m');
-
+        [$prevYear, $prevMonth] = $this->getYearMonth($current->copy()->subMonth());
         $lastMonth = $this->getMonthlyTotalPayments($prevYear, $prevMonth);
 
         return ($thisMonth && $lastMonth)
@@ -85,15 +96,10 @@ class FinanceService
 
     public function getChangeInExpenses(Carbon $current): ?float
     {
-        $year = $current->format('Y');
-        $monthNum = $current->format('m');
-
+        [$year, $monthNum] = $this->getYearMonth($current);
         $thisMonth = $this->getMonthlyTotalExpenses($year, $monthNum);
 
-        $prev = $current->copy()->subMonth();
-        $prevYear = $prev->format('Y');
-        $prevMonth = $prev->format('m');
-
+        [$prevYear, $prevMonth] = $this->getYearMonth($current->copy()->subMonth());
         $lastMonth = $this->getMonthlyTotalExpenses($prevYear, $prevMonth);
 
         return ($thisMonth && $lastMonth)
@@ -103,9 +109,7 @@ class FinanceService
 
     public function getPreviousMonthSummary(Carbon $current): ?float
     {
-        $prev = $current->copy()->subMonth();
-        $prevYear = $prev->format('Y');
-        $prevMonth = $prev->format('m');
+        [$prevYear, $prevMonth] = $this->getYearMonth($current->copy()->subMonth());
 
         $lastMonthTotalPayments = $this->getMonthlyTotalPayments($prevYear, $prevMonth);
         $lastMonthTotalExpenses = $this->getMonthlyTotalExpenses($prevYear, $prevMonth);
@@ -113,12 +117,98 @@ class FinanceService
         return $lastMonthTotalPayments - $lastMonthTotalExpenses;
     }
 
-//    public function getPreviousTotalPayments(Carbon $current): ?float
+    public function getStandardProjectsCount(string $year, string $monthNum)
+    {
+        return $this->projectsQuery($year, $monthNum)->where('type', 'Standard')->count();
+    }
+
+    public function getSubProjectsCount(string $year, string $monthNum)
+    {
+        return $this->projectsQuery($year, $monthNum)->where('type', 'Subskrypcja')->count();
+    }
+
+    public function getSubPercentage(string $year, string $monthNum): ?float
+    {
+        $standardProjectsCount = $this->getStandardProjectsCount($year, $monthNum);
+        $subProjectsCount = $this->getSubProjectsCount($year, $monthNum);
+        $total = $standardProjectsCount + $subProjectsCount;
+
+        return $total
+            ? round(($subProjectsCount / $total) * 100, 2)
+            : 0.0;
+    }
+
+    public function getPreviousSubPercentage(string $year, string $monthNum): ?float
+    {
+        $current = Carbon::createFromFormat('Y-m', $year.'-'.$monthNum);
+        [$prevYear, $prevMonth] = $this->getYearMonth($current->copy()->subMonth());
+
+        return $this->getSubPercentage($prevYear, $prevMonth);
+    }
+
+    public function getAveragePayment(string $year, string $monthNum): float
+    {
+        $average = $this->paymentsQuery($year, $monthNum)
+            ->avg('amount') ?? 0.0;
+
+        return round($average, 2);
+
+    }
+
+    public function getAverageSubPayment(string $year, string $monthNum): float
+    {
+        $averageSub = Payment::whereYear('payment_date', $year)
+            ->whereMonth('payment_date', $monthNum)
+            ->whereHas('project', fn($q) => $q->where('type', 'Subskrypcja'))
+            ->avg('amount') ?? 0.0;
+
+        return round($averageSub, 2);
+    }
+
+    public function getAverageStandardPayment(string $year, string $monthNum): float
+    {
+        $averageStandard = Payment::whereYear('payment_date', $year)
+            ->whereMonth('payment_date', $monthNum)
+            ->whereHas('project', fn($q) => $q->where('type', 'Standard'))
+            ->avg('amount') ?? 0.0;
+
+        return round($averageStandard, 2);
+    }
+
+    public function biggestSub(string $year, string $monthNum): float
+    {
+        $maxSub = Payment::whereYear('payment_date', $year)
+            ->whereMonth('payment_date', $monthNum)
+            ->whereHas('project', fn($q) => $q->where('type', 'Subskrypcja'))
+            ->max('amount');
+
+        return round($maxSub ?? 0.0, 2);
+    }
+
+//    public function getAllProjectsCount(string $year, string $monthNum): int
 //    {
-//        $prev = $current->copy()->subMonth();
-//        $prevYear = $prev->format('Y');
-//        $prevMonth = $prev->format('m');
+//        $totalSubs = $this->getSubProjectsCount($year, $monthNum);
+//        $totalStandard = $this->getStandardProjectsCount($year, $monthNum);
 //
-//        return $this->getMonthlyTotalPayments($prevYear, $prevMonth);
+//        return ($totalSubs && $totalStandard)
+//            ? $totalSubs + $totalStandard
+//            : 0;
 //    }
+
+    public function getMonthlySubPaymentsTotal(string $year, string $monthNum): float
+    {
+        return $this->paymentsQuery($year, $monthNum)
+            ->whereHas('project', fn(Builder $q) => $q->where('type', 'Subskrypcja'))
+            ->sum('amount');
+    }
+
+    public function getMonthlyStandardPaymentsTotal(string $year, string $monthNum): float
+    {
+        return $this->paymentsQuery($year, $monthNum)
+            ->whereHas('project', fn(Builder $q) => $q->where('type', 'Standard'))
+            ->sum('amount');
+    }
 }
+
+
+
