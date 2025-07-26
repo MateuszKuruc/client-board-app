@@ -10,18 +10,26 @@ interface exportParams {
     sort_dir: string;
 }
 
-const props = defineProps<{
-    modelValue: string;
-    onExpandAll?: () => void;
-    onCollapseAll?: () => void;
-    exportUrl: string;
-    filters: Record<string, any>;
-    searchable?: boolean;
-    expandLabel?: string;
-    collapseLabel?: string;
-    exportLabel?: string;
-    exportParams?: ExportParams;
-}>();
+const props = withDefaults(
+    defineProps<{
+        modelValue: string;
+        onExpandAll?: () => void;
+        onCollapseAll?: () => void;
+        exportUrl: string;
+        filters: Record<string, any>;
+        exportParams?: ExportParams;
+        searchable?: boolean;
+        expandLabel?: string;
+        collapseLabel?: string;
+        exportLabel?: string;
+    }>(),
+    {
+        searchable: true,
+        expandLabel: 'Rozwiń wszystkie',
+        collapseLabel: 'Zwiń wszystkie',
+        exportLabel: 'Eksportuj dane',
+    },
+);
 
 const emit = defineEmits(['update:modelValue']);
 </script>
@@ -51,7 +59,7 @@ const emit = defineEmits(['update:modelValue']);
             </div>
             <Button as="a" :href="route(exportUrl, exportParams)">
                 <FileDown />
-                {{ exportLabel ? exportLabel : 'Eksportuj dane' }}
+                {{ exportLabel }}
             </Button>
         </div>
     </div>
