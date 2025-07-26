@@ -3,23 +3,26 @@ import SectionHeading from '@/components/SectionHeading.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Divider from '@/components/volt/Divider.vue';
 import dayjs from '@/plugins/dayjs';
-import { Project } from '@/types/models';
+import { Project, Client } from '@/types/models';
 import { Plus } from 'lucide-vue-next';
 import Column from 'primevue/column';
 import StyledLink from '@/components/StyledLink.vue';
 
-const { projects, heading, subheading } = withDefaults(
+const props = withDefaults(
     defineProps<{
         projects: Project[];
         heading: string;
         subheading?: string;
         button?: boolean;
         href?: string;
+        client: Client;
     }>(),
     {
         button: false,
     },
 );
+
+console.log('slug', props.clientSlug);
 </script>
 
 <template>
@@ -35,7 +38,13 @@ const { projects, heading, subheading } = withDefaults(
         <Divider />
     </div>
     <DataTable v-if="projects.length >= 1" :value="projects" dataKey="id">
-        <Column field="name" header="Projekt" />
+        <Column field="name" header="Projekt">
+            <template #body="{ data }">
+                <StyledLink :href="route('projects.show', { client: client.slug, project: data.id })" variant="text">
+                    {{ data.name }}
+                </StyledLink>
+            </template>
+        </Column>
         <Column field="service.name" header="Usługa" />
         <Column field="start_date" header="Data startu">
             <template #body="{ data }: { data: Project }">

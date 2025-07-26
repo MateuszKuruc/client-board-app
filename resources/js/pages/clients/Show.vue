@@ -217,6 +217,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                                 subheading="Śledź projekty, które są aktualnie w toku"
                                 button
                                 :href="route('projects.create', client.slug)"
+                                :client="client"
                             />
                         </div>
 
@@ -225,6 +226,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                                 :projects="client.projects.filter((p) => !p.active)"
                                 heading="Lista nieaktywnych projektów"
                                 subheading="Sprawdź zakończone lub wciąż nieopłacone projekty"
+                                :client="client"
                             />
                         </div>
                     </div>
