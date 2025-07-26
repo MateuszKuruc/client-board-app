@@ -24,41 +24,49 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Pulpit',
         href: '/pulpit',
+        pattern: '/pulpit',
         icon: LayoutGrid,
     },
     {
         title: 'Klienci',
         href: route('clients.index'),
+        pattern: '/klienci',
         icon: SquareUserRound,
     },
     {
         title: 'Projekty',
         href: route('projects.index'),
+        pattern: '/projekty',
         icon: FolderOpen,
     },
     {
         title: 'Płatności',
         href: route('payments.index'),
+        pattern: '/platnosci',
         icon: BadgeDollarSign,
     },
     {
         title: 'Koszty',
         href: route('expenses.index'),
+        pattern: '/koszty',
         icon: Banknote,
     },
     {
         title: 'Finanse',
         href: route('finances.index'),
+        pattern: '/finanse',
         icon: PiggyBank,
     },
     {
         title: 'Leady',
         href: route('leads.index'),
+        pattern: '/leady',
         icon: BookA,
     },
     {
         title: 'Moje projekty',
         href: '/projekty/przypisane',
+        pattern: '/projekty/przypisane',
         icon: ScrollText,
     },
 ];
@@ -71,26 +79,31 @@ const footerNavItems: NavItem[] = [
             {
                 title: 'Klient',
                 href: route('clients.create'),
+                pattern: '/klienci/dodaj',
                 icon: SquareUserRound,
             },
             {
                 title: 'Projekt',
                 href: route('projects.create'),
+                pattern: '/projekty/dodaj',
                 icon: FolderOpen,
             },
             {
                 title: 'Płatność',
                 href: route('payments.create'),
+                pattern: '/platnosci/dodaj',
                 icon: BadgeDollarSign,
             },
             {
                 title: 'Koszt',
                 href: route('expenses.create'),
+                pattern: '/koszty/dodaj',
                 icon: Banknote,
             },
             {
                 title: 'Lead',
                 href: route('leads.create'),
+                pattern: '/leady/dodaj',
                 icon: BookA,
             },
         ],
