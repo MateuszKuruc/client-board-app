@@ -50,7 +50,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         v-model="globalSearch"
                         :exportUrl="'payments.export'"
                         :exportParams="exportParams"
-                        :filters="{ ...filters, sort_by: sortBy, sort_dir: sortDir }"
+                        :filters="filters"
                     />
                 </template>
                 <Column field="id">

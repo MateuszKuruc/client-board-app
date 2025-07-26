@@ -70,7 +70,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         :onCollapseAll="collapseAll"
                         :exportUrl="'projects.export'"
                         :exportParams="exportParams"
-                        :filters="{ ...filters, sort_by: sortBy, sort_dir: sortDir }"
+                        :filters="filters"
                     />
                 </template>
                 <Column expander style="width: 5rem" />
