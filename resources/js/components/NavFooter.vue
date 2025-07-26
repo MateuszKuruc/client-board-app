@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { useNavigation } from '@/composables/useNavigation';
 import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
+
+const { isActive } = useNavigation();
 
 interface Props {
     items: NavItem[];
@@ -9,8 +12,6 @@ interface Props {
 }
 
 defineProps<Props>();
-
-const page = usePage();
 </script>
 
 <template>
@@ -18,13 +19,7 @@ const page = usePage();
         <SidebarGroupContent>
             <SidebarMenu>
                 <SidebarMenuItem v-for="item in items" :key="item.title">
-                    <SidebarMenuButton
-                        v-if="!item.children"
-                        as-child
-                        :is-active="item.href === '/' ? page.url === '/' : page.url === item.href || page.url.startsWith(item.href + '?')"
-                        :tooltip="item.title"
-                        size="lg"
-                    >
+                    <SidebarMenuButton v-if="!item.children" as-child :is-active="isActive(item)" :tooltip="item.title" size="lg">
                         <Link :href="item.href">
                             <component :is="item.icon" />
                             <span>{{ item.title }}</span>
@@ -32,7 +27,7 @@ const page = usePage();
                     </SidebarMenuButton>
 
                     <div v-else>
-                        <SidebarMenuButton v-if="item.href" as-child :is-active="item.href === page.url" :tooltip="item.title" size="lg">
+                        <SidebarMenuButton v-if="item.href" as-child :is-active="isActive(item)" :tooltip="item.title" size="lg">
                             <Link :href="item.href">
                                 <component :is="item.icon" />
                                 <span>{{ item.title }}</span>
@@ -46,7 +41,7 @@ const page = usePage();
 
                         <SidebarMenu>
                             <SidebarMenuItem v-for="child in item.children" :key="child.title" class="pl-6">
-                                <SidebarMenuButton as-child :is-active="child.href === page.url" :tooltip="child.title" size="lg">
+                                <SidebarMenuButton as-child :is-active="isActive(child)" :tooltip="child.title" size="lg">
                                     <Link :href="child.href">
                                         <component :is="child.icon" />
                                         <span>{{ child.title }}</span>
