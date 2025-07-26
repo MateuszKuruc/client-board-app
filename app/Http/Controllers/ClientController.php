@@ -7,6 +7,7 @@ use App\Http\Requests\Clients\StoreClientRequest;
 use App\Http\Requests\Clients\UpdateClientRequest;
 use App\Http\Requests\Tags\SyncTagsRequest;
 use App\Models\Client;
+use App\Models\Lead;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -47,9 +48,11 @@ class ClientController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(Lead $lead = null)
     {
-        return Inertia::render('clients/Create');
+        return Inertia::render('clients/Create', [
+            'lead' => $lead,
+        ]);
     }
 
     public function store(StoreClientRequest $request)
@@ -57,7 +60,18 @@ class ClientController extends Controller
         $validated = $request->validated();
         $validated['slug'] = Str::slug($validated['name']);
 
-        Client::create($validated);
+        $leadId = $validated['lead_id'] ?? null;
+        unset($validated['lead_id']);
+
+        $client = Client::create($validated);
+
+        if ($leadId) {
+            Lead::where('id', $leadId)->update([
+                'client_id' => $client->id,
+                'converted_at' => now(),
+                'phone' => $client->phone,
+            ]);
+        }
 
         return redirect()->route('clients.index');
     }
@@ -90,8 +104,8 @@ class ClientController extends Controller
         $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
-        $allowed = ['id','name','email','phone','source','created_at'];
-        if (! in_array($sortBy, $allowed)) {
+        $allowed = ['id', 'name', 'email', 'phone', 'source', 'created_at'];
+        if (!in_array($sortBy, $allowed)) {
             $sortBy = 'created_at';
         }
         $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
