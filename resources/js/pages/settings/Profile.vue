@@ -20,7 +20,7 @@ defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Profile settings',
+        title: 'Ustawienia profilu',
         href: '/settings/profile',
     },
 ];
@@ -42,21 +42,21 @@ const submit = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Profile settings" />
+        <Head title="Ustawienia profilu" />
 
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
-                <HeadingSmall title="Profile information" description="Update your name and email address" />
+                <HeadingSmall title="Twój profil" description="Zmień nazwę lub email użytkownika" />
 
                 <form @submit.prevent="submit" class="space-y-6">
                     <div class="grid gap-2">
-                        <Label for="name">Name</Label>
-                        <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name" placeholder="Full name" />
+                        <Label for="name">Nazwa</Label>
+                        <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name" placeholder="Nazwa użytkownika" />
                         <InputError class="mt-2" :message="form.errors.name" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
+                        <Label for="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -64,31 +64,31 @@ const submit = () => {
                             v-model="form.email"
                             required
                             autocomplete="username"
-                            placeholder="Email address"
+                            placeholder="Email"
                         />
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
                         <p class="-mt-4 text-sm text-muted-foreground">
-                            Your email address is unverified.
+                            Adres email nie został zweryfikowany.
                             <Link
                                 :href="route('verification.send')"
                                 method="post"
                                 as="button"
                                 class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             >
-                                Click here to resend the verification email.
+                                Kliknij tutaj aby ponownie wysłać link weryfikacyjny.
                             </Link>
                         </p>
 
                         <div v-if="status === 'verification-link-sent'" class="mt-2 text-sm font-medium text-green-600">
-                            A new verification link has been sent to your email address.
+                            Nowy link weryfikacyjny został wysłany na Twój adres email.
                         </div>
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button :disabled="form.processing">Save</Button>
+                        <Button :disabled="form.processing">Zapisz</Button>
 
                         <Transition
                             enter-active-class="transition ease-in-out"
@@ -96,7 +96,7 @@ const submit = () => {
                             leave-active-class="transition ease-in-out"
                             leave-to-class="opacity-0"
                         >
-                            <p v-show="form.recentlySuccessful" class="text-sm text-neutral-600">Saved.</p>
+                            <p v-show="form.recentlySuccessful" class="text-sm text-neutral-600">Zapisano.</p>
                         </Transition>
                     </div>
                 </form>
