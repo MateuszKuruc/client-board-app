@@ -83,11 +83,8 @@ class FinanceService
 
     public function getChangeInPayments(Carbon $date): ?float
     {
-        [$year, $monthNum] = $this->getYearMonth($date);
         $thisMonth = $this->getMonthlyTotalPayments($date);
-
-        [$prevYear, $prevMonth] = $this->getYearMonth($date->copy()->subMonth());
-        $lastMonth = $this->getMonthlyTotalPayments($date);
+        $lastMonth = $this->getMonthlyTotalPayments($date->copy()->subMonth());
 
         return ($thisMonth && $lastMonth)
             ? round((($thisMonth / $lastMonth) - 1) * 100, 2)
@@ -96,11 +93,8 @@ class FinanceService
 
     public function getChangeInExpenses(Carbon $date): ?float
     {
-        [$year, $monthNum] = $this->getYearMonth($date);
         $thisMonth = $this->getMonthlyTotalExpenses($date);
-
-        [$prevYear, $prevMonth] = $this->getYearMonth($date->copy()->subMonth());
-        $lastMonth = $this->getMonthlyTotalExpenses($date);
+        $lastMonth = $this->getMonthlyTotalExpenses($date->copy()->subMonth());
 
         return ($thisMonth && $lastMonth)
             ? round((($thisMonth / $lastMonth) - 1) * 100, 2)
@@ -109,10 +103,8 @@ class FinanceService
 
     public function getPreviousMonthSummary(Carbon $date): ?float
     {
-        [$prevYear, $prevMonth] = $this->getYearMonth($date->copy()->subMonth());
-
-        $lastMonthTotalPayments = $this->getMonthlyTotalPayments($date);
-        $lastMonthTotalExpenses = $this->getMonthlyTotalExpenses($date);
+        $lastMonthTotalPayments = $this->getMonthlyTotalPayments($date->copy()->subMonth());
+        $lastMonthTotalExpenses = $this->getMonthlyTotalExpenses($date->copy()->subMonth());
 
         return $lastMonthTotalPayments - $lastMonthTotalExpenses;
     }
@@ -152,7 +144,6 @@ class FinanceService
             ->avg('amount') ?? 0.0;
 
         return round($average, 2);
-
     }
 
     public function getAverageSubPayment(Carbon $date): float
