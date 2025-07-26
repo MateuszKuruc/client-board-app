@@ -38,7 +38,11 @@ const props = withDefaults(
     </div>
     <DataTable v-if="payments.length >= 1" :value="payments" dataKey="id">
         <Column field="id" header="Płatność">
-            <template #body="{ data: payment }: { data: Payment }"> Nr {{ payment.id }} </template>
+            <template #body="{ data: payment }: { data: Payment }">
+                <StyledLink :href="route('payments.show', { client: client.slug, project: project.id, payment: payment.id })" variant="text">
+                    Nr {{ payment.id }}
+                </StyledLink>
+            </template>
         </Column>
         <Column field="amount" header="Kwota" />
         <Column field="status" header="Status">
@@ -53,10 +57,7 @@ const props = withDefaults(
         </Column>
         <Column>
             <template #body="{ data: payment }: { data: Payment }">
-                <StyledLink v-if="client && project && href" variant="text" :href="href">
-                    Zarządzaj
-                </StyledLink>
-
+                <StyledLink v-if="client && project && href" variant="text" :href="href"> Zarządzaj </StyledLink>
             </template>
         </Column>
     </DataTable>
