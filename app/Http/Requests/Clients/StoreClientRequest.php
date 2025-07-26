@@ -28,6 +28,7 @@ class StoreClientRequest extends FormRequest
                 Rule::in(['Strona internetowa', 'Social media', 'Polecenie', 'Ads', 'Grupki', 'Useme', 'Inne'])
             ],
             'location' => ['required', Rule::in(['local', 'remote', 'international'])],
+            'lead_id' => ['nullable', 'exists:leads,id'],
         ];
     }
 
