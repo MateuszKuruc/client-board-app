@@ -2,13 +2,13 @@
 import Paginator from '@/components/Paginator.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
-import { Paginated, Payment, Project } from '@/types/models';
+import { Paginated, Payment, Project, Expense } from '@/types/models';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
 import { computed } from 'vue';
 
 const props = defineProps<{
-    data: Paginated<Project> | Paginated<Payment> | Project[] | Payment[];
+    data: Paginated<Project> | Paginated<Payment> | Paginated<Expense> | Project[] | Payment[] | Expense[];
 }>();
 
 const hasNameData = computed(() => {
