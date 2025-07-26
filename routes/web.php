@@ -28,9 +28,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/klienci', [ClientController::class, 'store'])->name('clients.store');
     Route::get('/klienci/dodaj', [ClientController::class, 'create'])->name('clients.create');
     Route::get('/klienci/eksport', [ClientController::class, 'export'])->name('clients.export');
+    Route::get('/klienci/dodaj/{lead?}', [ClientController::class, 'create'])->name('clients.create');
     Route::get('/klienci/{client}', [ClientController::class, 'show'])->name('clients.show');
     Route::put('/klienci/{client}', [ClientController::class, 'update'])->name('clients.update');
     Route::put('/klienci/{client}/tags', [ClientController::class, 'updateTags'])->name('clients.tags.update');
+
 
 
     //  Projects
