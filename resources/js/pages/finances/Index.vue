@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import BarChart from '@/components/BarChart.vue';
+import FinanceCards from '@/components/FinanceCards.vue';
+import FinanceTable from '@/components/FinanceTable.vue';
 import ReusableCard from '@/components/ReusableCard.vue';
 import Fieldset from '@/components/volt/Fieldset.vue';
 import SelectButton from '@/components/volt/SelectButton.vue';
@@ -8,8 +10,6 @@ import TabList from '@/components/volt/TabList.vue';
 import { default as TabPanel, default as TabPanels } from '@/components/volt/TabPanels.vue';
 import Tabs from '@/components/volt/Tabs.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import FinanceCards from '@/components/FinanceCards.vue';
-import FinanceTable from '@/components/FinanceTable.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import { Expense, Paginated, Payment } from '@/types/models';
@@ -114,7 +114,16 @@ watch(
 
                     <TabPanels>
                         <TabPanel class="space-y-2">
-                            <SelectButton v-model="selectValue" :options="optionValues" />
+                            <SelectButton v-model="selectValue" :options="optionValues">
+                                <template #option="{ option }">
+                                    <button
+                                        :disabled="option === selectValue"
+                                        :class="option !== selectValue ? 'cursor-pointer' : 'cursor-not-allowed'"
+                                    >
+                                        {{ option }}
+                                    </button>
+                                </template>
+                            </SelectButton>
                             <div v-if="selectValue === optionValues[0]">
                                 <FinanceCards
                                     firstHeading="Podsumowanie miesiąca"
