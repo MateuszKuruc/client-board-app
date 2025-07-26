@@ -15,7 +15,8 @@ class LeadController extends Controller
     {
         $search = $request->input('search');
 
-        $leads = Lead::when($search, function ($query) use ($search) {
+        $leads = Lead::with('client')
+        ->when($search, function ($query) use ($search) {
             $query->where('email', 'like', '%'.$search.'%')
                 ->orWhere('phone', 'like', '%'.$search.'%');
         })
