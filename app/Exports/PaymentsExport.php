@@ -38,12 +38,19 @@ class PaymentsExport implements FromCollection, WithHeadings
             ->orderBy($this->sortBy, $this->sortDir)
             ->get()
             ->map(function ($payment) {
+                $statusText = match ($payment->status) {
+                    'pending' => 'Oczekująca',
+                    'paid' => 'Opłacona',
+                    'cancelled' => 'Anulowana',
+                    default => $payment->status,
+                };
+
                 return [
                     $payment->id,
                     $payment->project->name,
                     $payment->project->client->name,
                     $payment->amount,
-                    $payment->status,
+                    $statusText,
                     $payment->payment_date ?? '-',
                 ];
             });

@@ -41,6 +41,8 @@ class ProjectsExport implements FromCollection, WithHeadings
                     $project->client->name ?? '-',
                     $project->service->name ?? '-',
                     $project->price,
+                    $project->start_date,
+                    $project->end_date,
                 ];
             });
     }
@@ -52,7 +54,9 @@ class ProjectsExport implements FromCollection, WithHeadings
             'Nazwa projektu',
             'Klient',
             'Usługa',
-            'Cena'
+            'Cena',
+            'Data startu',
+            'Data zakończenia'
         ];
     }
 }

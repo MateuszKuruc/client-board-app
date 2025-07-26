@@ -33,12 +33,16 @@ class ExpensesExport implements FromCollection, WithHeadings
             ->orderBy($this->sortBy, $this->sortDir)
             ->get()
             ->map(function ($expense) {
+                $statusText = match ($expense->is_paid) {
+                    0 => 'Nieopłacona',
+                    1 => "Opłacona",
+                };
                 return [
                     $expense->id,
                     $expense->name,
                     $expense->amount,
                     $expense->type,
-                    $expense->is_paid,
+                    $statusText,
                     $expense->payment_date,
                 ];
             });
