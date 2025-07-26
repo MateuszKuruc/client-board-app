@@ -21,8 +21,6 @@ const props = withDefaults(
         button: false,
     },
 );
-
-console.log('slug', props.clientSlug);
 </script>
 
 <template>

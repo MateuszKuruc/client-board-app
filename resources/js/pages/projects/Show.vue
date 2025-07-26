@@ -11,6 +11,7 @@ import { Project, Service, User, Tag } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
+import { BreadcrumbItem } from '@/types';
 
 const toast = useToast();
 

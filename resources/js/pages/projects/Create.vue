@@ -10,7 +10,7 @@ import { projectTypeOptions } from '@/constants/projectTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Client } from '@/types/models';
+import { Client, Project } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 
@@ -40,7 +40,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const form = useForm<Payment>({
+const form = useForm<Project>({
     name: null,
     client_id: clientParam,
     service_id: null,

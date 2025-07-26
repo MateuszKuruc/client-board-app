@@ -16,7 +16,7 @@ import { Client, Tag } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, Ref } from 'vue';
-import NotesBlock from '@/pages/clients/NotesBlock.vue';
+import NotesBlock from '@/components/NotesBlock.vue';
 
 const toast = useToast();
 

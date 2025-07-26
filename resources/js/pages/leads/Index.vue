@@ -6,10 +6,11 @@ import DataTable from '@/components/volt/DataTable.vue';
 import Tag from '@/components/volt/Tag.vue';
 import { useServerSearch } from '@/composables/useServerSearch';
 import AppLayout from '@/layouts/AppLayout.vue';
+import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
 import type { Filters, Lead, Paginated } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
-import { SquarePen } from 'lucide-vue-next';
+import { SquarePen, User } from 'lucide-vue-next';
 import Column from 'primevue/column';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -45,15 +46,27 @@ const { globalSearch } = useServerSearch(props.filters.search || '', 'leads.inde
                 </Column>
                 <Column field="converted_at" header="Status">
                     <template #body="{ data: lead }: { data: Lead }">
-                        <Tag :value="lead.converted_at ? 'Przekonwertowany' : 'Potencjalny'" :severity="lead.converted_at ? 'success' : 'warn'" />
+                        <div class="flex flex-col gap-1">
+                            <Tag :value="lead.converted_at ? 'Przekonwertowany' : 'Lead'" :severity="lead.converted_at ? 'success' : 'warn'" />
+                            <Tag
+                                v-if="lead.converted_at"
+                                :value="lead.converted_at ? dayjs(lead.converted_at).format('DD.MM.YYYY') : null"
+                                severity="info"
+                            />
+                        </div>
                     </template>
                 </Column>
 
                 <Column header="Aktualizacja">
                     <template #body="{ data: lead }: { data: Lead }">
-                        <StyledLink variant="text" href="#">
+                        <StyledLink v-if="lead.converted_at === null" variant="text" :href="route('clients.create', lead.id)">
                             <SquarePen />
                             Zamień w klienta
+                        </StyledLink>
+
+                        <StyledLink v-if="lead.converted_at" variant="text" :href="route('clients.show', lead.client.slug)">
+                            <User />
+                            Profil klienta
                         </StyledLink>
                     </template>
                 </Column>

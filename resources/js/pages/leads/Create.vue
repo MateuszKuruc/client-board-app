@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const form = useForm<Payment>({
+const form = useForm({
     email: null,
     phone: null,
 });
