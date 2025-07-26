@@ -7,10 +7,17 @@ import { locationOptions } from '@/constants/locationOptions';
 import { sourceOptions } from '@/constants/sourceOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
+import { Lead } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
+
+const props = defineProps<{
+    lead: Lead | null;
+}>();
+
+const leadPhone = props.lead?.phone ?? null;
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -23,13 +30,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const form = useForm<Payment>({
+const form = useForm({
     name: null,
-    email: null,
-    phone: null,
+    email: props.lead?.email ?? null,
+    phone: props.lead?.phone ?? null,
     nip: null,
     source: null,
     location: null,
+    lead_id: props.lead?.id ?? null,
 });
 
 const submit = () => {
@@ -38,7 +46,11 @@ const submit = () => {
     form.post(route('clients.store'), {
         onSuccess: () => {
             form.reset();
-            toast.add({ severity: 'success', summary: 'Klient dodany poprawnie', detail: 'Dane zostały zapisane w systemie', life: 3000 });
+            if (props.lead !== null) {
+                toast.add({ severity: 'success', summary: 'Lead zamieniony w klienta', detail: 'Dane zostały zapisane w systemie', life: 3000 });
+            } else {
+                toast.add({ severity: 'success', summary: 'Klient dodany poprawnie', detail: 'Dane zostały zapisane w systemie', life: 3000 });
+            }
         },
         onError: () => {
             toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Klient nie został zapisany', life: 3000 });
@@ -51,7 +63,10 @@ const submit = () => {
     <Head title="Nowy klient" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <FormLayout title="Dodaj nowego klienta" description="Uzupełnij wymagane pola i utwórz profil klienta">
+        <FormLayout
+            :title="lead === null ? 'Dodaj nowego klienta' : 'Zmień leada w klienta'"
+            description="Uzupełnij wymagane pola i utwórz profil klienta"
+        >
             <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <form @submit.prevent="submit" class="flex flex-col gap-6">
                     <div class="grid gap-6">
@@ -64,9 +79,17 @@ const submit = () => {
                             v-model="form.email"
                             placeholder="example@gmail.com"
                             required
+                            :disabled="lead !== null"
                         />
 
-                        <InputField id="phone" label="Telefon" :error="form.errors.phone" v-model="form.phone" placeholder="531380713" />
+                        <InputField
+                            id="phone"
+                            label="Telefon"
+                            :error="form.errors.phone"
+                            v-model="form.phone"
+                            placeholder="531380713"
+                            :disabled="leadPhone !== null"
+                        />
 
                         <InputField id="nip" label="NIP" :error="form.errors.nip" v-model="form.nip" placeholder="7941840960" required />
 
