@@ -7,227 +7,181 @@ use App\Models\Payment;
 use App\Models\Project;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class FinanceService
 {
-
-    private function paymentsQuery(string $year, string $monthNum): Builder
+    private function getCurrentPaymentsQuery(Carbon $date)
     {
+        $currentStart = $date->copy()->startOfMonth();
+        $currentEnd = $date->copy()->endOfMonth();
+
         return Payment::with('project.client')
-            ->whereYear('payment_date', $year)
-            ->whereMonth('payment_date', $monthNum);
+            ->whereBetween('payment_date', [$currentStart, $currentEnd])
+            ->orderBy('payment_date', 'desc');
     }
 
-    private function expensesQuery(string $year, string $monthNum): Builder
+    private function getCurrentExpensesQuery(Carbon $date)
     {
-        return Expense::whereYear('payment_date', $year)
-            ->whereMonth('payment_date', $monthNum);
+        $currentStart = $date->copy()->startOfMonth();
+        $currentEnd = $date->copy()->endOfMonth();
+
+        return Expense::whereBetween('payment_date', [$currentStart, $currentEnd])
+            ->orderBy('payment_date', 'desc');
     }
 
-    private function projectsQuery(string $year, string $monthNum): Builder
-    {
-        return Project::whereHas('payments', function (Builder $query) use ($year, $monthNum) {
-            $query->whereYear('payment_date', $year)
-                ->whereMonth('payment_date', $monthNum);
-        });
-    }
-
-    private function getYearMonth(Carbon $date): array
-    {
-        return [
-            $date->format('Y'),
-            $date->format('m')
-        ];
-    }
-
-    public function getActiveProjectsCount(): int
+    public function getActiveProjectsCount()
     {
         return Project::where('active', true)->count();
     }
 
-    public function getActiveSubscriptionsValues(Carbon $date = null): float
+    public function getActiveSubscriptionsValues()
     {
-        $startOfCurrentMonth = $date ? $date->copy()->startOfMonth() : Carbon::now()->startOfMonth();
+        $currentMonthStart = Carbon::now()->endOfMonth();
 
-        return Project::with('payments')
-            ->where('type', 'Subskrypcja')
-            ->whereDate('end_date', '>=', $startOfCurrentMonth)
+        return (float) Project::where('type', 'Subskrypcja')
+            ->where('active', true)
+            ->where(function ($query) use ($currentMonthStart) {
+                $query->whereNull('end_date')
+                    ->orWhere('end_date', '>=', $currentMonthStart);
+            })
             ->sum('price');
     }
 
-    public function getMonthlyTotalPayments(Carbon $date): int
+    public function getLast3MonthsAverageNet(Carbon $date): float
     {
-        return $this->paymentsQuery($date->format('Y'), $date->format('m'))
+        $startDate = $date->copy()->subMonths(2)->startOfMonth();
+        $endDate = $date->copy()->endOfMonth();
+
+        $totalPayments = Payment::whereBetween('payment_date', [$startDate, $endDate])
             ->sum('amount');
-    }
 
-    public function getMonthlyTotalExpenses(Carbon $date): int
-    {
-        return $this->expensesQuery($date->format('Y'), $date->format('m'))
+        $totalExpenses = Expense::whereBetween('payment_date', [$startDate, $endDate])
             ->sum('amount');
-    }
 
-    public function getPayments(Carbon $date)
-    {
-        return $this->paymentsQuery($date->format('Y'), $date->format('m'))
-            ->paginate(10)
-            ->withQueryString();
-    }
-
-    public function getExpenses(Carbon $date)
-    {
-        return $this->expensesQuery($date->format('Y'), $date->format('m'))
-            ->paginate(10)
-            ->withQueryString();
-    }
-
-    public function getChangeInPayments(Carbon $date): ?float
-    {
-        $thisMonth = $this->getMonthlyTotalPayments($date);
-        $lastMonth = $this->getMonthlyTotalPayments($date->copy()->subMonth());
-
-        return ($thisMonth && $lastMonth)
-            ? round((($thisMonth / $lastMonth) - 1) * 100, 2)
-            : null;
-    }
-
-    public function getChangeInExpenses(Carbon $date): ?float
-    {
-        $thisMonth = $this->getMonthlyTotalExpenses($date);
-        $lastMonth = $this->getMonthlyTotalExpenses($date->copy()->subMonth());
-
-        return ($thisMonth && $lastMonth)
-            ? round((($thisMonth / $lastMonth) - 1) * 100, 2)
-            : null;
-    }
-
-    public function getPreviousMonthSummary(Carbon $date): ?float
-    {
-        $lastMonthTotalPayments = $this->getMonthlyTotalPayments($date->copy()->subMonth());
-        $lastMonthTotalExpenses = $this->getMonthlyTotalExpenses($date->copy()->subMonth());
-
-        return $lastMonthTotalPayments - $lastMonthTotalExpenses;
-    }
-
-    public function getStandardProjectsCount(Carbon $date)
-    {
-        return $this->projectsQuery($date->format('Y'), $date->format('m'))->where('type', 'Standard')->count();
-    }
-
-    public function getSubProjectsCount(Carbon $date)
-    {
-        return $this->projectsQuery($date->format('Y'), $date->format('m'))->where('type', 'Subskrypcja')->count();
-    }
-
-    public function getSubPercentage(Carbon $date): ?float
-    {
-        $standardProjectsCount = $this->getStandardProjectsCount($date);
-        $subProjectsCount = $this->getSubProjectsCount($date);
-        $total = $standardProjectsCount + $subProjectsCount;
-
-        return $total
-            ? round(($subProjectsCount / $total) * 100, 2)
-            : 0.0;
-    }
-
-
-    public function getPreviousSubPercentage(Carbon $date): ?float
-    {
-        $prevMonth = $date->copy()->subMonth();
-
-        return $this->getSubPercentage($prevMonth);
-    }
-
-    public function getAveragePayment(Carbon $date): float
-    {
-        $average = $this->paymentsQuery($date->format('Y'), $date->format('m'))
-            ->avg('amount') ?? 0.0;
-
-        return round($average, 2);
-    }
-
-    public function getAverageSubPayment(Carbon $date): float
-    {
-        $averageSub = Payment::whereYear('payment_date', $date->format('Y'))
-            ->whereMonth('payment_date', $date->format('m'))
-            ->whereHas('project', fn($q) => $q->where('type', 'Subskrypcja'))
-            ->avg('amount') ?? 0.0;
-
-        return round($averageSub, 2);
-    }
-
-    public function getAverageStandardPayment(Carbon $date): float
-    {
-        $averageStandard = Payment::whereYear('payment_date', $date->format('Y'))
-            ->whereMonth('payment_date', $date->format('m'))
-            ->whereHas('project', fn($q) => $q->where('type', 'Standard'))
-            ->avg('amount') ?? 0.0;
-
-        return round($averageStandard, 2);
-    }
-
-    public function biggestSub(Carbon $date): float
-    {
-        $maxSub = Payment::whereYear('payment_date', $date->format('Y'))
-            ->whereMonth('payment_date', $date->format('m'))
-            ->whereHas('project', fn($q) => $q->where('type', 'Subskrypcja'))
-            ->max('amount');
-
-        return round($maxSub ?? 0.0, 2);
-    }
-
-    public function getMonthlySubPaymentsTotal(Carbon $date): float
-    {
-        return $this->paymentsQuery($date->format('Y'), $date->format('m'))
-            ->whereHas('project', fn(Builder $q) => $q->where('type', 'Subskrypcja'))
-            ->sum('amount');
-    }
-
-    public function getMonthlyStandardPaymentsTotal(Carbon $date): float
-    {
-        return $this->paymentsQuery($date->format('Y'), $date->format('m'))
-            ->whereHas('project', fn(Builder $q) => $q->where('type', 'Standard'))
-            ->sum('amount');
+        return round(($totalPayments - $totalExpenses) / 3, 2);
     }
 
     public function getDashboardData(Carbon $date): array
     {
-        $totalPayments = $this->getMonthlyTotalPayments($date);
-        $totalExpenses = $this->getMonthlyTotalExpenses($date);
-        $summary = $totalPayments - $totalExpenses;
+        $previousStart = $date->copy()->subMonth()->startOfMonth();
+        $previousEnd = $date->copy()->subMonth()->endOfMonth();
 
-        $previousSummary = $this->getPreviousMonthSummary($date);
+        $paginatedCurrentPayments = $this->getCurrentPaymentsQuery($date)
+            ->paginate(10);
+
+        $paginatedCurrentExpenses = $this->getCurrentExpensesQuery($date)
+            ->paginate(10);
+
+        $currentPayments = $this->getCurrentPaymentsQuery($date)->get();
+
+        $previousPayments = Payment::with('project.client')
+            ->whereBetween('payment_date', [$previousStart, $previousEnd])
+            ->get();
+
+        $currentExpenses = $this->getCurrentExpensesQuery($date)
+            ->get();
+
+        $previousExpenses = Expense::whereBetween('payment_date', [$previousStart, $previousEnd])
+            ->get();
+
+        $totalPayments = round($currentPayments->sum('amount'), 2);
+        $totalExpenses = round($currentExpenses->sum('amount'), 2);
+        $summary = round($totalPayments - $totalExpenses, 2);
+
+        $previousTotalPayments = $previousPayments->sum('amount');
+        $previousTotalExpenses = $previousExpenses->sum('amount');
+        $previousSummary = $previousTotalPayments - $previousTotalExpenses;
+
+        $changeInPayments = ($totalPayments && $previousTotalPayments)
+            ? round((($totalPayments / $previousTotalPayments) - 1) * 100, 2)
+            : 0.0;
+
+        $changeInExpenses = ($totalExpenses && $previousTotalExpenses)
+            ? round((($totalExpenses / $previousTotalExpenses) - 1) * 100, 2)
+            : 0.0;
+
         $changeInSummary = ($summary && $previousSummary)
             ? round((($summary / $previousSummary) - 1) * 100, 2)
-            : null;
+            : 0.0;
+
+        $currentSubPayments = $currentPayments->filter(function ($payment) {
+            return $payment->project->type === 'Subskrypcja';
+        });
+
+        $currentStandardPayments = $currentPayments->filter(function ($payment) {
+            return $payment->project->type === 'Standard';
+        });
+
+        $previousSubPayments = $previousPayments->filter(function ($payment) {
+            return $payment->project->type === 'Subskrypcja';
+        });
+
+        $previousStandardPayments = $previousPayments->filter(function ($payment) {
+            return $payment->project->type === 'Standard';
+        });
+
+        $subCount = $currentSubPayments->count();
+        $standardCount = $currentStandardPayments->count();
+        $previousSubCount = $previousSubPayments->count();
+        $previousStandardCount = $previousStandardPayments->count();
+
+        $totalCurrentProjects = $subCount + $standardCount;
+        $totalPreviousProjects = $previousSubCount + $previousStandardCount;
+
+        $subPercentage = $totalCurrentProjects
+            ? round(($subCount / $totalCurrentProjects) * 100, 2)
+            : 0.0;
+
+        $previousSubPercentage = $totalPreviousProjects
+            ? round(($previousSubCount / $totalPreviousProjects) * 100, 2)
+            : 0.0;
+
+        $averagePayment = $currentPayments->count()
+            ? round($currentPayments->avg('amount'), 2)
+            : 0.0;
+
+        $averageSub = $currentPayments->count()
+            ? round($currentSubPayments->avg('amount'), 2)
+            : 0.0;
+
+        $averageStandard = $currentPayments->count()
+            ? round($currentStandardPayments->avg('amount'), 2)
+            : 0.0;
+
+        $biggestSub = $currentSubPayments->count()
+            ? round($currentSubPayments->max('amount'), 2)
+            : 0.0;
+
+        $subPaymentsTotal = $currentSubPayments->sum('amount');
+        $standardPaymentsTotal = $currentStandardPayments->sum('amount');
 
         return [
-            'payments' => $this->getPayments($date),
-            'expenses' => $this->getExpenses($date),
+            'payments' => $paginatedCurrentPayments,
+            'expenses' => $paginatedCurrentExpenses,
 
             'totalPayments' => $totalPayments,
             'totalExpenses' => $totalExpenses,
             'summary' => $summary,
 
-            'changeInPayments' => $this->getChangeInPayments($date),
-            'changeInExpenses' => $this->getChangeInExpenses($date),
+            'changeInPayments' => $changeInPayments,
+            'changeInExpenses' => $changeInExpenses,
             'changeInSummary' => $changeInSummary,
 
-            'subCount' => $this->getSubProjectsCount($date),
-            'standardCount' => $this->getStandardProjectsCount($date),
-            'subPercentage' => $this->getSubPercentage($date),
-            'previousSubPercentage' => $this->getPreviousSubPercentage($date),
+            'subCount' => $subCount,
+            'standardCount' => $standardCount,
+            'subPercentage' => $subPercentage,
+            'previousSubPercentage' => $previousSubPercentage,
 
-            'averagePayment' => $this->getAveragePayment($date),
-            'averageSub' => $this->getAverageSubPayment($date),
-            'averageStandard' => $this->getAverageStandardPayment($date),
-            'biggestSub' => $this->biggestSub($date),
+            'averagePayment' => $averagePayment,
+            'averageSub' => $averageSub,
+            'averageStandard' => $averageStandard,
+            'biggestSub' => $biggestSub,
 
-            'subPaymentsTotal' => $this->getMonthlySubPaymentsTotal($date),
-            'standardPaymentsTotal' => $this->getMonthlyStandardPaymentsTotal($date),
+            'subPaymentsTotal' => $subPaymentsTotal,
+            'standardPaymentsTotal' => $standardPaymentsTotal,
         ];
     }
 }
-
 
 
