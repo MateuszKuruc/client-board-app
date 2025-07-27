@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import Card from '@/components/volt/Card.vue';
+import Tag from '@/components/volt/Tag.vue';
+import { Client, Project } from '@/types/models';
+import { Link } from '@inertiajs/vue3';
+import { FolderOpen, User } from 'lucide-vue-next';
 
 const { value } = defineProps<{
     heading: string;
@@ -9,6 +13,8 @@ const { value } = defineProps<{
     percentage?: number;
     summary?: number;
     plainNumber?: number;
+    client?: Client;
+    project?: Project;
 }>();
 </script>
 
@@ -32,6 +38,21 @@ const { value } = defineProps<{
                     Pozostało do zapłaty: <span class="text-red-600">{{ secondValue }} zł</span>
                 </p>
                 <p v-if="plainNumber" class="text-3xl font-bold text-indigo-600">{{ plainNumber }}</p>
+                <Link v-if="client" :href="route('clients.show', { client: client.slug })">
+                    <Tag severity="info">
+                        <User />
+                        {{ client.name }}
+                    </Tag>
+                </Link>
+
+                <Link v-if="project" :href="route('projects.show', { client: project.client.slug, project: project.id })">
+                    <Tag severity="info">
+                        <FolderOpen />
+                        <p class="max-w-xs truncate">
+                            {{ project.name }}
+                        </p>
+                    </Tag>
+                </Link>
             </div>
         </template>
     </Card>
