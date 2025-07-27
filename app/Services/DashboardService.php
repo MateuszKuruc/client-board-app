@@ -12,6 +12,16 @@ class DashboardService
     public function getLatestPayments()
     {
         return Payment::with('project.client')
+            ->where('payment_date', '!=', null)
+            ->orderBy('payment_date', 'desc')
+            ->take(5)
+            ->get();
+    }
+
+    public function getPendingPayments()
+    {
+        return Payment::with('project.client')
+            ->where('status', 'pending')
             ->latest()
             ->take(5)
             ->get();
@@ -38,7 +48,8 @@ class DashboardService
             ->sortBy(function ($client) {
                 return $client->projects->first()?->start_date;
             })
-            ->take(5);
+            ->take(5)
+            ->values();
     }
 
     public function getActiveProjects()
@@ -65,7 +76,7 @@ class DashboardService
         return Project::with([
             'payments' => function ($query) {
                 $query->where('status', 'paid');
-            }
+            }, 'client', 'service'
         ])
             ->whereHas('payments', function ($query) {
                 $query->where('status', 'paid');
@@ -79,7 +90,7 @@ class DashboardService
 
     public function getRecentlyEndedProjects()
     {
-        return Project::with('client')
+        return Project::with('client', 'service')
             ->where('active', false)
             ->whereNotNull('end_date')
             ->whereBetween('end_date', [Carbon::now()->subMonth(), Carbon::now()])
