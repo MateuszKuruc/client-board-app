@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('type', ['Miesięczna', 'Roczna', 'Jednorazowa']);
             $table->date('payment_date')->nullable();
             $table->timestamps();
+
+            $table->index('payment_date');
         });
     }
 

@@ -23,6 +23,10 @@ return new class extends Migration {
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();
+
+            $table->index('active');
+            $table->index(['type', 'end_date']);
+            $table->index(['active', 'type']);
         });
     }
 
