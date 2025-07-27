@@ -24,7 +24,7 @@ class DashboardService
             ->get();
     }
 
-    public function longestClients()
+    public function getLongestClients()
     {
         return Client::with([
             'projects' => function ($query) {
@@ -43,7 +43,21 @@ class DashboardService
 
     public function getActiveProjects()
     {
-        return Project::where('active', true)->count();
+        return Project::where('active', true)
+            ->count();
+    }
+
+    public function getNewestClient()
+    {
+        return Client::latest()
+            ->first();
+    }
+
+    public function getNewestProject()
+    {
+        return Project::with('client')
+            ->latest()
+            ->first();
     }
 
     public function getEndingProjects()
@@ -76,16 +90,17 @@ class DashboardService
 
     public function getBiggestValueClients()
     {
-        return Client::withSum([
-            'projects.payments' => function ($query) {
-                $query->where('status', 'paid');
-            }
-        ], 'amount')
+        return Client::with('projects.payments')
             ->whereHas('projects.payments', function ($query) {
                 $query->where('status', 'paid');
             })
-            ->orderBy('projects_payments_sum_amount', 'desc')
+            ->get()
+            ->sortByDesc(function ($client) {
+                return $client->projects->sum(function ($project) {
+                    return $project->payments->where('status', 'paid')->sum('amount');
+                });
+            })
             ->take(5)
-            ->get();
+            ->values();
     }
 }
