@@ -117,6 +117,34 @@ class ProjectController extends Controller
         return redirect()->route('projects.show', ['client' => $client->slug, 'project' => $project->id]);
     }
 
+    public function assigned(Request $request)
+    {
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+
+        $allowedSorts = ['price', 'start_date', 'end_date', 'created_at'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+
+        $projects = auth()->user()->projects()
+            ->with('client', 'service', 'users', 'payments')
+            ->orderBy($sortBy, $sortDir)
+            ->paginate(10)
+            ->withQueryString();
+
+        return Inertia::render('projects/Assigned', [
+            'projects' => $projects,
+            'filters' => [
+                'search' => $search,
+                'sort_by' => $sortBy,
+                'sort_dir' => $sortDir,
+            ]
+        ]);
+    }
+
     public function export(Request $request)
     {
         $search = $request->input('search');
