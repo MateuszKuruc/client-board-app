@@ -25,11 +25,13 @@ class FinanceController extends Controller
 
         $activeProjects = $this->financeService->getActiveProjectsCount();
         $activeSubsValue = $this->financeService->getActiveSubscriptionsValues();
+        $last3MonthsAverageNet = $this->financeService->getLast3MonthsAverageNet($currentDate);
 
         return Inertia::render('finances/Index', [
             ...$dashboardData,
             'activeProjects' => $activeProjects,
             'activeSubsValue' => $activeSubsValue,
+            'last3MonthsAverageNet' => $last3MonthsAverageNet,
             'month' => $month,
             'tab' => $tab,
         ]);
