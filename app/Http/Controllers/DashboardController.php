@@ -26,6 +26,7 @@ class DashboardController extends Controller
         $endingProjects = $this->dashboardService->getEndingProjects();
         $recentlyEndedProjects = $this->dashboardService->getRecentlyEndedProjects();
         $biggestValueClients = $this->dashboardService->getBiggestValueClients();
+        $pendingPayments = $this->dashboardService->getPendingPayments();
 
         return Inertia::render('dashboard/Index', [
             'newestClient' => $newestClient,
@@ -37,6 +38,7 @@ class DashboardController extends Controller
             'endingProjects' => $endingProjects,
             'recentlyEndedProjects' => $recentlyEndedProjects,
             'biggestValueClients' => $biggestValueClients,
+            'pendingPayments' => $pendingPayments,
         ]);
     }
 }
