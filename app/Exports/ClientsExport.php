@@ -11,6 +11,7 @@ class ClientsExport implements FromCollection, WithHeadings
     protected $search;
     protected $sortBy;
     protected $sortDir;
+
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -20,12 +21,14 @@ class ClientsExport implements FromCollection, WithHeadings
         $this->sortBy = $sortBy;
         $this->sortDir = $sortDir;
     }
+
     public function collection()
     {
         return Client::query()
             ->when($this->search, function ($query, $search) {
                 $query->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('source', 'like', '%'.$search.'%');
             })
             ->orderBy($this->sortBy, $this->sortDir)
             ->get()

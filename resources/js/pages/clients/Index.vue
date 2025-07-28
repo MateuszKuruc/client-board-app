@@ -74,6 +74,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                 <Column field="email" header="Email" />
                 <Column field="phone" header="Telefon" />
                 <Column field="nip" header="NIP" />
+                <Column field="source" header="Źródło" />
 
                 <template #expansion="{ data }">
                     <div class="space-y-4 p-4">

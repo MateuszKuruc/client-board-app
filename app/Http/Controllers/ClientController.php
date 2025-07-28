@@ -32,7 +32,8 @@ class ClientController extends Controller
         $clients = Client::with(['projects.service', 'projects.client'])
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('source', 'like', '%'.$search.'%');
             })
             ->orderBy($sortBy, $sortDir)
             ->paginate(10)
