@@ -37,39 +37,32 @@ const pageLinks = computed(() => {
 </script>
 
 <template>
-    <div class="flex justify-center gap-1 mt-4 flex-wrap">
+    <div class="mt-4 flex flex-wrap justify-center gap-1">
         <!-- Previous -->
         <Link
             :href="prevLink.url || ''"
             :class="[
-        'px-3 py-1 border rounded text-sm',
-        prevLink.url
-          ? 'bg-white text-gray-700 hover:bg-rose-100'
-          : 'bg-gray-200 text-gray-400 cursor-not-allowed pointer-events-none',
-      ]"
+                'rounded border px-3 py-1 text-sm',
+                prevLink.url
+                    ? 'bg-white text-gray-700 hover:bg-amber-100 dark:bg-gray-600 dark:text-gray-50 dark:hover:bg-gray-700'
+                    : 'pointer-events-none cursor-not-allowed bg-gray-200 text-gray-400 dark:bg-gray-900',
+            ]"
             v-html="'&laquo; Poprzednia'"
         />
 
         <!-- Page Links with Ellipsis -->
         <template v-for="(link, index) in pageLinks" :key="link.label + link.url">
             <!-- Add ellipsis if gap from previous page -->
-            <span
-                v-if="
-          index > 0 &&
-          Number(link.label) - Number(pageLinks[index - 1].label) > 1
-        "
-                class="px-2 text-gray-400"
-            >...</span
-            >
+            <span v-if="index > 0 && Number(link.label) - Number(pageLinks[index - 1].label) > 1" class="px-2 text-gray-400">...</span>
 
             <Link
                 :href="link.url || ''"
                 :class="[
-          'px-3 py-1 border rounded text-sm',
-          link.active
-            ? 'bg-rose-600 text-white'
-            : 'bg-white text-gray-700 hover:bg-rose-100',
-        ]"
+                    'rounded border px-3 py-1 text-sm',
+                    link.active
+                        ? 'bg-amber-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-amber-100 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-800',
+                ]"
                 v-html="link.label"
             />
         </template>
@@ -78,11 +71,11 @@ const pageLinks = computed(() => {
         <Link
             :href="nextLink.url || ''"
             :class="[
-        'px-3 py-1 border rounded text-sm',
-        nextLink.url
-          ? 'bg-white text-gray-700 hover:bg-rose-100'
-          : 'bg-gray-200 text-gray-400 cursor-not-allowed pointer-events-none',
-      ]"
+                'rounded border px-3 py-1 text-sm',
+                nextLink.url
+                    ? 'bg-white text-gray-700 hover:bg-amber-100 dark:bg-gray-600 dark:text-gray-50 dark:hover:bg-gray-700'
+                    : 'pointer-events-none cursor-not-allowed bg-gray-200 text-gray-400 dark:bg-gray-900',
+            ]"
             v-html="'Następna &raquo;'"
         />
     </div>

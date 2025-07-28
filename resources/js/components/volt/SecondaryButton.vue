@@ -27,8 +27,8 @@ const theme = ref<ButtonPassThroughOptions>({
     transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2
     border border-gray-300 bg-white text-gray-700
     hover:bg-gray-50 enabled:active:bg-gray-100
-    focus:ring-blue-500 shadow-sm
-    disabled:opacity-50 disabled:cursor-not-allowed
+    focus:ring-amber-500 shadow-sm
+    disabled:opacity-50 disabled:cursor-not-allowed dark:bg-surface-700 dark:text-white dark:hover:bg-surface-600
   `,
 
     loadingIcon: ``,

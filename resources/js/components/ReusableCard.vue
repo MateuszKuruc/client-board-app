@@ -39,14 +39,14 @@ const { value } = defineProps<{
                 </p>
                 <p v-if="plainNumber" class="text-3xl font-bold text-accent">{{ plainNumber }}</p>
                 <Link v-if="client" :href="route('clients.show', { client: client.slug })">
-                    <Tag severity="info">
+                    <Tag severity="warn">
                         <User />
                         {{ client.name }}
                     </Tag>
                 </Link>
 
                 <Link v-if="project" :href="route('projects.show', { client: project.client.slug, project: project.id })">
-                    <Tag severity="info">
+                    <Tag severity="warn">
                         <FolderOpen />
                         <p class="max-w-xs truncate">
                             {{ project.name }}

@@ -52,16 +52,16 @@ const multiselectLabels = computed<string[]>(() => {
 
 <template>
     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <label class="text-sm/6 font-medium text-gray-900">{{ label }}</label>
-        <p v-if="!isEditing && type === 'text'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+        <label class="text-sm/6 font-medium text-gray-900 dark:text-gray-400">{{ label }}</label>
+        <p v-if="!isEditing && type === 'text'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 dark:text-gray-50 sm:col-span-2 sm:mt-0">
             {{ label === 'Cena' ? modelValue + ' zł' : label === 'Kwota' ? modelValue + ' zł' : modelValue }}
         </p>
 
-        <p v-if="!isEditing && type === 'select'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+        <p v-if="!isEditing && type === 'select'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 dark:text-gray-50 sm:col-span-2 sm:mt-0">
             {{ viewLabels[modelValue] || modelValue }}
         </p>
 
-        <p v-if="!isEditing && type === 'multiselect'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+        <p v-if="!isEditing && type === 'multiselect'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 dark:text-gray-50 sm:col-span-2 sm:mt-0">
             <Chip
                 v-for="user in multiselectLabels"
                 :key="user"
@@ -71,7 +71,7 @@ const multiselectLabels = computed<string[]>(() => {
             />
         </p>
 
-        <p v-else-if="!isEditing && type === 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+        <p v-else-if="!isEditing && type === 'picker'" class="mt-1 px-2 py-1 text-sm/6 text-gray-700 dark:text-gray-50 sm:col-span-2 sm:mt-0">
             {{ modelValue ? dayjs(modelValue).format('DD.MM.YYYY') : '-' }}
         </p>
 

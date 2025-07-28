@@ -76,7 +76,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                 <Column field="nip" header="NIP" />
 
                 <template #expansion="{ data }">
-                    <div class="space-y-4 bg-gray-50 p-4">
+                    <div class="space-y-4 p-4">
                         <h5 class="font-semibold">Historia projektów</h5>
 
                         <div v-if="data.projects.length > 0">

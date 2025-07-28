@@ -31,7 +31,7 @@ const theme = ref<FieldsetPassThroughOptions>({
         bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-0
         px-[1.125rem] pt-0 pb-[1.125rem]`,
     legend: `border border-transparent rounded-md px-3 py-2 p-toggleable:p-0
-        transition-colors duration-200`,
+        transition-colors duration-200 dark:border-surface-700`,
     toggleButton: `select-none overflow-hidden relative group cursor-pointer
         flex items-center justify-center gap-2
         px-3 py-2

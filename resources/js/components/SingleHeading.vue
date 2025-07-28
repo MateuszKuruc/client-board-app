@@ -5,5 +5,5 @@ const { heading } = defineProps<{
 </script>
 
 <template>
-    <h3 class="text-base/7 font-semibold text-gray-900">{{ heading }}</h3>
+    <h3 class="text-base/7 font-semibold text-gray-900 dark:text-gray-50">{{ heading }}</h3>
 </template>

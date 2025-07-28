@@ -61,10 +61,10 @@ defineProps<Props>();
 
 const theme = ref<DataTablePassThroughOptions>({
     root: `relative p-flex-scrollable:flex p-flex-scrollable:flex-col p-flex-scrollable:h-full`,
-    tableContainer: `p-scrollable:relative p-flex-scrollable:flex p-flex-scrollable:flex-col p-flex-scrollable:flex-1 p-flex-scrollable:h-full`,
+    tableContainer: `p-scrollable:relative p-flex-scrollable:flex p-flex-scrollable:flex-col p-flex-scrollable:flex-1 p-flex-scrollable:h-full dark:rounded-2xl`,
     header: `py-3 px-4 border-b border-surface-200 dark:border-surface-700
         bg-surface-0 dark:bg-surface-900
-        text-surface-700 dark:text-surface-0`,
+        text-surface-700 dark:text-surface-0 dark:rounded-2xl mb-4`,
     table: `border-spacing-0 w-full border-separate`,
     thead: `p-scrollable:bg-surface-0 dark:p-scrollable:bg-surface-900 p-scrollable:top-0 p-scrollable:z-10`,
     tbody: `p-hoverable:*:hover:bg-surface-100 p-hoverable:*:hover:text-surface-800 dark:p-hoverable:*:hover:bg-surface-800 dark:p-hoverable:*:hover:text-surface-0

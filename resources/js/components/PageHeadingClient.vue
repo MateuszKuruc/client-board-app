@@ -41,9 +41,9 @@ const paymentType = computed(() => {
 <template>
     <div class="lg:flex lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1">
-            <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">{{ title }}</h2>
+            <h2 class="text-2xl/7 font-bold text-gray-900 dark:text-gray-50 sm:truncate sm:text-3xl sm:tracking-tight">{{ title }}</h2>
             <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
-                <div class="mt-2 flex items-center text-sm text-gray-500">
+                <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                         <path
                             fill-rule="evenodd"
@@ -56,7 +56,7 @@ const paymentType = computed(() => {
                     </svg>
                     {{ props.client.projects.some((p) => p.active) ? 'Aktywny' : 'Nieaktywny' }}
                 </div>
-                <div class="mt-2 flex items-center text-sm text-gray-500">
+                <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                         <path
                             fill-rule="evenodd"
@@ -66,7 +66,7 @@ const paymentType = computed(() => {
                     </svg>
                     {{ props.client.location === 'local' ? 'Lokalny' : client.location === 'remote' ? 'Krajowy' : 'Zagraniczny' }}
                 </div>
-                <div class="mt-2 flex items-center text-sm text-gray-500">
+                <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                         <path
                             d="M10.75 10.818v2.614A3.13 3.13 0 0 0 11.888 13c.482-.315.612-.648.612-.875 0-.227-.13-.56-.612-.875a3.13 3.13 0 0 0-1.138-.432ZM8.33 8.62c.053.055.115.11.184.164.208.16.46.284.736.363V6.603a2.45 2.45 0 0 0-.35.13c-.14.065-.27.143-.386.233-.377.292-.514.627-.514.909 0 .184.058.39.202.592.037.051.08.102.128.152Z"
@@ -79,7 +79,7 @@ const paymentType = computed(() => {
                     </svg>
                     Płatności: {{ paymentType }}
                 </div>
-                <div class="mt-2 flex items-center text-sm text-gray-500">
+                <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                         <path
                             fill-rule="evenodd"
@@ -89,7 +89,7 @@ const paymentType = computed(() => {
                     </svg>
                     Klient od: {{ firstPaidProjectDate ? dayjs(firstPaidProjectDate).format('DD.MM.YYYY') : 'Brak płatności' }}
                 </div>
-                <div class="mt-2 flex items-center text-sm text-gray-500">
+                <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                     <svg class="mr-1.5 size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                         <path
                             fill-rule="evenodd"

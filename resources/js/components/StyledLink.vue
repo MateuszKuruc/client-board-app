@@ -12,9 +12,9 @@ const base =
 
 const variants: Record<string, string> = {
     default: 'bg-amber-500 text-white hover:bg-amber-700 focus:ring-amber-500 shadow-sm',
-    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500 shadow-sm',
+    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-amber-500 shadow-sm dark:bg-surface-700 dark:text-white dark:hover:bg-surface-600',
     destructive: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm',
-    text: 'text-amber-700 hover:text-amber-800 hover:bg-amber-100 focus:ring-blue-500',
+    text: 'text-amber-700 hover:text-amber-800 hover:bg-amber-100 focus:ring-amber-500 dark:text-amber-500 dark:hover:text-amber-800',
 };
 
 const sizes: Record<string, string> = {

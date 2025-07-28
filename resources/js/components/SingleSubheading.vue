@@ -5,5 +5,5 @@ const { subheading } = defineProps<{
 </script>
 
 <template>
-    <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">{{ subheading }}</p>
+    <p class="mt-1 max-w-2xl text-sm/6 text-gray-500 dark:text-gray-300">{{ subheading }}</p>
 </template>

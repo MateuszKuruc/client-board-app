@@ -128,7 +128,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                 </Column>
 
                 <template #expansion="{ data: project }">
-                    <div class="space-y-4 bg-gray-50 p-4">
+                    <div class="space-y-4 p-4">
                         <h5 class="font-semibold">Historia płatności</h5>
                         <div v-if="project.payments.length > 0">
                             <DataTable :value="getSortedPayments(project)" dataKey="id" scrollable scrollHeight="200px" removableSort>
