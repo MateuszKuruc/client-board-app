@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MyProjectsExport;
 use App\Exports\ProjectsExport;
 use App\Http\Requests\Projects\StoreProjectRequest;
 use App\Http\Requests\Tags\SyncTagsRequest;
@@ -131,6 +132,12 @@ class ProjectController extends Controller
 
         $projects = auth()->user()->projects()
             ->with('client', 'service', 'users', 'payments')
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', '%'.$search.'%')
+                    ->orWhereHas('client', function ($q) use ($search) {
+                        $q->where('name', 'like', '%'.$search.'%');
+                    });
+            })
             ->orderBy($sortBy, $sortDir)
             ->paginate(10)
             ->withQueryString();
@@ -158,6 +165,22 @@ class ProjectController extends Controller
         $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
 
         return Excel::download(new ProjectsExport($search, $sortBy, $sortDir), 'projects.xlsx');
+    }
+
+    public function exportMyProjects(Request $request)
+    {
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+        $userId = auth()->id();
+
+        $allowed = ['name', 'price', 'start_date', 'end_date', 'created_at'];
+        if (!in_array($sortBy, $allowed)) {
+            $sortBy = 'created_at';
+        }
+        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+
+        return Excel::download(new MyProjectsExport($search, $sortBy, $sortDir, $userId), 'my_projects.xlsx');
     }
 
     public function updateTags(SyncTagsRequest $request, Project $project)
