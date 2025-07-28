@@ -35,9 +35,10 @@ class StoreProjectRequest extends FormRequest
         return [
             'name.required' => 'Podaj nazwę projektu',
             'name.max' => 'Nazwa projektu nie może przekraczać 255 znaków',
+            'name.min' => 'Nazwa projektu musi mieć minimum 3 znaki',
 
             'client_id.required' => 'Przypisz projekt do klienta',
-            'client_id.numeric' => 'ID klienta musi być liczbą',
+            'client_id.numeric' => 'Wybierz klienta',
             'client_id.exists' => 'Wybrany klient nie istnieje',
 
             'service_id.required' => 'Wybierz rodzaj usługi',
