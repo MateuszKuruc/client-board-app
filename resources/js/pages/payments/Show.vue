@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import ActionButtons from '@/components/ActionButtons.vue';
 import EditableField from '@/components/EditableField.vue';
+import NotesBlock from '@/components/NotesBlock.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import PaymentsTable from '@/components/PaymentsTable.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import { statusOptions } from '@/constants/statusOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
+import { BreadcrumbItem } from '@/types';
 import { Payment } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
-import NotesBlock from '@/components/NotesBlock.vue';
-import { BreadcrumbItem } from '@/types';
 
 const toast = useToast();
 
@@ -122,7 +122,6 @@ const editableFields: EditableField[] = [
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
             <div class="flex flex-col gap-4">
                 <PageHeadingBasic :title="'Płatność nr ' + payment.id" :subtitle="'Powiązany projekt: ' + payment.project.name" />
-                <!--                <TagSection />-->
             </div>
 
             <div class="flex items-center justify-between">
@@ -174,10 +173,7 @@ const editableFields: EditableField[] = [
                     />
                 </div>
 
-                <NotesBlock href="#">
-
-                </NotesBlock>
-
+                <NotesBlock href="#"> </NotesBlock>
             </div>
         </div>
     </AppLayout>

@@ -23,7 +23,7 @@ import AppLogo from './AppLogo.vue';
 const mainNavItems: NavItem[] = [
     {
         title: 'Pulpit',
-        href: '/pulpit',
+        href: route('dashboard'),
         pattern: '/pulpit',
         icon: LayoutGrid,
     },
@@ -65,8 +65,8 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Moje projekty',
-        href: '/projekty/przypisane',
-        pattern: '/projekty/przypisane',
+        href: route('projects.assigned'),
+        pattern: '/projekty/moje',
         icon: ScrollText,
     },
 ];

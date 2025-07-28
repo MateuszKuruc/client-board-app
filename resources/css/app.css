@@ -59,6 +59,15 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    --color-brand-orange: #f97316;
+    --color-brand-orange-light: #fb923c;
+    --color-brand-orange-dark: #ea580c;
+
+    /* Gradient variables */
+    --gradient-orange: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+    --gradient-orange-warm: linear-gradient(135deg, #fed7aa 0%, #f97316 50%, #ea580c 100%);
+    --gradient-orange-vibrant: linear-gradient(45deg, #f97316 0%, #dc2626 100%);
 }
 
 /*
@@ -83,6 +92,42 @@
     body,
     html {
         --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    }
+
+    .text-accent {
+        @apply text-amber-600;
+    }
+
+    .text-success {
+        @apply text-green-600;
+    }
+
+    .text-danger {
+        @apply text-red-600;
+    }
+
+    .text-warning {
+        @apply text-yellow-600;
+    }
+
+    .text-info {
+        @apply text-blue-600;
+    }
+
+    .border-success {
+        @apply border-green-600;
+    }
+
+    .border-danger {
+        @apply border-red-600;
+    }
+
+    .border-warning {
+        @apply border-yellow-600;
+    }
+
+    .border-info {
+        @apply border-blue-600;
     }
 }
 
@@ -175,6 +220,7 @@
     --p-text-muted-color: var(--p-surface-400);
     --p-text-hover-muted-color: var(--p-surface-300);
 }
+
 
 
 @layer base {

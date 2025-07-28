@@ -57,10 +57,10 @@ const emit = defineEmits(['update:modelValue']);
                     pt:root="ps-10"
                 />
             </div>
-            <Button as="a" :href="route(exportUrl, exportParams)">
+            <SecondaryButton as="a" :href="route(exportUrl, exportParams)">
                 <FileDown />
                 {{ exportLabel }}
-            </Button>
+            </SecondaryButton>
         </div>
     </div>
 </template>

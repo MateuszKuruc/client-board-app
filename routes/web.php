@@ -12,16 +12,12 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return redirect()->route('dashboard');
 })->name('home');
-
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     // Home
-    Route::get('/pulpit', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/pulpit', [DashboardController::class, 'index'])->name('dashboard');
 
     // Clients
     Route::get('/klienci', [ClientController::class, 'index'])->name('clients.index');
@@ -32,7 +28,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/klienci/{client}', [ClientController::class, 'show'])->name('clients.show');
     Route::put('/klienci/{client}', [ClientController::class, 'update'])->name('clients.update');
     Route::put('/klienci/{client}/tags', [ClientController::class, 'updateTags'])->name('clients.tags.update');
-
 
 
     //  Projects
@@ -47,9 +42,11 @@ Route::middleware(['auth'])->group(function () {
 
     });
     Route::get('/projekty', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projekty/moje', [ProjectController::class, 'assigned'])->name('projects.assigned');
     Route::get('/projekty/dodaj/{client?}', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projekty', [ProjectController::class, 'store'])->name('projects.store');
     Route::get('/projekty/eksport', [ProjectController::class, 'export'])->name('projects.export');
+    Route::get('/projekty/moje/eksport', [ProjectController::class, 'exportMyProjects'])->name('projects.mine.export');
     Route::put('/projekty/{project}', [ProjectController::class, 'updateTags'])->name('projects.tags.update');
 
 

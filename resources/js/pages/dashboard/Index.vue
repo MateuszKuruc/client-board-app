@@ -48,7 +48,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <StyledLink :href="route('expenses.index')" variant="outline">Koszty</StyledLink>
                             <StyledLink :href="route('finances.index')" variant="outline">Finanse</StyledLink>
                             <StyledLink :href="route('leads.index')" variant="outline">Leady</StyledLink>
-                            <StyledLink :href="route('clients.index')" variant="outline">Moje projekty</StyledLink>
+                            <StyledLink :href="route('projects.assigned')" variant="outline">Moje projekty</StyledLink>
                         </div>
                     </div>
                 </template>

@@ -39,6 +39,7 @@ const props = defineProps<{
     standardCount: number;
     subPaymentsTotal: number;
     standardPaymentsTotal: number;
+    last3MonthsAverageNet: number;
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -102,7 +103,7 @@ watch(
                 <Fieldset legend="Statystyki" toggleable>
                     <div class="mx-8 my-4 grid grid-cols-3 gap-4">
                         <ReusableCard heading="Aktualna wartość subskrypcji" :value="activeSubsValue" class="h-fit" />
-                        <ReusableCard heading="Średnie wpływy z 3 miesięcy" :value="activeSubsValue" class="h-fit" />
+                        <ReusableCard heading="Średnie wpływy z 3 miesięcy" :value="last3MonthsAverageNet" class="h-fit" />
                         <ReusableCard heading="Liczba aktywnych projektów" :plainNumber="activeProjects" class="h-fit" />
                     </div>
                 </Fieldset>

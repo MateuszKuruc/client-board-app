@@ -13,6 +13,7 @@ import type { Expense, Filters, Paginated } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
+import Tag from '@/components/volt/Tag.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -44,12 +45,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable :value="expenses.data" dataKey="id">
                 <template #header>
-                    <DataTableToolbar
-                        v-model="globalSearch"
-                        :exportUrl="'expenses.export'"
-                        :exportParams="exportParams"
-                        :filters="filters"
-                    />
+                    <DataTableToolbar v-model="globalSearch" :exportUrl="'expenses.export'" :exportParams="exportParams" :filters="filters" />
                 </template>
                 <Column field="id" header="Numer płatności" />
                 <Column field="name">
@@ -79,7 +75,10 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         >
                     </template>
                     <template #body="{ data: expense }: { data: Expense }">
-                        {{ expense.is_paid ? 'Opłacona' : 'Nieopłacona' }}
+                        <Tag
+                            :value="expense.is_paid ? 'Opłacona' : 'Nieopłacona'"
+                            :severity="expense.is_paid ? 'success' : 'danger'"
+                        />
                     </template>
                 </Column>
                 <Column field="payment_date">

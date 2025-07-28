@@ -102,7 +102,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                                 </Column>
                                 <Column field="active" header="Aktywny" sortable>
                                     <template #body="{ data: project }">
-                                        <span :class="project.active ? 'text-green-600' : 'text-red-600'">
+                                        <span :class="project.active ? 'text-success' : 'text-danger'">
                                             {{ project.active ? 'Tak' : 'Nie' }}
                                         </span>
                                     </template>

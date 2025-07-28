@@ -66,7 +66,7 @@ const submit = () => {
                         :tabindex="2"
                         autocomplete="current-password"
                         v-model="form.password"
-                        placeholder="Password"
+                        placeholder="Hasło"
                     />
                     <InputError :message="form.errors.password" />
                 </div>

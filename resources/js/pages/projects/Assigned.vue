@@ -14,7 +14,7 @@ import { useServerSorting } from '@/composables/useServerSorting';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Filters, Paginated, Project } from '@/types/models';
+import { Filters, Paginated, Payment, Project } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { FolderOpenDot } from 'lucide-vue-next';
 import Column from 'primevue/column';
@@ -39,7 +39,7 @@ const { globalSearch } = useServerSearch(props.filters.search || '', 'projects.a
 
 const { expandedRows, expandAll, collapseAll } = useExpandableRows(props.projects.data);
 
-function getSortedPayments(project) {
+function getSortedPayments(project: Project) {
     return [...project.payments].sort((a, b) => {
         if (a.status === 'cancelled' && b.status !== 'cancelled') return 1;
         if (a.status !== 'cancelled' && b.status === 'cancelled') return -1;
@@ -72,7 +72,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         v-model="globalSearch"
                         :onExpandAll="expandAll"
                         :onCollapseAll="collapseAll"
-                        :exportUrl="'projects.export'"
+                        :exportUrl="'projects.mine.export'"
                         :exportParams="exportParams"
                         :filters="filters"
                     />

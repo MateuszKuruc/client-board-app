@@ -81,7 +81,8 @@ export interface Expense {
     name: string;
     amount: number;
     type: string;
-    payment_date: date | null;
+    payment_date: Date | null;
+    is_paid: boolean;
     created_at: string;
     updated_at: string;
 }
