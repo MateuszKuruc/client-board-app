@@ -68,10 +68,12 @@ class FinanceService
         $previousEnd = $date->copy()->subMonth()->endOfMonth();
 
         $paginatedCurrentPayments = $this->getCurrentPaymentsQuery($date)
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         $paginatedCurrentExpenses = $this->getCurrentExpensesQuery($date)
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         $currentPayments = $this->getCurrentPaymentsQuery($date)->get();
 
