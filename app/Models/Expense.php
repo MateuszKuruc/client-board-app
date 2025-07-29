@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Expense extends Model
 {
@@ -22,5 +23,12 @@ class Expense extends Model
 
     public function getModelTypeAttribute() {
         return 'App\Models\Expense';
+    }
+
+    public function notes(): MorphMany
+    {
+        return $this-> morphMany(Note::class, 'noteable')
+            ->with('user')
+            ->latest();
     }
 }

@@ -33,7 +33,8 @@ class Project extends Model
 
     protected $appends = ['model_type'];
 
-    public function getModelTypeAttribute() {
+    public function getModelTypeAttribute()
+    {
         return 'App\Models\Project';
     }
 
