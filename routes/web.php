@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/leady', [LeadController::class, 'store'])->name('leads.store');
     Route::get('/leady/eksport', [LeadController::class, 'export'])->name('leads.export');
 
+    //Notes
+    Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
+    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
     // Configuration
     Route::get('/konfiguracja', [ConfigurationController::class, 'index'])->name('configurations.index');
