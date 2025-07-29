@@ -6,7 +6,7 @@ import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
-import NotesBlock from '@/components/NotesBlock.vue';
+import NotesSection from '@/components/NotesSection.vue';
 import dayjs from '@/plugins/dayjs';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
@@ -155,7 +155,7 @@ const editableFields: EditableField[] = [
                 </div>
             </div>
 
-            <NotesBlock subheading="" href="#" />
+            <NotesSection subheading="" href="#" />
         </div>
     </AppLayout>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ActionButtons from '@/components/ActionButtons.vue';
 import EditableField from '@/components/EditableField.vue';
-import NotesBlock from '@/components/NotesBlock.vue';
+import NotesSection from '@/components/NotesSection.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import PaymentsTable from '@/components/PaymentsTable.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
@@ -173,7 +173,7 @@ const editableFields: EditableField[] = [
                     />
                 </div>
 
-                <NotesBlock href="#"> </NotesBlock>
+                <NotesSection href="#"> </NotesSection>
             </div>
         </div>
     </AppLayout>

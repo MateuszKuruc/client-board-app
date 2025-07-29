@@ -26,16 +26,16 @@ const { value } = defineProps<{
             <div class="flex flex-col gap-2">
                 <p v-if="value !== null && value !== undefined" class="text-3xl font-bold text-accent">{{ value > 0 ? `${value} zł` : '-' }}</p>
                 <p v-if="percentage" class="text-3xl font-bold">
-                    <span :class="percentage >= 0 ? 'text-success' : 'text-danger'"> {{ percentage }} % </span>
+                    <span :class="percentage >= 0 ? 'text-success' : 'text-danger dark:text-red-500'"> {{ percentage }} % </span>
                 </p>
                 <p v-if="percentage === null" class="text-3xl font-bold">-</p>
                 <p v-if="percentage === 0" class="text-3xl font-bold">0 %</p>
                 <p v-if="summary" class="text-3xl font-bold">
-                    <span :class="summary >= 0 ? 'text-success' : 'text-danger'"> {{ summary > 0 ? `+ ${summary}` : `- ${summary}` }} zł </span>
+                    <span :class="summary >= 0 ? 'text-success' : 'text-danger dark:text-red-500'"> {{ summary > 0 ? `+ ${summary}` : `- ${summary}` }} zł </span>
                 </p>
                 <p v-if="summary === 0" class="text-3xl font-bold">0 zł</p>
                 <p v-if="secondValue">
-                    Pozostało do zapłaty: <span class="text-danger">{{ secondValue }} zł</span>
+                    Pozostało do zapłaty: <span class="text-danger dark:text-red-500">{{ secondValue }} zł</span>
                 </p>
                 <p v-if="plainNumber" class="text-3xl font-bold text-accent">{{ plainNumber }}</p>
                 <Link v-if="client" :href="route('clients.show', { client: client.slug })">

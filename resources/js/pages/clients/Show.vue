@@ -12,17 +12,18 @@ import { sourceOptions } from '@/constants/sourceOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Client, Tag } from '@/types/models';
+import { Client, Tag, Note } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, Ref } from 'vue';
-import NotesBlock from '@/components/NotesBlock.vue';
+import NotesSection from '@/components/NotesSection.vue';
 
 const toast = useToast();
 
 const props = defineProps<{
     client: Client;
     tags: Tag[];
+    notes: Note[];
 }>();
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => [
@@ -207,6 +208,8 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                         </li>
                     </ul>
 
+                    <NotesSection href="#" :noteable="client" :notes="notes" />
+
                     <BarChart v-if="lifetimeValue" class="h-100" :labels="chartLabels" :values="chartValues" />
 
                     <div class="my-6 flex flex-col gap-4">
@@ -232,7 +235,6 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                     </div>
                 </div>
 
-                <NotesBlock href="#" />
             </div>
         </div>
     </AppLayout>
