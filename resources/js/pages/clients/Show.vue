@@ -208,7 +208,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                         </li>
                     </ul>
 
-                    <NotesSection href="#" :noteable="client" :notes="notes" />
+                    <NotesSection :noteable="client" :notes="notes" />
 
                     <BarChart v-if="lifetimeValue" class="h-100" :labels="chartLabels" :values="chartValues" />
 

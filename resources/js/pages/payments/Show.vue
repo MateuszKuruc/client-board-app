@@ -9,7 +9,7 @@ import { statusOptions } from '@/constants/statusOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import { BreadcrumbItem } from '@/types';
-import { Payment } from '@/types/models';
+import { Note, Payment } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
@@ -19,6 +19,7 @@ const toast = useToast();
 const props = defineProps<{
     payment: Payment;
     latestPayments: Payment[];
+    notes: Note[];
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -98,7 +99,7 @@ function cancelEdit() {
     isEditing.value = !isEditing.value;
 }
 
-const form = useForm<Payment>({
+const form = useForm({
     amount: props.payment.amount,
     status: props.payment.status,
     payment_date: props.payment.payment_date,
@@ -145,6 +146,8 @@ const editableFields: EditableField[] = [
                 </ul>
             </div>
 
+            <NotesSection :noteable="payment" :notes="notes" />
+
             <div class="mt-6 flex flex-col gap-4">
                 <div>
                     <PaymentsTable
@@ -172,8 +175,6 @@ const editableFields: EditableField[] = [
                         subheading="Sprawdź najświeższe potwierdzone płatności"
                     />
                 </div>
-
-                <NotesSection href="#"> </NotesSection>
             </div>
         </div>
     </AppLayout>

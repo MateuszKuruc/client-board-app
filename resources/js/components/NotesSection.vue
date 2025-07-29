@@ -14,6 +14,7 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { ArrowDownFromLine, Delete, Expand, Pencil, Plus, X } from 'lucide-vue-next';
 import { useToast } from 'primevue/usetoast';
 import { ref } from 'vue';
+import { timestamp } from '@vueuse/core';
 
 const toast = useToast();
 
@@ -23,7 +24,6 @@ const user = page.props.auth.user;
 const props = withDefaults(
     defineProps<{
         subheading?: string;
-        href: string;
         noteable: Client | Project | Payment | Expense;
         notes: Note[];
     }>(),

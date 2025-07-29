@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import ActionButtons from '@/components/ActionButtons.vue';
 import EditableField from '@/components/EditableField.vue';
+import NotesSection from '@/components/NotesSection.vue';
 import PageHeadingProject from '@/components/PageHeadingProject.vue';
 import PaymentsTable from '@/components/PaymentsTable.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import TagSection from '@/components/TagSection.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
-import { Project, Service, User, Tag } from '@/types/models';
+import { BreadcrumbItem } from '@/types';
+import { Note, Project, Service, Tag, User } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
-import { BreadcrumbItem } from '@/types';
 
 const toast = useToast();
 
@@ -20,6 +21,7 @@ const props = defineProps<{
     services: Service[];
     users: User[];
     tags: Tag[];
+    notes: Note[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -29,7 +31,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: props.project.client.name,
-        href: route('clients.show', props.project.client.slug),
+        href: route('clients.show', props.project.client?.slug),
     },
     {
         title: 'Projekty',
@@ -37,7 +39,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: props.project.name,
-        href: `/klienci/${props.project.client.slug}/projekty/${props.project.id}`,
+        href: `/klienci/${props.project.client?.slug}/projekty/${props.project.id}`,
     },
 ];
 
@@ -65,6 +67,12 @@ type editableField =
           key: string;
           label: string;
           type: 'picker';
+      }
+    | {
+          key: string;
+          label: string;
+          type: 'multiselect';
+          options: string[];
       };
 
 const serviceIdToName = (serviceId: number): string => {
@@ -97,7 +105,7 @@ function cancelEdit() {
     isEditing.value = !isEditing.value;
 }
 
-const form = useForm<Project>({
+const form = useForm({
     name: props.project.name,
     service_id: props.project.service_id,
     service_name: serviceIdToName(props.project.service_id),
@@ -111,7 +119,7 @@ const form = useForm<Project>({
     user_ids: props.project.users?.map((user) => user.id),
 });
 
-function submitEdit() {
+function submitEdit(): void {
     form.transform((data) => {
         data.service_id = serviceNameToId(data.service_name);
         data.active = stringToActive(data.active_status);
@@ -201,6 +209,8 @@ const editableFields: editableField[] = [
                     </li>
                 </ul>
             </div>
+
+            <NotesSection :noteable="project" :notes="notes" />
 
             <div class="mt-6 flex flex-col gap-4">
                 <div>

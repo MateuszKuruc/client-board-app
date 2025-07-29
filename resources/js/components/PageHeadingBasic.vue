@@ -3,7 +3,7 @@ import { Client, Expense, Payment, Project } from '@/types/models';
 
 const { title, data } = defineProps<{
     title: string;
-    subtitle: string;
+    subtitle?: string;
     data?: Project | Payment | Client | Expense;
 }>();
 </script>

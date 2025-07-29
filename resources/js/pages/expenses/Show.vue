@@ -6,11 +6,13 @@ import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
-import NotesSection from '@/components/NotesSection.vue';
 import dayjs from '@/plugins/dayjs';
+import { BreadcrumbItem } from '@/types';
+import { Expense, Note } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
+import NotesSection from '@/components/NotesSection.vue';
 
 const toast = useToast();
 
@@ -18,6 +20,7 @@ const props = defineProps<{
     expense: Expense;
     latestExpenses: Expense[];
     biggestExpenses: Expense[];
+    notes: Note[];
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -86,7 +89,7 @@ function cancelEdit() {
     isEditing.value = !isEditing.value;
 }
 
-const form = useForm<Expense>({
+const form = useForm({
     name: props.expense.name,
     amount: props.expense.amount,
     is_paid: props.expense.is_paid,
@@ -114,8 +117,7 @@ const editableFields: EditableField[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
             <div class="flex flex-col gap-4">
-                <PageHeadingBasic :title="'Koszt nr ' + expense.id" subtitle="test" />
-                <!--                <TagSection />-->
+                <PageHeadingBasic :title="'Koszt nr ' + expense.id" />
             </div>
 
             <div class="flex items-center justify-between">
@@ -139,6 +141,8 @@ const editableFields: EditableField[] = [
                 </ul>
             </div>
 
+            <NotesSection :noteable="expense" :notes="notes" />
+
             <div class="mt-6 flex flex-col gap-4">
                 <div>
                     <ExpensesTable
@@ -154,8 +158,6 @@ const editableFields: EditableField[] = [
                     <ExpensesTable :expenses="biggestExpenses" heading="Największe wydatki" subheading="Lista najwyższych wydatków w historii" />
                 </div>
             </div>
-
-            <NotesSection subheading="" href="#" />
         </div>
     </AppLayout>
 </template>
