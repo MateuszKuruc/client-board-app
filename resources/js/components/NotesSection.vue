@@ -37,6 +37,8 @@ const isExpanded = ref(false);
 const isPanelCollapsed = ref(false);
 const showAllNotes = ref(false);
 const showDialog = ref(false);
+
+const noteToEdit = ref<number | null>(null);
 const noteToDelete = ref<number | null>(null);
 
 const form = useForm({
@@ -47,17 +49,16 @@ const form = useForm({
     edited_at: null,
 });
 
+const editForm = useForm({
+    content: '',
+});
+
 function startNote(): void {
     isActive.value = !isActive.value;
 }
 
 function cancelNote(): void {
     isActive.value = false;
-}
-
-function openDeleteDialog(noteId: number): void {
-    noteToDelete.value = noteId;
-    showDialog.value = true;
 }
 
 function submitNote(): void {
@@ -74,8 +75,39 @@ function submitNote(): void {
     });
 }
 
+function startEditingNote(note: Note): void {
+    noteToEdit.value = note.id;
+    editForm.content = note.content;
+}
+
+function cancelEditingNote(): void {
+    noteToEdit.value = null;
+    editForm.reset();
+}
+
+function saveEditedNote(): void {
+    if (noteToEdit.value) {
+        editForm.put(route('notes.update', noteToEdit.value), {
+            preserveScroll: true,
+            onSuccess: () => {
+                editForm.reset();
+                noteToEdit.value = null;
+                toast.add({ severity: 'success', summary: 'Notatka została zmieniona', detail: 'Dane zostały pomyślnie zapisane', life: 3000 });
+            },
+            onError: () => {
+                toast.add({ severity: 'error', summary: 'Wystąpił błąd', detail: 'Dane nie zostały zmienione', life: 3000 });
+            },
+        });
+    }
+}
+
 function expandNotes(): void {
     isExpanded.value = !isExpanded.value;
+}
+
+function openDeleteDialog(noteId: number): void {
+    noteToDelete.value = noteId;
+    showDialog.value = true;
 }
 
 function deleteNote(): void {
@@ -111,7 +143,7 @@ function toggleDialog(): void {
                 </div>
 
                 <div class="flex flex-col gap-3" v-if="isActive">
-                    <Textarea v-model="form.content" :rows="5" :cols="30" />
+                    <Textarea v-model="form.content" :rows="5" class="max-w-[500px]" />
                     <div class="mt-5 flex items-center lg:mt-0">
                         <span>
                             <SecondaryButton v-if="!isActive" @click="startNote">
@@ -167,10 +199,17 @@ function toggleDialog(): void {
                     <template #footer>
                         <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
                             <div class="flex items-center gap-2">
-                                <DangerButton v-if="note.user_id === user.id" variant="destructive" size="small" @click="openDeleteDialog(note.id)">
+                                <DangerButton
+                                    v-if="note.user_id === user.id && noteToEdit !== note.id"
+                                    variant="destructive"
+                                    size="small"
+                                    @click="openDeleteDialog(note.id)"
+                                >
                                     <Delete class="w-4" />
                                     Usuń
                                 </DangerButton>
+
+                                <Button v-if="noteToEdit === note.id" size="small" @click="saveEditedNote" variant="default"> Zapisz zmiany </Button>
                             </div>
                             <div class="flex flex-col">
                                 <span v-if="note.edited_at !== null" class="text-sm text-surface-500 dark:text-surface-400"
@@ -183,15 +222,23 @@ function toggleDialog(): void {
                         </div>
                     </template>
                     <template #icons>
-                        <Button size="small">
+                        <Button v-if="!noteToEdit" size="small" @click="startEditingNote(note)">
                             <Pencil class="w-4" />
-                            <!--                            Edytuj-->
+                        </Button>
+
+                        <Button v-if="noteToEdit" size="small" @click="cancelEditingNote">
+                            <X class="w-4" />
                         </Button>
                     </template>
 
-                    <p :class="['!m-0 whitespace-pre-line', isExpanded ? '' : 'line-clamp-2']">
+                    <p
+                        v-if="noteToEdit !== note.id"
+                        :class="['overflow-wrap-anywhere !m-0 break-words hyphens-auto whitespace-pre-line', isExpanded ? '' : 'line-clamp-2']"
+                    >
                         {{ note.content }}
                     </p>
+
+                    <Textarea v-if="noteToEdit === note.id" v-model="editForm.content" class="w-full" :rows="5" />
                 </Panel>
             </div>
         </Panel>
