@@ -66,6 +66,7 @@ function submitNote(): void {
         preserveScroll: true,
         onSuccess: () => {
             isActive.value = false;
+            isPanelCollapsed.value = false;
             form.reset();
             toast.add({ severity: 'success', summary: 'Notatka została zapisana', detail: 'Zmiany zostały pomyślnie zapisane', life: 3000 });
         },
