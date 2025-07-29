@@ -17,6 +17,12 @@ class Payment extends Model
         'status',
         'payment_date',
     ];
+
+    protected $appends = ['model_type'];
+
+    public function getModelTypeAttribute() {
+        return 'App\Models\Payment';
+    }
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
