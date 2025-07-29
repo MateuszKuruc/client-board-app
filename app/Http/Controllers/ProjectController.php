@@ -92,6 +92,8 @@ class ProjectController extends Controller
 
         $project->load('client', 'service', 'payments', 'users', 'tags');
 
+        $notes = $project->notes;
+
         $services = Service::all();
         $users = User::get(['id', 'name']);
 
@@ -101,7 +103,8 @@ class ProjectController extends Controller
             'project' => $project,
             'services' => $services,
             'users' => $users,
-            'tags' => $tags
+            'tags' => $tags,
+            'notes' => $notes,
         ]);
     }
 

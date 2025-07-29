@@ -62,10 +62,13 @@ class ExpenseController extends Controller
         $latestExpenses = Expense::latest()->take(3)->get();
         $biggestExpenses = Expense::where('is_paid', 1)->orderBy('amount', 'desc')->take(3)->get();
 
+        $notes = $expense->notes;
+
         return Inertia::render('expenses/Show', [
             'expense' => $expense,
             'latestExpenses' => $latestExpenses,
             'biggestExpenses' => $biggestExpenses,
+            'notes' => $notes,
         ]);
     }
 

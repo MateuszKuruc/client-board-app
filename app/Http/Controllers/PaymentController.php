@@ -80,9 +80,12 @@ class PaymentController extends Controller
         $payment->load('project.client', 'project.payments');
         $latestPayments = Payment::where('status', 'paid')->orderBy('payment_date', 'desc')->take(3)->get();
 
+        $notes = $payment->notes;
+
         return Inertia::render('payments/Show', [
             'payment' => $payment,
             'latestPayments' => $latestPayments,
+            'notes' => $notes,
         ]);
     }
 

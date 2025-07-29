@@ -26,10 +26,14 @@ class NoteController extends Controller
     public function update(Request $request, Note $note)
     {
         $validated = $request->validate([
-            'content' => 'required',
+            'content' => 'required|string|max:5000',
         ]);
 
-        $note->update($validated);
+
+        $note->update([
+            'content' => $validated['content'],
+            'edited_at' => now(),
+        ]);
 
         return redirect()->back();
     }
