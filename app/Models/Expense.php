@@ -17,4 +17,10 @@ class Expense extends Model
         'type',
         'payment_date',
     ];
+
+    protected $appends = ['model_type'];
+
+    public function getModelTypeAttribute() {
+        return 'App\Models\Expense';
+    }
 }
