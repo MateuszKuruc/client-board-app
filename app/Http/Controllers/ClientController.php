@@ -81,10 +81,13 @@ class ClientController extends Controller
     {
         $client->load(['projects', 'projects.service', 'projects.payments', 'tags']);
         $tags = Tag::all();
+        $notes = $client->notes()->with('user')->latest()->get();
 
         return Inertia::render('clients/Show', [
             'client' => $client,
-            'tags' => $tags
+            'tags' => $tags,
+            'notes' => $notes,
+
         ]);
     }
 

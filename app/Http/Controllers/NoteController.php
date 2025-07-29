@@ -23,18 +23,19 @@ class NoteController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(Note $note)
+    public function update(Request $request, Note $note)
     {
-
-        Log::info('Delete attempt', [
-            'note_user_id' => $note->user_id,
-            'note_user_id_type' => gettype($note->user_id),
-            'auth_id' => auth()->id(),
-            'auth_id_type' => gettype(auth()->id()),
-            'are_equal_loose' => $note->user_id == auth()->id(),
-            'are_equal_strict' => $note->user_id === auth()->id(),
+        $validated = $request->validate([
+            'content' => 'required',
         ]);
 
+        $note->update($validated);
+
+        return redirect()->back();
+    }
+
+    public function destroy(Note $note)
+    {
         if ($note->user_id !== auth()->id()) {
             abort(403, 'Możesz usunąć tylko swoje notatki');
         }
