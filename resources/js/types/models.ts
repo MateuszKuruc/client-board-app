@@ -35,7 +35,10 @@ export interface Client {
     created_at: string;
     updated_at: string;
 
+
+    model_type: string;
     projects?: Project[];
+    tags?: Tag[];
 }
 
 export interface Payment {
@@ -47,6 +50,7 @@ export interface Payment {
     created_at: string;
     updated_at: string;
 
+    model_type: string;
     project?: Project;
 }
 
@@ -63,10 +67,12 @@ export interface Project {
     created_at: string;
     updated_at: string;
 
+    model_type: string;
     payments?: Payment[];
     service?: Service;
     client?: Client;
     users?: User[];
+    tags?: Tag[];
 }
 
 export interface Service {
@@ -85,18 +91,33 @@ export interface Expense {
     is_paid: boolean;
     created_at: string;
     updated_at: string;
+
+    model_type: string;
 }
 
 export interface User {
     id: number;
     name: string;
     email?: string;
+    avatar_url: strong;
 }
 
 export interface Tag {
     id: number;
     name: string;
     severity: string;
+}
+
+export interface Note {
+    id: number;
+    user_id: number;
+    content: string;
+    noteable_type: Client | Project | Payment | Expense;
+    noteable_id: number;
+    edited_at: string | null;
+    created_at: string;
+
+    user: User;
 }
 
 export interface Paginated<T> {
