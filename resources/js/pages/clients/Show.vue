@@ -210,7 +210,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
 
                     <NotesSection :noteable="client" :notes="notes" />
 
-                    <BarChart v-if="lifetimeValue" class="h-100" :labels="chartLabels" :values="chartValues" />
+                    <BarChart v-if="lifetimeValue" class="h-100 max-w-[1920px] my-12" :labels="chartLabels" :values="chartValues" />
 
                     <div class="my-6 flex flex-col gap-4">
                         <div>
