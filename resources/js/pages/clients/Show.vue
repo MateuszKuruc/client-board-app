@@ -2,6 +2,7 @@
 import ActionButtons from '@/components/ActionButtons.vue';
 import BarChart from '@/components/BarChart.vue';
 import EditableField from '@/components/EditableField.vue';
+import NotesSection from '@/components/NotesSection.vue';
 import PageHeadingClient from '@/components/PageHeadingClient.vue';
 import ProjectsTable from '@/components/ProjectsTable.vue';
 import ReusableCard from '@/components/ReusableCard.vue';
@@ -12,11 +13,10 @@ import { sourceOptions } from '@/constants/sourceOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Client, Tag, Note } from '@/types/models';
+import { Client, Note, Tag } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, Ref } from 'vue';
-import NotesSection from '@/components/NotesSection.vue';
 
 const toast = useToast();
 
@@ -178,7 +178,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
             <PageHeadingClient :title="form.name" :client="client" />
             <TagSection :tags="tags" :client="client" />
 
-            <div class="grid grid-cols-3 gap-4 py-8">
+            <div class="grid xl:grid-cols-3 gap-4 py-8">
                 <ReusableCard :value="lifetimeValue" heading="Łączna wartość klienta" subheading="Lifetime value" />
                 <ReusableCard :value="lastMonthPaidTotal" heading="Ostatni miesiąc" subheading="Opłacone usługi" />
                 <ReusableCard
@@ -234,7 +234,6 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </AppLayout>

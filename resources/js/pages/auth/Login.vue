@@ -8,6 +8,9 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 defineProps<{
     status?: string;
@@ -23,6 +26,12 @@ const form = useForm({
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
+        onSuccess: () => {
+            toast.add({ severity: 'success', summary: 'Zalogowano pomyślnie', life: 3000 });
+        },
+        onError: () => {
+            toast.add({ severity: 'success', summary: 'Wystąpił błąd', detail: 'Wprowadź poprawne dane i spróbuj ponownie', life: 3000 });
+        }
     });
 };
 </script>

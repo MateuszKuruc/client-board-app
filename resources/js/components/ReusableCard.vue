@@ -48,7 +48,7 @@ const { value } = defineProps<{
                 <Link v-if="project" :href="route('projects.show', { client: project.client.slug, project: project.id })">
                     <Tag severity="warn">
                         <FolderOpen />
-                        <p class="max-w-xs truncate">
+                        <p class="max-w-xs truncate capitalize-first-letter">
                             {{ project.name }}
                         </p>
                     </Tag>

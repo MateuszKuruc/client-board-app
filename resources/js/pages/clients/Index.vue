@@ -82,7 +82,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
 
                         <div v-if="data.projects.length > 0">
                             <DataTable :value="data.projects" dataKey="id" scrollable scrollHeight="200px" removableSort>
-                                <Column field="name" header="Nazwa projektu" sortable />
+                                <Column field="name" header="Nazwa projektu" sortable class="capitalize-first-letter" />
                                 <Column field="service.name" header="Usługa" sortable>
                                     <template #body="{ data }">
                                         <Tag :value="data.service.name" severity="info"></Tag>

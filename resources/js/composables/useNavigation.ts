@@ -30,6 +30,10 @@ export function useNavigation() {
             return page.url === '/pulpit';
         }
 
+        if (item.pattern === '/projekty/moje') {
+            return page.url === '/projekty/moje';
+        }
+
         return activePattern === item.pattern;
     };
 

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import ActionButtons from '@/components/ActionButtons.vue';
+import BackButton from '@/components/BackButton.vue';
 import EditableField from '@/components/EditableField.vue';
 import ExpensesTable from '@/components/ExpensesTable.vue';
+import NotesSection from '@/components/NotesSection.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
@@ -12,7 +14,6 @@ import { Expense, Note } from '@/types/models';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 import { ref, Ref } from 'vue';
-import NotesSection from '@/components/NotesSection.vue';
 
 const toast = useToast();
 

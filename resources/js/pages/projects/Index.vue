@@ -74,7 +74,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                     />
                 </template>
                 <Column expander style="width: 5rem" />
-                <Column field="name" header="Projekt" />
+                <Column field="name" header="Projekt" class="capitalize-first-letter" />
                 <Column header="Opiekun">
                     <template #body="{ data: project }: { data: Project }">
                         <template v-if="project.users?.length">

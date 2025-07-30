@@ -11,7 +11,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div class="my-8 grid grid-cols-2 gap-4">
+    <div class="my-8 grid xl:grid-cols-2 gap-4">
         <ReusableCard :heading="firstHeading" :value="value" :summary="summary" />
         <ReusableCard :heading="secondHeading" :percentage="percentage" />
     </div>

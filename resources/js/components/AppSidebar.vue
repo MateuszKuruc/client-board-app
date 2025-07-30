@@ -114,18 +114,18 @@ const footerNavItems: NavItem[] = [
             },
         ],
     },
-    {
-        title: 'Konfiguracja',
-        href: '/konfiguracja',
-        pattern: '/konfiguracja',
-        icon: Cog,
-    },
-    {
-        title: 'Dokumentacja',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        pattern: '/dokumentacja',
-        icon: BookOpen,
-    },
+    // {
+    //     title: 'Konfiguracja',
+    //     href: '/konfiguracja',
+    //     pattern: '/konfiguracja',
+    //     icon: Cog,
+    // },
+    // {
+    //     title: 'Dokumentacja',
+    //     href: 'https://laravel.com/docs/starter-kits#vue',
+    //     pattern: '/dokumentacja',
+    //     icon: BookOpen,
+    // },
 ];
 </script>
 

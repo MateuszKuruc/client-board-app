@@ -20,7 +20,7 @@ const projectDuration = computed(() => {
 <template>
     <div class="lg:flex lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1">
-            <h2 class="text-2xl/7 font-bold text-gray-900 dark:text-gray-50 sm:truncate sm:text-3xl sm:tracking-tight">{{ title }}</h2>
+            <h2 class="text-2xl/7 font-bold text-gray-900 dark:text-gray-50 sm:truncate sm:text-3xl sm:tracking-tight capitalize-first-letter">{{ title }}</h2>
             <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
                 <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                     <MonitorPlay class="mr-1.5 size-5 shrink-0 text-gray-400" />

@@ -90,9 +90,9 @@ function submitEdit(): void {
             />
         </div>
 
-        <div class="mt-5 flex items-center lg:mt-0">
+        <div class="mt-5 flex items-center lg:mt-0 ml-6 xl:ml-0">
             <span>
-                <SecondaryButton v-if="!isEditing" @click="startEdit">
+                <SecondaryButton v-if="!isEditing" @click="startEdit" class="w-[150px]">
                     <Pencil class="w-5 text-gray-400" />
                     {{ form.tags.length ? 'Edytuj tagi' : 'Dodaj tagi' }}
                 </SecondaryButton>

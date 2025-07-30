@@ -15,6 +15,7 @@ import type { BreadcrumbItem } from '@/types';
 import { Expense, Paginated, Payment } from '@/types/models';
 import { Head, router } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
+import Divider from '@/components/volt/Divider.vue';
 
 const props = defineProps<{
     month: string;
@@ -101,7 +102,7 @@ watch(
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <div>
                 <Fieldset legend="Statystyki" toggleable>
-                    <div class="mx-8 my-4 grid grid-cols-3 gap-4">
+                    <div class="mx-8 my-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
                         <ReusableCard heading="Aktualna wartość subskrypcji" :value="activeSubsValue" class="h-fit" />
                         <ReusableCard heading="Średnie wpływy z 3 miesięcy" :value="last3MonthsAverageNet" class="h-fit" />
                         <ReusableCard heading="Liczba aktywnych projektów" :plainNumber="activeProjects" class="h-fit" />
@@ -109,7 +110,7 @@ watch(
                 </Fieldset>
 
                 <Tabs v-model:value="selectedMonth" scrollable>
-                    <TabList class="mt-8">
+                    <TabList class="mt-8 w-full">
                         <Tab v-for="month in scrollableTabs" :key="month" :value="month">{{ month }}</Tab>
                     </TabList>
 
@@ -134,8 +135,9 @@ watch(
                                 />
 
                                 <div class="flex flex-col gap-24">
-                                    <div class="grid grid-cols-2">
+                                    <div class="grid gap-8 xl:grid-cols-2 xl:gap-0">
                                         <BarChart
+                                            v-if="subCount || standardCount"
                                             type="pie"
                                             :labels="['Subskrypcje', 'Standard']"
                                             :values="[subCount, standardCount]"
@@ -143,6 +145,10 @@ watch(
                                             mainLabel="Udział subskrypcji we wszystkich projektach"
                                             secondaryLabel="Liczba projektów"
                                         />
+
+                                        <div v-else class="xl:mt-[40%] text-center flex flex-col gap-4 text-xl font-semibold text-gray-500">
+                                            Brak danych do wykresu
+                                        </div>
 
                                         <Fieldset legend="Miesiąc w liczbach" class="h-fit">
                                             <div class="flex flex-col justify-between gap-4 p-4">
@@ -153,8 +159,8 @@ watch(
                                         </Fieldset>
                                     </div>
 
-                                    <div class="grid grid-cols-2">
-                                        <Fieldset legend="Dodatkowe statystyki">
+                                    <div class="grid gap-8 xl:grid-cols-2 xl:gap-0">
+                                        <Fieldset legend="Dodatkowe statystyki" class="order-1 xl:order-0">
                                             <div class="flex flex-col justify-between gap-4 p-4">
                                                 <ReusableCard heading="Najwyższa subskrypcja" :value="biggestSub" class="h-fit" />
                                                 <ReusableCard heading="Średnia opłata za projekt" :value="averagePayment" class="h-fit" />
@@ -163,6 +169,7 @@ watch(
                                         </Fieldset>
 
                                         <BarChart
+                                            v-if="subPaymentsTotal || standardPaymentsTotal"
                                             type="doughnut"
                                             :labels="['Subskrypcje', 'Standard']"
                                             :values="[subPaymentsTotal, standardPaymentsTotal]"
@@ -170,6 +177,9 @@ watch(
                                             mainLabel="Wysokość zysków z subskrybcji"
                                             secondaryLabel="Zapłacona kwota"
                                         />
+                                        <div v-else class="xl:mt-[50%] text-center flex flex-col gap-4 text-xl font-semibold text-gray-500">
+                                            Brak danych do wykresu
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +191,12 @@ watch(
                                     :value="totalPayments"
                                     :percentage="changeInPayments"
                                 />
-                                <FinanceTable :data="payments" />
+                                <FinanceTable v-if="totalPayments" :data="payments" />
+
+                                <div v-else class="mt-4 flex flex-col gap-4 text-xl font-semibold text-gray-500">
+                                    Brak wpływów
+                                    <Divider />
+                                </div>
                             </div>
 
                             <div v-if="selectValue === optionValues[2]">
@@ -191,7 +206,11 @@ watch(
                                     :value="totalExpenses"
                                     :percentage="changeInExpenses"
                                 />
-                                <FinanceTable :data="expenses" />
+                                <FinanceTable v-if="totalExpenses" :data="expenses" />
+                                <div v-else class="mt-4 flex flex-col gap-4 text-xl font-semibold text-gray-500">
+                                    Brak wydatków
+                                    <Divider />
+                                </div>
                             </div>
                         </TabPanel>
                     </TabPanels>

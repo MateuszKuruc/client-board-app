@@ -48,7 +48,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                     <DataTableToolbar v-model="globalSearch" :exportUrl="'expenses.export'" :exportParams="exportParams" :filters="filters" />
                 </template>
                 <Column field="id" header="Numer płatności" />
-                <Column field="name">
+                <Column field="name" class="capitalize-first-letter">
                     <template #header>
                         <SortableHeader field="name" :active="sortBy === 'name'" :direction="sortDir" @sort="setSort">Koszt</SortableHeader>
                     </template>

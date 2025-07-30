@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import SectionHeading from '@/components/SectionHeading.vue';
+import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
 import Divider from '@/components/volt/Divider.vue';
 import dayjs from '@/plugins/dayjs';
-import { Project, Client } from '@/types/models';
+import { Client, Project } from '@/types/models';
 import { Plus } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import StyledLink from '@/components/StyledLink.vue';
 
 const props = withDefaults(
     defineProps<{
@@ -39,7 +39,9 @@ const props = withDefaults(
         <Column field="name" header="Projekt">
             <template #body="{ data }">
                 <StyledLink :href="route('projects.show', { client: client.slug, project: data.id })" variant="text">
-                    {{ data.name }}
+                    <span class="capitalize-first-letter">
+                        {{ data.name }}
+                    </span>
                 </StyledLink>
             </template>
         </Column>

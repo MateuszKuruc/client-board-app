@@ -41,7 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <template #start>
                     <div class="flex flex-col gap-2">
                         <h3 class="font-bold">Przejdź do:</h3>
-                        <div class="flex w-full gap-2">
+                        <div class="flex w-full gap-2 flex-wrap">
                             <StyledLink :href="route('clients.index')" variant="outline">Klienci</StyledLink>
                             <StyledLink :href="route('projects.index')" variant="outline">Projekty</StyledLink>
                             <StyledLink :href="route('payments.index')" variant="outline">Płatności</StyledLink>
@@ -56,7 +56,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
             <div>
                 <Fieldset legend="Aktualności" toggleable>
-                    <div class="mx-8 my-4 grid grid-cols-3 gap-4">
+                    <div class="mx-8 my-4 grid grid-cols-1 xl:grid-cols-3 gap-4">
                         <ReusableCard heading="Liczba aktywnych projektów" :plainNumber="activeProjects" class="h-fit" />
                         <ReusableCard heading="Najnowszy klient" :client="newestClient" class="h-fit" />
                         <ReusableCard heading="Najnowszy projekt" :project="newestProject" class="h-fit" />

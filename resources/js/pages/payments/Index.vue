@@ -71,8 +71,8 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                     </template>
                 </Column>
                 <Column field="amount" header="Kwota"></Column>
-                <Column field="project.client.name" header="Klient"></Column>
-                <Column field="project.name" header="Projekt"></Column>
+                <Column field="project.client.name" header="Klient" />
+                <Column field="project.name" header="Projekt" class="capitalize-first-letter" />
                 <Column field="payment_date">
                     <template #header>
                         <SortableHeader field="payment_date" :active="sortBy === 'payment_date'" :direction="sortDir" @sort="setSort"

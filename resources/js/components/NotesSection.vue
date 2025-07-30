@@ -189,7 +189,7 @@ function toggleDialog(): void {
                     </SecondaryButton>
                 </div>
             </template>
-            <div class="grid grid-cols-3 gap-6">
+            <div class="grid xl:grid-cols-3 gap-6">
                 <Panel v-for="note in showAllNotes ? notes : notes.slice(0, 3)" :key="note.id" class="flex h-auto flex-col justify-between">
                     <template #header>
                         <div class="flex items-center gap-2 py-4">
