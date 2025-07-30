@@ -2,14 +2,17 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
-class LoginRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,17 +30,46 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                'unique:'.User::class
+            ],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:'.User::class
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::defaults()
+            ],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.required' => 'Podaj email',
-            'email.email' => 'Email musi mieć poprawny format',
-            'password.required' => 'Wprowadź hasło',
+            'name.required' => 'Wybierz nazwę użytkownika',
+            'name.string' => 'Imię i nazwisko musi być w formie tekstowej',
+            'name.max' => 'Nazwa nie może przekraczać 255 znaków',
+            'name.min' => 'Nazwa musi mieć co najmniej 3 znaki',
+            'name.unique' => 'Ta nazwa użytkownika jest już zajęta',
+
+            'email.required' => 'Adres email jest wymagany',
+            'email.email' => 'Podaj poprawny adres email',
+            'email.lowercase' => 'Email musi być napisany małymi literami',
+            'email.unique' => 'Ten adres email jest już zarejestrowany',
+            'email.max' => 'Email nie może przekraczać 255 znaków',
+
+            'password.required' => 'Hasło jest wymagane',
+            'password.confirmed' => 'Potwierdzenie hasła jest niepoprawne',
         ];
     }
 
@@ -54,7 +86,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => 'Nieprawidłowy email',
+                'email' => trans('auth.failed'),
             ]);
         }
 
@@ -77,10 +109,10 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => 'Za dużo prób logowania, spróbuj ponownie za :seconds sekund', [
+            'email' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
-            ],
+            ]),
         ]);
     }
 
