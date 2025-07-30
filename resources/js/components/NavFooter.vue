@@ -21,8 +21,8 @@ defineProps<Props>();
                 <SidebarMenuItem v-for="item in items" :key="item.title">
                     <SidebarMenuButton v-if="!item.children" as-child :is-active="isActive(item)" :tooltip="item.title" size="lg">
                         <Link :href="item.href">
-                            <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
+                            <component :is="item.icon" class="group-data-[collapsible=icon]:ml-2" />
+                            <span class="group-data-[collapsible=icon]:hidden">{{ item.title }}</span>
                         </Link>
                     </SidebarMenuButton>
 
@@ -36,15 +36,15 @@ defineProps<Props>();
 
                         <div v-else class="flex items-center gap-2 py-2">
                             <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
+                            <span class="group-data-[collapsible=icon]:hidden">{{ item.title }}</span>
                         </div>
 
                         <SidebarMenu>
-                            <SidebarMenuItem v-for="child in item.children" :key="child.title" class="pl-6">
-                                <SidebarMenuButton as-child :is-active="isActive(child)" :tooltip="child.title" size="lg">
+                            <SidebarMenuItem v-for="child in item.children" :key="child.title" class="pl-6 group-data-[collapsible=icon]:pl-3">
+                                <SidebarMenuButton as-child :is-active="isActive(child)" :tooltip="child.tooltip" size="lg">
                                     <Link :href="child.href">
-                                        <component :is="child.icon" />
-                                        <span>{{ child.title }}</span>
+                                        <component :is="child.icon" class="group-data-[collapsible=icon]:ml-2" />
+                                        <span class="group-data-[collapsible=icon]:hidden">{{ child.title }}</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

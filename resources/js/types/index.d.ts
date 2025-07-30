@@ -17,6 +17,7 @@ export interface NavItem {
     isActive?: boolean;
     children?: NavItem[];
     pattern: string;
+    tooltip?: string;
 }
 
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
