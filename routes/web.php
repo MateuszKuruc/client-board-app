@@ -23,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
     // Clients
     Route::get('/klienci', [ClientController::class, 'index'])->name('clients.index');
     Route::post('/klienci', [ClientController::class, 'store'])->name('clients.store');
-    Route::get('/klienci/dodaj', [ClientController::class, 'create'])->name('clients.create');
     Route::get('/klienci/eksport', [ClientController::class, 'export'])->name('clients.export');
     Route::get('/klienci/dodaj/{lead?}', [ClientController::class, 'create'])->name('clients.create');
     Route::get('/klienci/{client}', [ClientController::class, 'show'])->name('clients.show');
