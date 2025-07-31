@@ -1,16 +1,15 @@
 <?php
 
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\InfoController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -81,8 +80,11 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
+    //Info
+    Route::get('/info', [InfoController::class, 'index'])->name('info.index');
+
     // Configuration
-    Route::get('/konfiguracja', [ConfigurationController::class, 'index'])->name('configurations.index');
+//    Route::get('/konfiguracja', [ConfigurationController::class, 'index'])->name('configurations.index');
 });
 
 require __DIR__.'/settings.php';

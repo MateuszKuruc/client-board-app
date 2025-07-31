@@ -22,6 +22,7 @@ export function useNavigation() {
             'finances/Index': '/finanse',
             'leads/Index': '/leady',
             'leads/Create': '/leady/dodaj',
+            'info/Index': '/info',
         };
 
         const activePattern = componentMapping[currentComponent];
