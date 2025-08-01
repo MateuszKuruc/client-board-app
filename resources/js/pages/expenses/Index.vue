@@ -39,7 +39,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
 </script>
 
 <template>
-    <Head title="Leady" />
+    <Head title="Koszty" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
