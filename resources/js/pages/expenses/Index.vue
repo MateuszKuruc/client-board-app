@@ -60,6 +60,11 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         <SortableHeader field="name" :active="sortBy === 'name'" :direction="sortDir" @sort="setSort">Koszt</SortableHeader>
                     </template>
                 </Column>
+                <Column field="category" header="Kategoria">
+                    <template #body="{ data: expense }: { data: Expense }">
+                        <Tag :value="expense.category" severity="info" />
+                    </template>
+                </Column>
                 <Column field="amount">
                     <template #header>
                         <SortableHeader field="amount" :active="sortBy === 'amount'" :direction="sortDir" @sort="setSort">Cena</SortableHeader>

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import ActionButtons from '@/components/ActionButtons.vue';
-import BackButton from '@/components/BackButton.vue';
 import EditableField from '@/components/EditableField.vue';
 import ExpensesTable from '@/components/ExpensesTable.vue';
 import NotesSection from '@/components/NotesSection.vue';
 import PageHeadingBasic from '@/components/PageHeadingBasic.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
+import Tag from '@/components/volt/Tag.vue';
+import { expenseCategoryOptions } from '@/constants/expenseCategoryOptions';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
@@ -92,6 +93,7 @@ function cancelEdit() {
 
 const form = useForm({
     name: props.expense.name,
+    category: props.expense.category,
     amount: props.expense.amount,
     is_paid: props.expense.is_paid,
     is_paid_status: paidToString(props.expense.is_paid),
@@ -101,6 +103,12 @@ const form = useForm({
 
 const editableFields: EditableField[] = [
     { key: 'name', label: 'Nazwa' },
+    {
+        key: 'category',
+        label: 'Kategoria',
+        type: 'select',
+        options: expenseCategoryOptions,
+    },
     { key: 'amount', label: 'Kwota' },
     { key: 'is_paid_status', label: 'Status płatności', type: 'select', options: statusOptions },
     {
@@ -119,6 +127,10 @@ const editableFields: EditableField[] = [
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
             <div class="flex flex-col gap-4">
                 <PageHeadingBasic :title="'Koszt nr ' + expense.id" />
+                <div>
+                    <span>Kategoria: </span>
+                    <Tag :value="expense.category" severity="info" />
+                </div>
             </div>
 
             <div class="flex items-center justify-between">

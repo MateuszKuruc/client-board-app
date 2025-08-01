@@ -6,6 +6,7 @@ import SelectField from '@/components/SelectField.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 import { booleanPaidOptions } from '@/constants/booleanPaidOptions';
 import { expenseTypeOptions } from '@/constants/expenseTypeOptions';
+import { expenseCategoryOptions } from '@/constants/expenseCategoryOptions';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
@@ -25,8 +26,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const form = useForm<Payment>({
+const form = useForm({
     name: null,
+    category: null,
     amount: null,
     is_paid: null,
     type: null,
@@ -70,6 +72,16 @@ const submit = () => {
                             :error="form.errors.name"
                             v-model="form.name"
                             placeholder="Subskrypcja Trello"
+                            required
+                        />
+
+                        <SelectField
+                            id="category"
+                            label="Kategoria"
+                            :error="form.errors.category"
+                            v-model="form.category"
+                            :options="expenseCategoryOptions"
+                            placeholder="Wybierz kategorię"
                             required
                         />
 
