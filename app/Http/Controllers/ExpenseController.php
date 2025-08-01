@@ -16,12 +16,12 @@ class ExpenseController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $sortBy = $request->input('sort_by', 'created_at');
+        $sortBy = $request->input('sort_by', 'payment_date');
         $sortDir = $request->input('sort_dir', 'desc');
 
         $allowedSorts = ['name', 'category', 'amount', 'type', 'is_paid', 'payment_date', 'created_at'];
         if (!in_array($sortBy, $allowedSorts)) {
-            $sortBy = 'created_at';
+            $sortBy = 'payment_date';
         }
         $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
 
