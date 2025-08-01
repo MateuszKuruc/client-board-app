@@ -112,7 +112,7 @@ const projectOptions = computed(() =>
 
                         <InputField
                             id="amount"
-                            label="Kwota płatności"
+                            label="Kwota płatności netto"
                             :error="form.errors.amount"
                             v-model="form.amount"
                             placeholder="1000"

@@ -87,7 +87,7 @@ const submit = () => {
 
                         <InputField
                             id="amount"
-                            label="Koszt produktu"
+                            label="Koszt produktu netto"
                             :error="form.errors.amount"
                             v-model="form.amount"
                             placeholder="1000"

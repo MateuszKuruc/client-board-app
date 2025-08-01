@@ -131,7 +131,7 @@ const submit = () => {
                             required
                         />
 
-                        <InputField id="price" label="Cena" :error="form.errors.price" v-model="form.price" placeholder="1000" required />
+                        <InputField id="price" label="Cena netto" :error="form.errors.price" v-model="form.price" placeholder="1000" required />
 
                         <SelectField
                             id="type"

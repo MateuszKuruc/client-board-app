@@ -38,7 +38,11 @@ const props = withDefaults(
         <Column field="id" header="Płatność">
             <template #body="{ data: expense }: { data: Expense }"> Nr {{ expense.id }} </template>
         </Column>
-        <Column field="amount" header="Kwota" />
+        <Column field="amount" header="Kwota">
+            <template #body="{ data: expense }: { data: Expense }">
+                {{ expense.amount }} zł
+            </template>
+        </Column>
         <Column field="is_paid" header="Status">
             <template #body="{ data: expense }: { data: Expense }">
                 {{ expense.is_paid ? 'Opłacona' : 'Nieopłacona' }}

@@ -47,8 +47,8 @@ const props = withDefaults(
         </Column>
         <Column field="service.name" header="Usługa" />
         <Column field="start_date" header="Data startu">
-            <template #body="{ data }: { data: Project }">
-                {{ dayjs(data.start_date).format('DD.MM.YYYY') }}
+            <template #body="{ data: project }: { data: Project }">
+                {{ dayjs(project.start_date).format('DD.MM.YYYY') }}
             </template>
         </Column>
         <Column field="end_date" header="Data zakończenia">
@@ -56,11 +56,15 @@ const props = withDefaults(
                 {{ dayjs(data.end_date).format('DD.MM.YYYY') }}
             </template>
         </Column>
-        <Column field="price" header="Cena" />
+        <Column field="price" header="Cena">
+            <template #body="{ data: project }: { data: Project }">
+                {{ project.price }} zł
+            </template>
+        </Column>
         <Column field="active" header="Aktywny">
-            <template #body="{ data }: { data: Project }">
-                <span :class="data.active ? 'text-green-600' : 'text-red-600'">
-                    {{ data.active ? 'Tak' : 'Nie' }}
+            <template #body="{ data: project }: { data: Project }">
+                <span :class="project.active ? 'text-green-600' : 'text-red-600'">
+                    {{ project.active ? 'Tak' : 'Nie' }}
                 </span>
             </template>
         </Column>

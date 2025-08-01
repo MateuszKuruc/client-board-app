@@ -72,7 +72,11 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         />
                     </template>
                 </Column>
-                <Column field="amount" header="Kwota"></Column>
+                <Column field="amount" header="Kwota">
+                    <template #body="{ data: payment }: { data: Payment }">
+                        {{ payment.amount }} zł
+                    </template>
+                </Column>
                 <Column field="project.client.name" header="Klient" />
                 <Column field="project.name" header="Projekt" class="capitalize-first-letter" />
                 <Column field="payment_date">

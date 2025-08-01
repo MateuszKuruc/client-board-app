@@ -134,7 +134,11 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         <h5 class="font-semibold">Historia płatności</h5>
                         <div v-if="project.payments.length > 0">
                             <DataTable :value="getSortedPayments(project)" dataKey="id" scrollable scrollHeight="200px" removableSort>
-                                <Column field="amount" header="Kwota" sortable />
+                                <Column field="amount" header="Kwota" sortable>
+                                    <template #body="{ data: payment }: { data: Payment }">
+                                        {{ payment.amount }} zł
+                                    </template>
+                                </Column>
                                 <Column field="status" header="Status" sortable>
                                     <template #body="{ data: payment }: { data: Payment }">
                                         <Tag

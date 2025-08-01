@@ -44,7 +44,11 @@ const props = withDefaults(
                 </StyledLink>
             </template>
         </Column>
-        <Column field="amount" header="Kwota" />
+        <Column field="amount" header="Kwota">
+            <template #body="{ data: payment }: { data: Payment }">
+                {{ payment.amount }} zł
+            </template>
+        </Column>
         <Column field="status" header="Status">
             <template #body="{ data: payment }: { data: Payment }">
                 {{ payment.status === 'paid' ? 'Opłacona' : payment.status === 'pending' ? 'Oczekująca' : 'Anulowana' }}
