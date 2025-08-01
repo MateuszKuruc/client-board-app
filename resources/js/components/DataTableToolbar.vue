@@ -24,7 +24,7 @@ const props = withDefaults(
         exportLabel?: string;
         addButtonLabel?: string;
         addButtonRoute?: string;
-        displayButton: boolean;
+        displayButton?: boolean;
     }>(),
     {
         searchable: true,
