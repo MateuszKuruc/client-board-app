@@ -122,11 +122,12 @@ const editableFields: EditableField[] = [
 </script>
 
 <template>
-    <Head :title="breadcrumbs[1].title" />
+    <Head :title="expense.name" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
-            <div class="flex flex-col gap-4">
-                <PageHeadingBasic :title="'Koszt nr ' + expense.id" />
+            <div class="flex flex-col gap-2">
+                <PageHeadingBasic :title="expense.name" :subtitle="'Koszt nr ' + expense.id" />
+
                 <div>
                     <span>Kategoria: </span>
                     <Tag :value="expense.category" severity="info" />

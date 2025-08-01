@@ -118,7 +118,7 @@ const editableFields: EditableField[] = [
 </script>
 
 <template>
-    <Head :title="breadcrumbs[0].title" />
+    <Head :title="`Płatność ${payment.id}`" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">
             <div class="flex flex-col gap-4">
@@ -162,7 +162,7 @@ const editableFields: EditableField[] = [
                         heading="Powiązane płatności"
                         subheading="Lista innych płatności przypisanych do tego samego projektu"
                         button
-                        :href="route('payments.create', payment.project.id)"
+                        :href="route('payments.create')"
                     />
                 </div>
 

@@ -171,7 +171,7 @@ const chartValues = computed(() => sortedMonths.value.map((month) => monthlyTota
 </script>
 
 <template>
-    <Head :title="breadcrumbs[0].title" />
+    <Head :title="props.client.name" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-6">

@@ -57,7 +57,7 @@ const props = withDefaults(
         </Column>
         <Column>
             <template #body="{ data: payment }: { data: Payment }">
-                <StyledLink v-if="client && project && href" variant="text" :href="href"> Zarządzaj </StyledLink>
+                <StyledLink v-if="client && project && href" variant="text" :href="route('payments.show', { client: client.slug, project: project.id, payment: payment.id })"> Zarządzaj </StyledLink>
             </template>
         </Column>
     </DataTable>
