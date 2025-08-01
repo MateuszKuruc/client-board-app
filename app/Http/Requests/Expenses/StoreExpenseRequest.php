@@ -20,6 +20,17 @@ class StoreExpenseRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:255', 'string', 'min:3'],
+            'category' => [
+                'required', Rule::in([
+                    'Księgowość',
+                    'Reklamy',
+                    'VAT',
+                    'CIT',
+                    'Pracownik',
+                    'Software',
+                    'Inne'
+                ])
+            ],
             'amount' => ['required', 'numeric', 'min:1', 'max:999999.99'],
             'is_paid' => ['required', 'boolean'],
             'type' => ['required', Rule::in(['Miesięczna', 'Roczna', 'Jednorazowa'])],
@@ -33,6 +44,9 @@ class StoreExpenseRequest extends FormRequest
             'name.required' => 'Nazwa produktu jest wymagana',
             'name.min' => 'Nazwa musi mieć co najmniej :min znaki',
             'name.max' => 'Nazwa nie może mieć więcej niż :max znaków.',
+
+            'category.required' => 'Kategoria jest wymagana',
+            'category.in' => 'Wybrano nieprawidłową kategorię',
 
             'amount.required' => 'Kwota jest wymagana',
             'amount.numeric' => 'Kwota musi być liczbą',

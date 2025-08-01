@@ -13,6 +13,7 @@ class Expense extends Model
 
     protected $fillable = [
         'name',
+        'category',
         'amount',
         'is_paid',
         'type',

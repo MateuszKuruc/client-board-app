@@ -19,7 +19,7 @@ class ExpenseController extends Controller
         $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
-        $allowedSorts = ['name', 'amount', 'type', 'is_paid', 'payment_date', 'created_at'];
+        $allowedSorts = ['name', 'category', 'amount', 'type', 'is_paid', 'payment_date', 'created_at'];
         if (!in_array($sortBy, $allowedSorts)) {
             $sortBy = 'created_at';
         }
@@ -27,7 +27,8 @@ class ExpenseController extends Controller
 
         $expenses = Expense::when($search, function ($query, $search) {
             $query->where('name', 'like', '%'.$search.'%')
-                ->orWhere('type', 'like', '%'.$search.'%');
+                ->orWhere('type', 'like', '%'.$search.'%')
+                ->orWhere('category', 'like', '%'.$search.'%');
         })
             ->orderBy($sortBy, $sortDir)
             ->paginate(10)
@@ -87,7 +88,7 @@ class ExpenseController extends Controller
         $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
-        $allowed = ['name', 'amount', 'type', 'is_paid', 'payment_date', 'created_at'];
+        $allowed = ['name', 'category', 'amount', 'type', 'is_paid', 'payment_date', 'created_at'];
         if (!in_array($sortBy, $allowed)) {
             $sortBy = 'created_at';
         }

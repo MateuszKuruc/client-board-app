@@ -28,7 +28,8 @@ class ExpensesExport implements FromCollection, WithHeadings
     {
         return Expense::when($this->search, function ($query, $search) {
             $query->where('name', 'like', '%'.$search.'%')
-                ->orWhere('type', 'like', '%'.$search.'%');
+                ->orWhere('type', 'like', '%'.$search.'%')
+            ->orWhere('category', 'like', '%'.$search.'%');
         })
             ->orderBy($this->sortBy, $this->sortDir)
             ->get()
@@ -40,6 +41,7 @@ class ExpensesExport implements FromCollection, WithHeadings
                 return [
                     $expense->id,
                     $expense->name,
+                    $expense->category,
                     $expense->amount,
                     $expense->type,
                     $statusText,
@@ -53,6 +55,7 @@ class ExpensesExport implements FromCollection, WithHeadings
         return [
             'ID',
             'Koszt',
+            'Kategoria',
             'Cena',
             'Rodzaj płatności',
             'Status płatności',
