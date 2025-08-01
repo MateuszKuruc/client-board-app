@@ -102,6 +102,10 @@
         text-transform: uppercase;
     }
 
+    .input-readonly {
+        @apply text-gray-500!;
+    }
+
     .text-accent {
         @apply text-amber-600;
     }

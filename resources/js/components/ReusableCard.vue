@@ -31,13 +31,16 @@ const { value } = defineProps<{
                 <p v-if="percentage === null" class="text-3xl font-bold">-</p>
                 <p v-if="percentage === 0" class="text-3xl font-bold">0 %</p>
                 <p v-if="summary" class="text-3xl font-bold">
-                    <span :class="summary >= 0 ? 'text-success' : 'text-danger dark:text-red-500'"> {{ summary > 0 ? `+${summary}` : `${summary}` }} zł </span>
+                    <span :class="summary >= 0 ? 'text-success' : 'text-danger dark:text-red-500'">
+                        {{ summary > 0 ? `+${summary}` : `${summary}` }} zł
+                    </span>
                 </p>
                 <p v-if="summary === 0" class="text-3xl font-bold">0 zł</p>
                 <p v-if="secondValue">
                     Pozostało do zapłaty: <span class="text-danger dark:text-red-500">{{ secondValue }} zł</span>
                 </p>
                 <p v-if="plainNumber" class="text-3xl font-bold text-accent">{{ plainNumber === 0 ? 0 : plainNumber }}</p>
+
                 <Link v-if="client" :href="route('clients.show', { client: client.slug })">
                     <Tag severity="warn">
                         <User />
@@ -48,7 +51,7 @@ const { value } = defineProps<{
                 <Link v-if="project" :href="route('projects.show', { client: project.client.slug, project: project.id })">
                     <Tag severity="warn">
                         <FolderOpen />
-                        <p class="max-w-xs truncate capitalize-first-letter">
+                        <p class="capitalize-first-letter max-w-xs truncate">
                             {{ project.name }}
                         </p>
                     </Tag>

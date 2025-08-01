@@ -59,11 +59,11 @@ const copyToClipboard = async () => {
             {{ text }}
         </span>
 
-        <InputText :value="data" readonly pt:root="flex-1 rounded-s-none rounded-e-md pointer-events-none" style="color: #D1D5DB !important" class="truncate" />
+        <InputText :value="data" readonly pt:root="flex-1 rounded-s-none rounded-e-md pointer-events-none" class="input-readonly truncate" />
         <button
             type="button"
             @click="copyToClipboard"
-            class="flex w-10 items-center justify-center rounded-s-md border-y border-s border-surface-300 bg-surface-0 text-surface-400 hover:cursor-pointer hover:text-amber-500 dark:border-surface-700 dark:bg-surface-950"
+            class="flex w-10 items-center justify-center rounded-md border border-surface-300 bg-surface-0 text-surface-400 hover:cursor-pointer hover:text-amber-500 dark:border-surface-700 dark:bg-surface-950"
         >
             <Copy />
         </button>
