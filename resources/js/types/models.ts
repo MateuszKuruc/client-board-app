@@ -85,6 +85,7 @@ export interface Service {
 export interface Expense {
     id: number;
     name: string;
+    category: string;
     amount: number;
     type: string;
     payment_date: Date | null;
