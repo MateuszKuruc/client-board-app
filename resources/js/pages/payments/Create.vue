@@ -48,7 +48,7 @@ const statusOptions = [
     },
 ];
 
-const form = useForm<Payment>({
+const form = useForm({
     project_id: projectParam,
     amount: null,
     status: null,
@@ -106,7 +106,7 @@ const projectOptions = computed(() =>
                             :disabled="project !== null"
                         />
 
-                        <Message v-if="project !== null" size="small" severity="info" class="mb-2"
+                        <Message v-if="project !== null" size="small" severity="warn" class="mb-2"
                             >Projekt: {{ project.name }} <span class="block">Klient: {{ project.client.name }}</span></Message
                         >
 
