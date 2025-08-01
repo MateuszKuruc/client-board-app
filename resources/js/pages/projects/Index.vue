@@ -71,6 +71,8 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         :exportUrl="'projects.export'"
                         :exportParams="exportParams"
                         :filters="filters"
+                        addButtonLabel="Dodaj projekt"
+                        :addButtonRoute="route('projects.create')"
                     />
                 </template>
                 <Column expander style="width: 5rem" />

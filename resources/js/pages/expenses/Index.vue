@@ -4,6 +4,7 @@ import Paginator from '@/components/Paginator.vue';
 import SortableHeader from '@/components/SortableHeader.vue';
 import StyledLink from '@/components/StyledLink.vue';
 import DataTable from '@/components/volt/DataTable.vue';
+import Tag from '@/components/volt/Tag.vue';
 import { useExportParams } from '@/composables/useExportParams';
 import { useServerSearch } from '@/composables/useServerSearch';
 import { useServerSorting } from '@/composables/useServerSorting';
@@ -13,7 +14,6 @@ import type { Expense, Filters, Paginated } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
-import Tag from '@/components/volt/Tag.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -45,7 +45,14 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable :value="expenses.data" dataKey="id">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :exportUrl="'expenses.export'" :exportParams="exportParams" :filters="filters" />
+                    <DataTableToolbar
+                        v-model="globalSearch"
+                        :exportUrl="'expenses.export'"
+                        :exportParams="exportParams"
+                        :filters="filters"
+                        addButtonLabel="Dodaj koszt"
+                        :addButtonRoute="route('expenses.create')"
+                    />
                 </template>
                 <Column field="id" header="Numer płatności" />
                 <Column field="name" class="capitalize-first-letter">
@@ -75,10 +82,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         >
                     </template>
                     <template #body="{ data: expense }: { data: Expense }">
-                        <Tag
-                            :value="expense.is_paid ? 'Opłacona' : 'Nieopłacona'"
-                            :severity="expense.is_paid ? 'success' : 'danger'"
-                        />
+                        <Tag :value="expense.is_paid ? 'Opłacona' : 'Nieopłacona'" :severity="expense.is_paid ? 'success' : 'danger'" />
                     </template>
                 </Column>
                 <Column field="payment_date">

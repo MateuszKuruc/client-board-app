@@ -46,7 +46,14 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <DataTable :value="leads.data" dataKey="id">
                 <template #header>
-                    <DataTableToolbar v-model="globalSearch" :exportUrl="'leads.export'" :filters="filters" :exportParams="exportParams" />
+                    <DataTableToolbar
+                        v-model="globalSearch"
+                        :exportUrl="'leads.export'"
+                        :filters="filters"
+                        :exportParams="exportParams"
+                        addButtonLabel="Dodaj leada"
+                        :addButtonRoute="route('leads.create')"
+                    />
                 </template>
 
                 <Column field="email" header="Email"> </Column>

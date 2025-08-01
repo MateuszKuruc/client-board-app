@@ -55,6 +55,8 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         :onCollapseAll="collapseAll"
                         :exportUrl="'clients.export'"
                         :exportParams="exportParams"
+                        addButtonLabel="Dodaj klienta"
+                        :addButtonRoute="route('clients.create')"
                         :filters="filters"
                     />
                 </template>

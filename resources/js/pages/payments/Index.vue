@@ -11,7 +11,7 @@ import { useServerSorting } from '@/composables/useServerSorting';
 import AppLayout from '@/layouts/AppLayout.vue';
 import dayjs from '@/plugins/dayjs';
 import type { BreadcrumbItem } from '@/types';
-import { Filters, Payment } from '@/types/models';
+import { Filters, Payment, Paginated } from '@/types/models';
 import { Head } from '@inertiajs/vue3';
 import { SquarePen } from 'lucide-vue-next';
 import Column from 'primevue/column';
@@ -51,6 +51,8 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         :exportUrl="'payments.export'"
                         :exportParams="exportParams"
                         :filters="filters"
+                        addButtonLabel="Dodaj płatność"
+                        :addButtonRoute="route('payments.create')"
                     />
                 </template>
                 <Column field="id">

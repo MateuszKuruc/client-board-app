@@ -75,6 +75,7 @@ const exportParams = useExportParams(globalSearch, sortBy, sortDir);
                         :exportUrl="'projects.mine.export'"
                         :exportParams="exportParams"
                         :filters="filters"
+                        :displayButton="false"
                     />
                 </template>
                 <Column expander style="width: 5rem" />
