@@ -3,6 +3,7 @@ import BarChart from '@/components/BarChart.vue';
 import FinanceCards from '@/components/FinanceCards.vue';
 import FinanceTable from '@/components/FinanceTable.vue';
 import ReusableCard from '@/components/ReusableCard.vue';
+import Divider from '@/components/volt/Divider.vue';
 import Fieldset from '@/components/volt/Fieldset.vue';
 import SelectButton from '@/components/volt/SelectButton.vue';
 import Tab from '@/components/volt/Tab.vue';
@@ -15,7 +16,6 @@ import type { BreadcrumbItem } from '@/types';
 import { Expense, Paginated, Payment } from '@/types/models';
 import { Head, router } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
-import Divider from '@/components/volt/Divider.vue';
 
 const props = defineProps<{
     month: string;
@@ -103,9 +103,9 @@ watch(
             <div>
                 <Fieldset legend="Statystyki" toggleable>
                     <div class="mx-8 my-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
-                        <ReusableCard heading="Aktualna wartość subskrypcji" :value="activeSubsValue" class="h-fit" />
-                        <ReusableCard heading="Średnie wpływy z 3 miesięcy" :value="last3MonthsAverageNet" class="h-fit" />
-                        <ReusableCard heading="Liczba aktywnych projektów" :plainNumber="activeProjects" class="h-fit" />
+                        <ReusableCard heading="Aktualna wartość subskrypcji" :value="activeSubsValue" class="h-full" />
+                        <ReusableCard heading="Średnie wpływy z 3 miesięcy" :value="last3MonthsAverageNet" class="h-full" />
+                        <ReusableCard heading="Liczba aktywnych projektów" :plainNumber="activeProjects" class="h-full" />
                     </div>
                 </Fieldset>
 
@@ -146,7 +146,7 @@ watch(
                                             secondaryLabel="Liczba projektów"
                                         />
 
-                                        <div v-else class="xl:mt-[40%] text-center flex flex-col gap-4 text-xl font-semibold text-gray-500">
+                                        <div v-else class="flex flex-col gap-4 text-center text-xl font-semibold text-gray-500 xl:mt-[40%]">
                                             Brak danych do wykresu
                                         </div>
 
@@ -177,7 +177,7 @@ watch(
                                             mainLabel="Wysokość zysków z subskrybcji"
                                             secondaryLabel="Zapłacona kwota"
                                         />
-                                        <div v-else class="xl:mt-[50%] text-center flex flex-col gap-4 text-xl font-semibold text-gray-500">
+                                        <div v-else class="flex flex-col gap-4 text-center text-xl font-semibold text-gray-500 xl:mt-[50%]">
                                             Brak danych do wykresu
                                         </div>
                                     </div>
